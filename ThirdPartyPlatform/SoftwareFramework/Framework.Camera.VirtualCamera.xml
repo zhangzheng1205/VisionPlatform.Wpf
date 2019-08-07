@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Camera.VirtualCamera</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Camera.VirtualCamera.Camera">
+            <summary>
+            相机操作接口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.OpenImage(System.String)">
+            <summary>
+            打开图像
+            </summary>
+            <param name="FileName">文件路径</param>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Dispose(System.Boolean)">
+            <summary>
+            资源释放
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Dispose">
+            <summary>
+            资源释放
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.VirtualCamera.Camera.NewConnectionStatusEvent">
+            <summary>
+            连接状态改变事件
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.VirtualCamera.Camera.NewImageEvent">
+            <summary>
+            图像采集完成事件
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.CameraHandle">
+            <summary>
+            相机操作句柄
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.Info">
+            <summary>
+            相机设备参数
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.Item(System.String)">
+            <summary>
+            节点参数索引器
+            </summary>
+            <param name="NodeName">节点名</param>
+            <returns>节点参数</returns>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.PixelFormatTypeEnum">
+            <summary>
+            像素格式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerModeEnum">
+            <summary>
+            触发模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerSourceEnum">
+            <summary>
+            触发源枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerActivationEnum">
+            <summary>
+            有效触发信号枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.AcquisitionModeEnum">
+            <summary>
+            采集模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.GainAutoContorlEnum">
+            <summary>
+            自动增益控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.ExposureAutoContorlEnum">
+            <summary>
+            自动曝光控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.PixelFormat">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.Width">
+            <summary>
+            宽度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.Height">
+            <summary>
+            高度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.ImageSize">
+            <summary>
+            图像尺寸
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerMode">
+            <summary>
+            触发模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerSource">
+            <summary>
+            触发源
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.TriggerActivation">
+            <summary>
+            有效触发信号(硬件)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.AcquisitionMode">
+            <summary>
+            采集模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.AcquisitionFrameCount">
+            <summary>
+            采集帧数量(多帧采集模式下有效)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.ExposureTime">
+            <summary>
+            曝光值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.ExposureAuto">
+            <summary>
+            自动曝光
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.Gain">
+            <summary>
+            增益值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.GainAuto">
+            <summary>
+            自动增益
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.IsOpen">
+            <summary>
+            相机打开/连接标志位
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.VirtualCamera.Camera.IsGrabbing">
+            <summary>
+            相机采集中标志位
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Connect">
+            <summary>
+            连接
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Connect(System.String)">
+            <summary>
+            连接
+            </summary>
+            <param name="ImagePath">图像路径</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Connect(System.Int32)">
+            <summary>
+            连接
+            </summary>
+            <param name="deviceID">设备ID</param>
+            <returns>执行结果</returns>
+            <remarks>支持USB相机调用</remarks>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.DisConnect">
+            <summary>
+            断开连接
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.Grab">
+            <summary>
+            开始采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.StopGrab">
+            <summary>
+            停止采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.TriggerSoftware">
+            <summary>
+            软触发
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.GetDeviceList">
+            <summary>
+            获取相机设备列表
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.VirtualCamera.Camera.ToString">
+            <summary>
+            转为字符串
+            </summary>
+            <returns>字符串</returns>
+        </member>
+    </members>
+</doc>

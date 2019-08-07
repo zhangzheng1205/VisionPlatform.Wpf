@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Infrastructure.Serialization</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Infrastructure.Serialization.JsonSerialization">
+            <summary>
+            JSON序列化器
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.JsonSerialization.SerializeObject(System.Object)">
+            <summary>
+            序列化对象
+            </summary>
+            <param name="obj">要序列化的对象</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.JsonSerialization.SerializeObjectToFile(System.Object,System.String)">
+            <summary>
+            序列化对象并保存到文件中
+            </summary>
+            <param name="obj">要序列化的对象</param>
+            <param name="path">保存文件路径</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.JsonSerialization.DeserializeObject``1(System.String)">
+            <summary>
+            反序列化对象
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="value">反序列化字符串</param>
+            <returns>反序列化得到的对象</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.JsonSerialization.DeserializeObjectFromFile``1(System.String)">
+            <summary>
+            从文件中反序列化对象
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="path">文件路径</param>
+            <returns>反序列化得到的对象</returns>
+        </member>
+        <member name="T:Framework.Infrastructure.Serialization.XmlSerialization">
+            <summary>
+            Xml序列化器
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.XmlSerialization.SerializeObject(System.Object)">
+            <summary>
+            将对象按XML序列化后写入到一个文件
+            </summary>
+            <param name="obj">要序列化的对象</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.XmlSerialization.SerializeObjectToFile(System.Object,System.String)">
+            <summary>
+            将对象按XML序列化后写入到一个文件
+            </summary>
+            <param name="obj">要序列化的对象</param>
+            <param name="path">保存文件路径</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.XmlSerialization.DeserializeObject``1(System.String)">
+            <summary>
+            反序列化对象
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="value">反序列化字符串</param>
+            <returns>反序列化得到的对象</returns>
+        </member>
+        <member name="M:Framework.Infrastructure.Serialization.XmlSerialization.DeserializeObjectFromFile``1(System.String)">
+            <summary>
+            从文件中反序列化对象
+            </summary>
+            <typeparam name="T">对象类型</typeparam>
+            <param name="path">文件路径</param>
+            <returns>反序列化得到的对象</returns>
+        </member>
+    </members>
+</doc>

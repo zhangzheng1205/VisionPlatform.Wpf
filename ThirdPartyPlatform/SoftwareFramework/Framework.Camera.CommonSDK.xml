@@ -1,0 +1,648 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Camera.CommonSDK</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Camera.CommonSDK.JCameraFactory">
+            <summary>
+            SDK 相机工厂
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.JCameraFactory.Factory">
+            <summary>
+            相机工厂
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.JCameraFactory.#ctor">
+            <summary>
+            私有构造函数
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.JCameraFactory.GetInstance">
+            <summary>
+            获取实例接口
+            </summary>
+            <returns>实例接口</returns>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.Camera">
+            <summary>
+            通用控制接口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.JConnectionStatusCallBack(Jai_FactoryDotNET.CCamera,Jai_FactoryDotNET.Jai_FactoryWrapper.EDeviceConnectionType)">
+            <summary>
+            连接状态改变回调
+            </summary>
+            <param name="camera"></param>
+            <param name="JaiConnectionStatus"></param>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.JImageCallBack(Jai_FactoryDotNET.Jai_FactoryWrapper.ImageInfo@)">
+            <summary>
+            图像采集完成回调
+            </summary>
+            <param name="JaiImageInfo"></param>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.GetCameraParams(System.String)">
+            <summary>
+            获取相机参数
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.CommonSDK.Camera.NewConnectionStatusEvent">
+            <summary>
+            连接状态改变事件
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.CommonSDK.Camera.NewImageEvent">
+            <summary>
+            图像采集完成事件
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.CameraHandle">
+            <summary>
+            相机操作句柄
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.Info">
+            <summary>
+            相机设备参数
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.Item(System.String)">
+            <summary>
+            节点参数索引器
+            </summary>
+            <param name="NodeName">节点名</param>
+            <returns>节点参数</returns>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.PixelFormatTypeEnum">
+            <summary>
+            像素格式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerModeEnum">
+            <summary>
+            触发模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerSourceEnum">
+            <summary>
+            触发源枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerActivationEnum">
+            <summary>
+            有效触发信号枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.AcquisitionModeEnum">
+            <summary>
+            采集模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.GainAutoContorlEnum">
+            <summary>
+            自动增益控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.ExposureAutoContorlEnum">
+            <summary>
+            自动曝光控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.PixelFormat">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.Width">
+            <summary>
+            宽度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.Height">
+            <summary>
+            高度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.ImageSize">
+            <summary>
+            图像尺寸
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerMode">
+            <summary>
+            触发模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerSource">
+            <summary>
+            触发源
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.TriggerActivation">
+            <summary>
+            有效触发信号(硬件)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.AcquisitionMode">
+            <summary>
+            采集模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.AcquisitionFrameCount">
+            <summary>
+            采集帧数量(多帧采集模式下有效)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.ExposureTime">
+            <summary>
+            曝光值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.ExposureAuto">
+            <summary>
+            自动曝光
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.Gain">
+            <summary>
+            增益值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.GainAuto">
+            <summary>
+            自动增益
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.IsOpen">
+            <summary>
+            相机打开/连接标志位
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.CommonSDK.Camera.IsGrabbing">
+            <summary>
+            相机采集中标志位
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Connect">
+            <summary>
+            连接
+            按照默认顺序打开能打开的相机
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Connect(System.String)">
+            <summary>
+            连接
+            </summary>
+            <param name="serialNumber">序列号</param>
+            <returns>执行结果</returns>
+            <remarks>支持USB相机以及GIGE相机调用</remarks>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Connect(System.Int32)">
+            <summary>
+            连接
+            </summary>
+            <param name="deviceID">设备ID</param>
+            <returns>执行结果</returns>
+            <remarks>支持USB相机调用</remarks>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.DisConnect">
+            <summary>
+            断开连接
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Grab">
+            <summary>
+            开始采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Grab(System.IntPtr)">
+            <summary>
+            采集并输出
+            </summary>
+            <param name="WindowHandle"></param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.StopGrab">
+            <summary>
+            停止采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.TriggerSoftware">
+            <summary>
+            软触发
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.GetDeviceList">
+            <summary>
+            获取相机设备列表
+            </summary>
+            <returns>设备列表</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.ToString">
+            <summary>
+            转为字符串
+            </summary>
+            <returns>字符串</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Dispose(System.Boolean)">
+            <summary>
+            释放资源
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.Camera.Dispose">
+            <summary>
+            释放资源
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam">
+            <summary>
+            相机触发源节点配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Software">
+            <summary>
+            软件触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line0">
+            <summary>
+            Line0触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line1">
+            <summary>
+            Line1触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line2">
+            <summary>
+            Line2触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line3">
+            <summary>
+            Line3触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line4">
+            <summary>
+            Line4触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line5">
+            <summary>
+            Line5触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line6">
+            <summary>
+            Line6触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line7">
+            <summary>
+            Line7触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line8">
+            <summary>
+            Line8触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line9">
+            <summary>
+            Line9触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerSourceParam.Line10">
+            <summary>
+            Line10触发
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeTriggerActivationParam">
+            <summary>
+            相机触发有效信号节点配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerActivationParam.RisingEdge">
+            <summary>
+            上升沿触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerActivationParam.FallingEdge">
+            <summary>
+            下降沿触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerActivationParam.LevelHigh">
+            <summary>
+            高电平触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeTriggerActivationParam.LevelLow">
+            <summary>
+            低电平触发
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeAcquisitionModeParam">
+            <summary>
+            相机采集模式节点配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeAcquisitionModeParam.Continuous">
+            <summary>
+            连续采集
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeAcquisitionModeParam.SingleFrame">
+            <summary>
+            单帧采集
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeAcquisitionModeParam.MultiFrame">
+            <summary>
+            多帧采集
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeGainAutoParam">
+            <summary>
+            相机自动增益节点配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeGainAutoParam.Off">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeGainAutoParam.Once">
+            <summary>
+            单次调节
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeGainAutoParam.Continuous">
+            <summary>
+            连续调节
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeExposureAutoParam">
+            <summary>
+            相机自动曝光节点配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeExposureAutoParam.Off">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeExposureAutoParam.Once">
+            <summary>
+            单次调节
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeExposureAutoParam.Continuous">
+            <summary>
+            连续调节
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeParams">
+            <summary>
+            相机节点控制指令
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.PixelFormat">
+            <summary>
+            像素格式指令
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.PixelSize">
+            <summary>
+            像素比特
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.Width">
+            <summary>
+            宽度
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.Height">
+            <summary>
+            高度
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerMode">
+            <summary>
+            触发模式 0-连续采集  1-触发模式
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerSource">
+            <summary>
+            触发源
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerSourceParam">
+            <summary>
+            触发源配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerActivation">
+            <summary>
+            有效触发信号
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerActivationParam">
+            <summary>
+            有效触发信号配置参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.TriggerSoftware">
+            <summary>
+            软件触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AcquisitionMode">
+            <summary>
+            采集模式
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AcquisitionModeParam">
+            <summary>
+            采集模式参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AcquisitionFrameCount">
+            <summary>
+            采集帧数(多帧采集下有效)
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.ExposureTime">
+            <summary>
+            曝光时间 >=0.0 单位:us
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.ExposureAuto">
+            <summary>
+            自动曝光
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.ExposureAutoParam">
+            <summary>
+            自动曝光参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AutoExposureTimeLowerLimit">
+            <summary>
+            自动曝光下限
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AutoExposureTimeUpperLimit">
+            <summary>
+            自动曝光上限
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.Gain">
+            <summary>
+            增益值
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.GainAuto">
+            <summary>
+            自动增益
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.GainAutoParam">
+            <summary>
+            自动增益参数
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AutoGainLowerLimit">
+            <summary>
+            自动增益下限
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.CommonSDK.CameraNodeParams.AutoGainUpperLimit">
+            <summary>
+            自动增益上限
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.CommonSDK.CameraNodeParamAdapter">
+            <summary>
+            相机节点参数适配器
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.LoadCameraNodeParams(System.String)">
+            <summary>
+            加载相机节点参数
+            </summary>
+            <param name="FileName">文件名</param>
+            <returns>节点参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SaveCameraNodeParams(System.String,Framework.Camera.CommonSDK.CameraNodeParams)">
+            <summary>
+            保存相机节点参数
+            </summary>
+            <param name="FileName">文件名</param>
+            <param name="NodeParams">节点参数</param>
+            <returns>保存结果</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetCameraNodeParams(System.String)">
+            <summary>
+            获取相机接口配置参数
+            </summary>
+            <param name="Manufacturer">相机制造商名</param>
+            <returns>节点参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetTriggerSource(Framework.Camera.CommonSDK.CameraNodeParams,System.String)">
+            <summary>
+            获取触发类型
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraParam">相机参数</param>
+            <returns>相机参数的枚举类型</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SetTriggerSource(Framework.Camera.CommonSDK.CameraNodeParams,Framework.Camera.ETriggerSource)">
+            <summary>
+            设置触发类型
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraEnum">相机参数的枚举类型</param>
+            <returns>对应的相机参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetTriggerActivation(Framework.Camera.CommonSDK.CameraNodeParams,System.String)">
+            <summary>
+            获取有效触发信号
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraParam">相机参数</param>
+            <returns>相机参数的枚举类型</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SetTriggerActivation(Framework.Camera.CommonSDK.CameraNodeParams,Framework.Camera.ETriggerActivation)">
+            <summary>
+            设置有效触发信号
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraEnum">相机参数的枚举类型</param>
+            <returns>对应的相机参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetAcquisitionMode(Framework.Camera.CommonSDK.CameraNodeParams,System.String)">
+            <summary>
+            获取采集模式参数
+            </summary>
+            <param name="NodeParams"></param>
+            <param name="CameraParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SetAcquisitionMode(Framework.Camera.CommonSDK.CameraNodeParams,Framework.Camera.EAcquisitionMode)">
+            <summary>
+            设置采集模式参数
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraEnum">相机参数的枚举类型</param>
+            <returns>对应的相机参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetExposureAutoContorl(Framework.Camera.CommonSDK.CameraNodeParams,System.String)">
+            <summary>
+            获取曝光自动控制参数
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraParam">相机参数</param>
+            <returns>相机参数的枚举类型</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SetExposureAutoContorl(Framework.Camera.CommonSDK.CameraNodeParams,Framework.Camera.EExposureAutoContorl)">
+            <summary>
+            设置曝光自动控制参数
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraEnum">相机参数的枚举类型</param>
+            <returns>对应的相机参数</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.GetGainAutoContorl(Framework.Camera.CommonSDK.CameraNodeParams,System.String)">
+            <summary>
+            获取增益自动控制参数
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraParam">相机参数</param>
+            <returns>相机参数的枚举类型</returns>
+        </member>
+        <member name="M:Framework.Camera.CommonSDK.CameraNodeParamAdapter.SetGainAutoContorl(Framework.Camera.CommonSDK.CameraNodeParams,Framework.Camera.EGainAutoContorl)">
+            <summary>
+            设置增益自动控制参数
+            </summary>
+            <param name="NodeParams">节点参数</param>
+            <param name="CameraEnum">相机参数的枚举类型</param>
+            <returns>对应的相机参数</returns>
+        </member>
+    </members>
+</doc>

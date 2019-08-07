@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Vision</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Vision.ICalibration">
+            <summary>
+            标定接口
+            </summary>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@,System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.CreateCalibMatrix(Framework.Vision.CalibParam@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="param">标定参数</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.Calibrate(System.Double[],System.Double,System.Double,System.Double@,System.Double@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.ICalibration.Calibrate(System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="T:Framework.Vision.CalibParam">
+            <summary>
+            标定参数
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibParam.CalibPointList">
+            <summary>
+            标定点列表
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibParam.Matrix">
+            <summary>
+            标定矩阵
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibParam.InvMatrix">
+            <summary>
+            逆标定矩阵
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibParam.IsValid">
+            <summary>
+            有效标志
+            </summary>
+        </member>
+        <member name="M:Framework.Vision.CalibParam.#ctor">
+            <summary>
+            创建标定参数新实例
+            </summary>
+        </member>
+        <member name="T:Framework.Vision.CalibPointData">
+            <summary>
+            标定点位数据
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibPointData.Px">
+            <summary>
+            原始X点位
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibPointData.Py">
+            <summary>
+            原始Y点位
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibPointData.Qx">
+            <summary>
+            转换X点位
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.CalibPointData.Qy">
+            <summary>
+            转换Y点位
+            </summary>
+        </member>
+        <member name="M:Framework.Vision.CalibPointData.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建CalibData新实例
+            </summary>
+            <param name="px">原始X点位</param>
+            <param name="py">原始Y点位</param>
+            <param name="qx">转换X点位</param>
+            <param name="qy">转换Y点位</param>
+        </member>
+        <member name="T:Framework.Vision.SimpleCalibration">
+            <summary>
+            简单的标定算法
+            </summary>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@,System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.CreateCalibMatrix(Framework.Vision.CalibParam@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="param">标定参数</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.Calibrate(System.Double[],System.Double,System.Double,System.Double@,System.Double@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.SimpleCalibration.Calibrate(System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="T:Framework.Vision.SimpleVision">
+            <summary>
+            简易视觉接口
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.SimpleVision.Calibration">
+            <summary>
+            标定接口
+            </summary>
+        </member>
+    </members>
+</doc>

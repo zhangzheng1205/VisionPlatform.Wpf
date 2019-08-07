@@ -1,0 +1,1107 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Camera</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Camera.EDeviceType">
+            <summary>
+            设备类型
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceType.USBDevice">
+            <summary>
+            USB设备
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceType.GigeDevice">
+            <summary>
+            GIGE设备
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceType.CameraLinkDevice">
+            <summary>
+            CameraLink设备
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceType.UnKnown">
+            <summary>
+            未知设备
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.NewImageEventArgs">
+            <summary>
+            相机采集完成事件
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.NewImageEventArgs.m_ImageBuff">
+            <summary>
+            图像像素数组
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.NewImageEventArgs.DisposeImageIntPtr">
+            <summary>
+            释放图像资源
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.NewImageEventArgs.#ctor(System.IntPtr,System.Int32,System.Int32,System.Int32,Framework.Camera.EPixelFormatType,System.Action{System.IntPtr})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="ImagePtr">图像指针</param>
+            <param name="ImageSize">图像尺寸</param>
+            <param name="Width">高度</param>
+            <param name="Height">宽度</param>
+            <param name="PixelFormat">像素格式</param>
+            <param name="DisposeImageIntPtr">资源释放接口</param>
+        </member>
+        <member name="M:Framework.Camera.NewImageEventArgs.DisposeImage">
+            <summary>
+            释放图像资源
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.ImagePtr">
+            <summary>
+            图像缓冲区指针
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.ImageBuff">
+            <summary>
+            图像像素数组
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.ImageSize">
+            <summary>
+            图像尺寸(字节数)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.Width">
+            <summary>
+            图像宽度
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.Height">
+            <summary>
+            图像高度
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.NewImageEventArgs.PixelFormat">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.NewImageEventArgs.ToString">
+            <summary>
+            字符串转换
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.Camera.NewConnectionStatusEventArgs">
+            <summary>
+            设备连接状态改变事件
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.NewConnectionStatusEventArgs.#ctor(Framework.Camera.EDeviceConnectionStatus)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="ConnectionStatus">连接状态</param>
+        </member>
+        <member name="P:Framework.Camera.NewConnectionStatusEventArgs.ConnectionStatus">
+            <summary>
+            设备连接状态
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.NewConnectionStatusEventArgs.ToString">
+            <summary>
+            字符串转换
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.Camera.DeviceInfo">
+            <summary>
+            设备参数
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.IPAddress">
+            <summary>
+            IP地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.SubnetMask">
+            <summary>
+            子网掩码
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.GatewayAddress">
+            <summary>
+            网关地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.MACAddress">
+            <summary>
+            MAC地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.AdapterMACAddress">
+            <summary>
+            网卡MAC
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.AdapterIPAddress">
+            <summary>
+            网卡IP
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.CameraID">
+            <summary>
+            相机ID
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.DeviceID">
+            <summary>
+            设备ID
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.InUse">
+            <summary>
+            使用标志
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.DisplayName">
+            <summary>
+            显示名称
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.Manufacturer">
+            <summary>
+            制造商
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.ModelName">
+            <summary>
+            型号
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.DeviceName">
+            <summary>
+            设备名
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.SerialNumber">
+            <summary>
+            序列号
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.DeviceInfo.DeviceType">
+            <summary>
+            设备
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.DeviceInfo.ToString">
+            <summary>
+            获取字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.Camera.ICamera">
+            <summary>
+            相机接口
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.ICamera.NewConnectionStatusEvent">
+            <summary>
+            连接状态改变事件
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.ICamera.NewImageEvent">
+            <summary>
+            图像采集完成事件
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.CameraHandle">
+            <summary>
+            相机操作句柄
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.Info">
+            <summary>
+            相机设备参数
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.Item(System.String)">
+            <summary>
+            节点参数索引器
+            </summary>
+            <param name="NodeName">节点名</param>
+            <returns>节点参数</returns>
+        </member>
+        <member name="P:Framework.Camera.ICamera.PixelFormatTypeEnum">
+            <summary>
+            像素格式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerModeEnum">
+            <summary>
+            触发模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerSourceEnum">
+            <summary>
+            触发源枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerActivationEnum">
+            <summary>
+            有效触发信号枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.AcquisitionModeEnum">
+            <summary>
+            采集模式枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.GainAutoContorlEnum">
+            <summary>
+            自动增益控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.ExposureAutoContorlEnum">
+            <summary>
+            自动曝光控制枚举列表
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.PixelFormat">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.Width">
+            <summary>
+            宽度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.Height">
+            <summary>
+            高度信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.ImageSize">
+            <summary>
+            图像尺寸
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerMode">
+            <summary>
+            触发模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerSource">
+            <summary>
+            触发源
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.TriggerActivation">
+            <summary>
+            有效触发信号(硬件)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.AcquisitionMode">
+            <summary>
+            采集模式
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.AcquisitionFrameCount">
+            <summary>
+            采集帧数量(多帧采集模式下有效)
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.ExposureTime">
+            <summary>
+            曝光值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.ExposureAuto">
+            <summary>
+            自动曝光
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.Gain">
+            <summary>
+            增益值
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.GainAuto">
+            <summary>
+            自动增益
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.IsOpen">
+            <summary>
+            相机打开/连接标志位
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ICamera.IsGrabbing">
+            <summary>
+            相机采集中标志位
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.ICamera.Connect">
+            <summary>
+            连接
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.ICamera.Connect(System.String)">
+            <summary>
+            连接
+            </summary>
+            <param name="serialNumber">序列号</param>
+            <returns>执行结果</returns>
+            <remarks>支持USB相机以及GIGE相机调用</remarks>
+        </member>
+        <member name="M:Framework.Camera.ICamera.Connect(System.Int32)">
+            <summary>
+            连接
+            </summary>
+            <param name="deviceID">设备ID</param>
+            <returns>执行结果</returns>
+            <remarks>支持USB相机调用</remarks>
+        </member>
+        <member name="M:Framework.Camera.ICamera.DisConnect">
+            <summary>
+            断开连接
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.ICamera.Grab">
+            <summary>
+            开始采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.ICamera.StopGrab">
+            <summary>
+            停止采集
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.ICamera.TriggerSoftware">
+            <summary>
+            软触发
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Camera.ICamera.GetDeviceList">
+            <summary>
+            获取相机设备列表
+            </summary>
+            <returns>设备列表</returns>
+        </member>
+        <member name="T:Framework.Camera.EAcquisitionMode">
+            <summary>
+            采集模式
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EAcquisitionMode.Continuous">
+            <summary>
+            连续采集
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EAcquisitionMode.SingleFrame">
+            <summary>
+            单帧采集
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EAcquisitionMode.MultiFrame">
+            <summary>
+            多帧采集
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EAcquisitionMode.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.EDeviceConnectionStatus">
+            <summary>
+            设备连接类型
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceConnectionStatus.Connected">
+            <summary>
+            相机已连接
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceConnectionStatus.Disconnected">
+            <summary>
+            相机已断开
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EDeviceConnectionStatus.LostControl">
+            <summary>
+            相机丢失(失去控制)
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.EExposureAutoContorl">
+            <summary>
+            自动曝光控制
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EExposureAutoContorl.Off">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EExposureAutoContorl.Once">
+            <summary>
+            单次执行
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EExposureAutoContorl.Continuous">
+            <summary>
+            连续执行
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EExposureAutoContorl.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.EGainAutoContorl">
+            <summary>
+            自动增益控制
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EGainAutoContorl.Off">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EGainAutoContorl.Once">
+            <summary>
+            单次执行
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EGainAutoContorl.Continuous">
+            <summary>
+            连续执行
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EGainAutoContorl.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.EPixelFormatType">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO8">
+            <summary>
+            GVSP_PIX_MONO8
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO8_SIGNED">
+            <summary>
+            GVSP_PIX_MONO8_SIGNED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR8">
+            <summary>
+            GVSP_PIX_BAYGR8
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG8">
+            <summary>
+            GVSP_PIX_BAYRG8
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB8">
+            <summary>
+            GVSP_PIX_BAYGB8
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG8">
+            <summary>
+            GVSP_PIX_BAYBG8
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_MONO10_PACKED">
+            <summary>
+            PFNC_PIX_MONO10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYBG10_PACKED">
+            <summary>
+            PFNC_PIX_BAYBG10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYGB10_PACKED">
+            <summary>
+            PFNC_PIX_BAYGB10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYGR10_PACKED">
+            <summary>
+            PFNC_PIX_BAYGR10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYRG10_PACKED">
+            <summary>
+            PFNC_PIX_BAYRG10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO10_PACKED">
+            <summary>
+            GVSP_PIX_MONO10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO12_PACKED">
+            <summary>
+            GVSP_PIX_MONO12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR10_PACKED">
+            <summary>
+            GVSP_PIX_BAYGR10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG10_PACKED">
+            <summary>
+            GVSP_PIX_BAYRG10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB10_PACKED">
+            <summary>
+            GVSP_PIX_BAYGB10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG10_PACKED">
+            <summary>
+            GVSP_PIX_BAYBG10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR12_PACKED">
+            <summary>
+            GVSP_PIX_BAYGR12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG12_PACKED">
+            <summary>
+            GVSP_PIX_BAYRG12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB12_PACKED">
+            <summary>
+            GVSP_PIX_BAYGB12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG12_PACKED">
+            <summary>
+            GVSP_PIX_BAYBG12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_MONO12_PACKED">
+            <summary>
+            PFNC_PIX_MONO12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYBG12_PACKED">
+            <summary>
+            PFNC_PIX_BAYBG12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYGB12_PACKED">
+            <summary>
+            PFNC_PIX_BAYGB12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYGR12_PACKED">
+            <summary>
+            PFNC_PIX_BAYGR12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BAYRG12_PACKED">
+            <summary>
+            PFNC_PIX_BAYRG12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO10">
+            <summary>
+            GVSP_PIX_MONO10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO12">
+            <summary>
+            GVSP_PIX_MONO12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO16">
+            <summary>
+            GVSP_PIX_MONO16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR10">
+            <summary>
+            GVSP_PIX_BAYGR10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG10">
+            <summary>
+            GVSP_PIX_BAYRG10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB10">
+            <summary>
+            GVSP_PIX_BAYGB10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG10">
+            <summary>
+            GVSP_PIX_BAYBG10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR12">
+            <summary>
+            GVSP_PIX_BAYGR12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG12">
+            <summary>
+            GVSP_PIX_BAYRG12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB12">
+            <summary>
+            GVSP_PIX_BAYGB12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG12">
+            <summary>
+            GVSP_PIX_BAYBG12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_MONO14">
+            <summary>
+            GVSP_PIX_MONO14
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGR16">
+            <summary>
+            GVSP_PIX_BAYGR16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYRG16">
+            <summary>
+            GVSP_PIX_BAYRG16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYGB16">
+            <summary>
+            GVSP_PIX_BAYGB16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BAYBG16">
+            <summary>
+            GVSP_PIX_BAYBG16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_YUV411_PACKED">
+            <summary>
+            GVSP_PIX_YUV411_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_YUV422_PACKED">
+            <summary>
+            GVSP_PIX_YUV422_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_YUV422_YUYV_PACKED">
+            <summary>
+            GVSP_PIX_YUV422_YUYV_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB8_PACKED">
+            <summary>
+            GVSP_PIX_RGB8_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BGR8_PACKED">
+            <summary>
+            GVSP_PIX_BGR8_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_YUV444_PACKED">
+            <summary>
+            GVSP_PIX_YUV444_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB8_PLANAR">
+            <summary>
+            GVSP_PIX_RGB8_PLANAR
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGR10_P">
+            <summary>
+            PFNC_PIX_BGR10_P
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGB10_P">
+            <summary>
+            PFNC_PIX_RGB10_P
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGBA8_PACKED">
+            <summary>
+            GVSP_PIX_RGBA8_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BGRA8_PACKED">
+            <summary>
+            GVSP_PIX_BGRA8_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB10V1_PACKED">
+            <summary>
+            GVSP_PIX_RGB10V1_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB10V2_PACKED">
+            <summary>
+            GVSP_PIX_RGB10V2_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB8A">
+            <summary>
+            GVSP_PIX_RGB8A
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB12V1_PACKED">
+            <summary>
+            GVSP_PIX_RGB12V1_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGR12_P">
+            <summary>
+            PFNC_PIX_BGR12_P
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGB12_P">
+            <summary>
+            PFNC_PIX_RGB12_P
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA10_PACKED">
+            <summary>
+            PFNC_PIX_BGRA10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA10_PACKED">
+            <summary>
+            PFNC_PIX_RGBA10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BGR16_PACKED_INTERNAL">
+            <summary>
+            GVSP_PIX_BGR16_PACKED_INTERNAL
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB10_PACKED">
+            <summary>
+            GVSP_PIX_RGB10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BGR10_PACKED">
+            <summary>
+            GVSP_PIX_BGR10_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB12_PACKED">
+            <summary>
+            GVSP_PIX_RGB12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_BGR12_PACKED">
+            <summary>
+            GVSP_PIX_BGR12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB10_PLANAR">
+            <summary>
+            GVSP_PIX_RGB10_PLANAR
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB12_PLANAR">
+            <summary>
+            GVSP_PIX_RGB12_PLANAR
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB16_PLANAR">
+            <summary>
+            GVSP_PIX_RGB16_PLANAR
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.GVSP_PIX_RGB16_PACKED">
+            <summary>
+            GVSP_PIX_RGB16_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA12_PACKED">
+            <summary>
+            PFNC_PIX_BGRA12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA12_PACKED">
+            <summary>
+            PFNC_PIX_RGBA12_PACKED
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA10">
+            <summary>
+            PFNC_PIX_BGRA10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA12">
+            <summary>
+            PFNC_PIX_BGRA12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA14">
+            <summary>
+            PFNC_PIX_BGRA14
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_BGRA16">
+            <summary>
+            PFNC_PIX_BGRA16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA10">
+            <summary>
+            PFNC_PIX_RGBA10
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA12">
+            <summary>
+            PFNC_PIX_RGBA12
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA14">
+            <summary>
+            PFNC_PIX_RGBA14
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.PFNC_PIX_RGBA16">
+            <summary>
+            PFNC_PIX_RGBA16
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.EPixelFormatType.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.ETriggerActivation">
+            <summary>
+            有效触发信号
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.RisingEdge">
+            <summary>
+            上升沿触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.FallingEdge">
+            <summary>
+            下降沿触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.LevelHigh">
+            <summary>
+            高电平触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.LevelLow">
+            <summary>
+            低电平触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.AnyEdge">
+            <summary>
+            任意边缘触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerActivation.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.ETriggerModeStatus">
+            <summary>
+            触发模式状态
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerModeStatus.Off">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerModeStatus.On">
+            <summary>
+            开启
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerModeStatus.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.ETriggerSource">
+            <summary>
+            触发源
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Software">
+            <summary>
+            软件触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line0">
+            <summary>
+            Line0触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line1">
+            <summary>
+            Line1触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line2">
+            <summary>
+            Line2触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line3">
+            <summary>
+            Line3触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line4">
+            <summary>
+            Line4触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line5">
+            <summary>
+            Line5触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line6">
+            <summary>
+            Line6触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line7">
+            <summary>
+            Line7触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line8">
+            <summary>
+            Line8触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line9">
+            <summary>
+            Line9触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Line10">
+            <summary>
+            Line10触发
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.ETriggerSource.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.IGigeDeviceInfo">
+            <summary>
+            Gige设备信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.SerialNumber">
+            <summary>
+            序列号
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.IPAddress">
+            <summary>
+            IP地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.SubnetMask">
+            <summary>
+            子网掩码
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.GatewayAddress">
+            <summary>
+            网关地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.MACAddress">
+            <summary>
+            MAC地址
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.AdapterMACAddress">
+            <summary>
+            网卡MAC
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IGigeDeviceInfo.AdapterIPAddress">
+            <summary>
+            网卡IP
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.IUSBDeviceInfo">
+            <summary>
+            USB设备信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IUSBDeviceInfo.CameraID">
+            <summary>
+            相机ID
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IUSBDeviceInfo.DeviceID">
+            <summary>
+            设备ID
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IUSBDeviceInfo.InUse">
+            <summary>
+            使用中标志
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IUSBDeviceInfo.SerialNumber">
+            <summary>
+            相机序列号
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.IUSBDeviceInfo.ModelName">
+            <summary>
+            型号
+            </summary>
+        </member>
+    </members>
+</doc>

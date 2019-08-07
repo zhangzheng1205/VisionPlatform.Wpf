@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Infrastructure.Logging.Log4Net</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Infrastructure.Logging.Log4Net.Log4Net">
+            <summary>
+            Log4Net 日志操作类
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.LoadConfigFile(System.String)">
+            <summary>
+            加载配置文件
+            </summary>
+            <param name="FileName">文件名</param>
+            <returns>加载结果</returns>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Log4Net.Log4Net.IsInfoEnabled">
+            <summary>
+            信息日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Log4Net.Log4Net.IsDebugEnabled">
+            <summary>
+            调试日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Log4Net.Log4Net.IsWarnEnabled">
+            <summary>
+            警告日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Log4Net.Log4Net.IsErrorEnabled">
+            <summary>
+            错误日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Log4Net.Log4Net.IsFatalEnabled">
+            <summary>
+            致命错误日志使能
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Info(System.Object)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Info(System.Object,System.Exception)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.InfoFormat(System.String,System.Object[])">
+            <summary>
+            信息
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Debug(System.Object)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Debug(System.Object,System.Exception)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.DebugFormat(System.String,System.Object[])">
+            <summary>
+            调试
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Warn(System.Object)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Warn(System.Object,System.Exception)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.WarnFormat(System.String,System.Object[])">
+            <summary>
+            警告
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Error(System.Object)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Error(System.Object,System.Exception)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.ErrorFormat(System.String,System.Object[])">
+            <summary>
+            错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Fatal(System.Object)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.Fatal(System.Object,System.Exception)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Log4Net.Log4Net.FatalFormat(System.String,System.Object[])">
+            <summary>
+            致命错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+    </members>
+</doc>

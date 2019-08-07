@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Vision.Halcon</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Vision.Halcon.Calibration">
+            <summary>
+            标定算子
+            </summary>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.CreateCalibMatrix(System.Double[],System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            创建标定矩阵
+            </summary>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.CreateCalibMatrix(System.Collections.Generic.List{Framework.Vision.CalibPointData},System.Double[]@,System.Double[]@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="calibPointList">标定数据列表</param>
+            <param name="matrix">标定矩阵</param>
+            <param name="invMatrix">逆标定矩阵</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.CreateCalibMatrix(Framework.Vision.CalibParam@)">
+            <summary>
+            计算标定矩阵
+            </summary>
+            <param name="param">标定参数</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.Calibrate(System.Double[],System.Double,System.Double,System.Double@,System.Double@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.Vision.Halcon.Calibration.Calibrate(System.Double[],System.Double[],System.Double[],System.Double[]@,System.Double[]@)">
+            <summary>
+            标定
+            </summary>
+            <param name="matrix">标定矩阵</param>
+            <param name="px">原始点X</param>
+            <param name="py">原始点Y</param>
+            <param name="qx">目标点位X</param>
+            <param name="qy">目标点位Y</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="T:Framework.Vision.Halcon.HalconVision">
+            <summary>
+            Halcon视觉算子
+            </summary>
+        </member>
+        <member name="P:Framework.Vision.Halcon.HalconVision.Calibration">
+            <summary>
+            标定接口
+            </summary>
+        </member>
+    </members>
+</doc>

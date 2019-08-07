@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Camera.UI.Winform</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Camera.UI.Winform.AdapterInfo">
+            <summary>
+            适配器信息
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.AdapterInfo.ToString">
+            <summary>
+            获取字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.AdapterHelper">
+            <summary>
+            适配器助手
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.AdapterHelper.GetAdapterInfoList">
+            <summary>
+            获取网卡信息
+            </summary>
+            <returns>网卡信息列表</returns>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.AdapterHelper.GetAdapterInfoByName(System.String)">
+            <summary>
+            通过网卡名获取网卡信息
+            </summary>
+            <param name="Name">网卡名</param>
+            <returns>网卡信息</returns>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.AdapterHelper.GetAdapterInfoByIP(System.Net.IPAddress)">
+            <summary>
+            通过IP地址获取网卡信息
+            </summary>
+            <param name="IPv4Address">IPv4地址</param>
+            <returns>网卡信息</returns>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.AdapterHelper.GetAdapterInfoByPhysicalAddress(System.String)">
+            <summary>
+            通过MAC地址获取网卡信息
+            </summary>
+            <param name="PhysicalAddress">物理地址</param>
+            <returns>网卡信息</returns>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.CameraControl">
+            <summary>
+            相机操作控件
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraControl.m_DeviceSelectionForm">
+            <summary>
+            设备选择窗口
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraControl.m_CameraParamForm">
+            <summary>
+            相机参数窗口
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraControl.m_CameraParamControl">
+            <summary>
+            相机参数控件
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.CameraControl_Load(System.Object,System.EventArgs)">
+            <summary>
+            界面加载事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.UpdateUI">
+            <summary>
+            更新UI
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.ConnectButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            连接相机
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.DisconnectButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            断开相机连接
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.PlayButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            开始采集
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.StopButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            停止采集
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.SoftTriggerButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            软触发
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.DeviceParamButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            打开相机参数
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.DeviceSelectionForm_SelectedCamera(System.Object,Framework.Camera.UI.Winform.SelectedCameraEventArgs)">
+            <summary>
+            相机选择事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.#ctor(Framework.Camera.ICamera)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Camera">相机操作接口</param>
+        </member>
+        <member name="P:Framework.Camera.UI.Winform.CameraControl.Camera">
+            <summary>
+            相机接口
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.UI.Winform.CameraControl.CameraConnectStatusChangedEvent">
+            <summary>
+            相机连接状态改变事件
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraControl.components">
+            <summary> 
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraControl.InitializeComponent">
+            <summary> 
+            设计器支持所需的方法 - 不要修改
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.CameraConnectStatusChangedEventArgs">
+            <summary>
+            设备连接状态改变事件
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraConnectStatusChangedEventArgs.#ctor(Framework.Camera.ICamera,System.Boolean)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Camera">相机接口</param>
+            <param name="IsConnect">连接状态</param>
+        </member>
+        <member name="P:Framework.Camera.UI.Winform.CameraConnectStatusChangedEventArgs.Camera">
+            <summary>
+            相机接口
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.UI.Winform.CameraConnectStatusChangedEventArgs.IsConnect">
+            <summary>
+            连接状态
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.CameraParamControl">
+            <summary>
+            相机参数控件
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraParamControl.m_Camera">
+            <summary>
+            相机接口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.#ctor(Framework.Camera.ICamera)">
+            <summary>
+            相机参数控件
+            </summary>
+            <param name="Camera">相机控制接口</param>
+        </member>
+        <member name="P:Framework.Camera.UI.Winform.CameraParamControl.CameraOpera">
+            <summary>
+            相机控制接口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.CameraParamControl_Load(System.Object,System.EventArgs)">
+            <summary>
+            控件加载
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.UpdateUI">
+            <summary>
+            更新UI
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.ReadCameraParam">
+            <summary>
+            读取相机参数
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.PixelFormatComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            像素格式
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.SoftTriggerButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            执行软触发
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.TriggerModeComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            触发模式
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.TriggerSourceComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            触发源
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.TriggerActivationComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            硬件触发
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.AcquisitionModeComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            采集模式
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.ExposureAutoComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            自动曝光
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.GainAutoComboBox_SelectionChangeCommitted(System.Object,System.EventArgs)">
+            <summary>
+            自动增益
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.WidthTextBox_KeyUp(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            改变宽度
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.HeihtTextBox_KeyUp(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            改变高度
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.AcquisitionFrameCountTextBox_KeyUp(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            改变采集帧数
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.ExposureTimeTextBox_KeyUp(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            改变曝光值
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.GainTextBox_KeyUp(System.Object,System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            改变增益值
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraParamControl.components">
+            <summary> 
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.Dispose(System.Boolean)">
+            <summary> 
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamControl.InitializeComponent">
+            <summary> 
+            设计器支持所需的方法 - 不要修改
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.CameraParamForm">
+            <summary>
+            相机参数窗口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamForm.#ctor">
+            <summary>
+            相机参数窗口
+            </summary>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.CameraParamForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.CameraParamForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.DeviceSelectionForm">
+            <summary>
+            设备选择窗口
+            </summary>
+            <summary>
+            设备选择窗体
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="E:Framework.Camera.UI.Winform.DeviceSelectionForm.SelectedCameraEvent">
+            <summary>
+            相机选择事件
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.UpdateAvailableDevices">
+            <summary>
+            更新可用设备
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.UpdateAdapterInfo(Framework.Camera.UI.Winform.AdapterInfo)">
+            <summary>
+            更新网卡信息
+            </summary>
+            <param name="Adapter"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.UpdateCameraInfo(Framework.Camera.DeviceInfo)">
+            <summary>
+            更新相机信息
+            </summary>
+            <param name="Camera"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.DeviceSelectionForm_Load(System.Object,System.EventArgs)">
+            <summary>
+            设备加载事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.AvailableDevicesTreeView_MouseDoubleClick(System.Object,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            鼠标双击事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.DeviceSelectionForm_FormClosing(System.Object,System.Windows.Forms.FormClosingEventArgs)">
+            <summary>
+            界面关闭事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.DeviceSelectionForm_VisibleChanged(System.Object,System.EventArgs)">
+            <summary>
+            控件有效性改变
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.AvailableDevicesTreeView_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
+            <summary>
+            选择控件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.UpdateButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            刷新列表
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.Show(Framework.Camera.ICamera)">
+            <summary>
+            显示界面
+            </summary>
+            <param name="CameraOpera">相机操作接口</param>
+        </member>
+        <member name="F:Framework.Camera.UI.Winform.DeviceSelectionForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.DeviceSelectionForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Framework.Camera.UI.Winform.SelectedCameraEventArgs">
+            <summary>
+            选择相机事件
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.UI.Winform.SelectedCameraEventArgs.#ctor(Framework.Camera.DeviceInfo)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Device">设备</param>
+        </member>
+        <member name="P:Framework.Camera.UI.Winform.SelectedCameraEventArgs.Device">
+            <summary>
+            设备连接状态
+            </summary>
+        </member>
+    </members>
+</doc>

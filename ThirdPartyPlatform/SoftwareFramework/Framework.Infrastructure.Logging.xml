@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.Infrastructure.Logging</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.Infrastructure.Logging.ILogging">
+            <summary>
+            通用日志接口
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.LoadConfigFile(System.String)">
+            <summary>
+            加载配置文件
+            </summary>
+            <param name="FileName">文件名</param>
+            <returns>加载结果</returns>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.ILogging.IsInfoEnabled">
+            <summary>
+            信息日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.ILogging.IsDebugEnabled">
+            <summary>
+            调试日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.ILogging.IsWarnEnabled">
+            <summary>
+            警告日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.ILogging.IsErrorEnabled">
+            <summary>
+            错误日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.ILogging.IsFatalEnabled">
+            <summary>
+            致命错误日志使能
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Info(System.Object)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Info(System.Object,System.Exception)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.InfoFormat(System.String,System.Object[])">
+            <summary>
+            信息
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Debug(System.Object)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Debug(System.Object,System.Exception)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.DebugFormat(System.String,System.Object[])">
+            <summary>
+            调试
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Warn(System.Object)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Warn(System.Object,System.Exception)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.WarnFormat(System.String,System.Object[])">
+            <summary>
+            警告
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Error(System.Object)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Error(System.Object,System.Exception)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.ErrorFormat(System.String,System.Object[])">
+            <summary>
+            错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Fatal(System.Object)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.Fatal(System.Object,System.Exception)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.ILogging.FatalFormat(System.String,System.Object[])">
+            <summary>
+            致命错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="T:Framework.Infrastructure.Logging.Logging">
+            <summary>
+            日志操作类
+            </summary>
+        </member>
+        <member name="F:Framework.Infrastructure.Logging.Logging.m_Log">
+            <summary>
+            日志接口
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Init(Framework.Infrastructure.Logging.ILogging)">
+            <summary>
+            初始化
+            </summary>
+            <param name="Log"></param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.LoadConfigFile(System.String)">
+            <summary>
+            加载配置文件
+            </summary>
+            <param name="FileName">配置文件</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Logging.IsInfoEnabled">
+            <summary>
+            信息日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Logging.IsDebugEnabled">
+            <summary>
+            调试日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Logging.IsWarnEnabled">
+            <summary>
+            警告日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Logging.IsErrorEnabled">
+            <summary>
+            错误日志使能
+            </summary>
+        </member>
+        <member name="P:Framework.Infrastructure.Logging.Logging.IsFatalEnabled">
+            <summary>
+            致命错误日志使能
+            </summary>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Info(System.Object)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Info(System.Object,System.Exception)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.InfoFormat(System.String,System.Object[])">
+            <summary>
+            信息
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Debug(System.Object)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Debug(System.Object,System.Exception)">
+            <summary>
+            调试
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.DebugFormat(System.String,System.Object[])">
+            <summary>
+            调试
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Warn(System.Object)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Warn(System.Object,System.Exception)">
+            <summary>
+            警告
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.WarnFormat(System.String,System.Object[])">
+            <summary>
+            警告
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Error(System.Object)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Error(System.Object,System.Exception)">
+            <summary>
+            错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.ErrorFormat(System.String,System.Object[])">
+            <summary>
+            错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Fatal(System.Object)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.Fatal(System.Object,System.Exception)">
+            <summary>
+            致命错误
+            </summary>
+            <param name="message">消息</param>
+            <param name="exception">异常</param>
+        </member>
+        <member name="M:Framework.Infrastructure.Logging.Logging.FatalFormat(System.String,System.Object[])">
+            <summary>
+            致命错误
+            </summary>
+            <param name="format">格式</param>
+            <param name="args">参数</param>
+        </member>
+    </members>
+</doc>

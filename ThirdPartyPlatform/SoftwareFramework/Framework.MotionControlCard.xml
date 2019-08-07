@@ -1,0 +1,858 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.MotionControlCard</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.MotionControlCard.DataType.ECoordinateSystemType">
+            <summary>
+            坐标系模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.ECoordinateSystemType.X_Y">
+            <summary>
+            2轴模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.ECoordinateSystemType.X_Y_Z">
+            <summary>
+            3轴模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.ECoordinateSystemType.X_Y_Z_U">
+            <summary>
+            4轴模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.ECoordinateSystemType.X_Y_Z_Yaw_Pitch_Roll">
+            <summary>
+            6轴模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.ECoordinateSystemType.Unknown">
+            <summary>
+            未知
+            </summary>
+        </member>
+        <member name="T:Framework.MotionControlCard.DataType.EErrCode">
+            <summary>
+            运动接口错误码
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.Normal">
+            <summary>
+            正常
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.Uninit">
+            <summary>
+            未初始化
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.ParamErr">
+            <summary>
+            参数错误
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.CmdErr">
+            <summary>
+            无效指令(此指令未实现)
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.TimeOut">
+            <summary>
+            超时
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.CannotConnect">
+            <summary>
+            无法与板卡连接
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.Busy">
+            <summary>
+            设备忙
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EErrCode.Unknown">
+            <summary>
+            未知错误
+            </summary>
+        </member>
+        <member name="T:Framework.MotionControlCard.DataType.EHomeMode">
+            <summary>
+            回零模式
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EHomeMode.Mode1">
+            <summary>
+            模式1: 单次回零
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EHomeMode.Mode2">
+            <summary>
+            模式2: 单次回零+回找
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.DataType.EHomeMode.Mode3">
+            <summary>
+            模式3: 两次回零
+            </summary>
+        </member>
+        <member name="T:Framework.MotionControlCard.DataType.Location">
+            <summary>
+            坐标系位置参数类
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.X">
+            <summary>
+            X坐标
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.Y">
+            <summary>
+            Y坐标
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.Z">
+            <summary>
+            Z坐标
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.Yaw">
+            <summary>
+            Yaw坐标
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.Pitch">
+            <summary>
+            Pitch坐标
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Location.Roll">
+            <summary>
+            Roll坐标(U轴)
+            </summary>
+        </member>
+        <member name="T:Framework.MotionControlCard.DataType.Profile">
+            <summary>
+            速度参数
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Profile.Speed">
+            <summary>
+            速度
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Profile.Accel">
+            <summary>
+            加速度
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Profile.Decel">
+            <summary>
+            减速度
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.DataType.Profile.IsWaitStop">
+            <summary>
+            等待停止标志
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.DataType.Profile.#ctor(System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Speed">速度</param>
+            <param name="Accel">加速度</param>
+        </member>
+        <member name="M:Framework.MotionControlCard.DataType.Profile.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Speed">速度</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+        </member>
+        <member name="M:Framework.MotionControlCard.DataType.Profile.#ctor(System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Speed">速度</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+            <param name="bIsWaitStop">等待停止</param>
+        </member>
+        <member name="T:Framework.MotionControlCard.Interface.IMotionCard">
+            <summary>
+            运动控制卡接口
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.Interface.IMotionCard.CardNO">
+            <summary>
+            当前板卡编号
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.Interface.IMotionCard.MaxAxisNum">
+            <summary>
+            最大轴数量
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.Interface.IMotionCard.IsInit">
+            <summary>
+            初始化标志
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.InitSystem">
+            <summary>
+            初始化系统
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.ResetSystem">
+            <summary>
+            复位系统
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.CloseSystem">
+            <summary>
+            关闭系统(释放资源)
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetVersion(System.String@)">
+            <summary>
+            查询固件版本
+            </summary>
+            <param name="Version">版本</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.TrapMove(System.Int32,System.Int32,System.Double,System.Double,System.Double)">
+            <summary>
+            点位运动(位置控制)
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="PulsePos">位置(单位:脉冲)</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.RelativeTrapMove(System.Int32,System.Int32,System.Double,System.Double,System.Double)">
+            <summary>
+            相对点位运动(位置控制)
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="PulsePos">位置(单位:脉冲)</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.JopMove(System.Int32,System.Int32,System.Double,System.Double,System.Double)">
+            <summary>
+            Jop运动(速度控制)
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Direction">方向,0-负,1-正</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.LineInterpolation(System.Int32,System.Int32[],System.Int32[],System.Double,System.Double,System.Double)">
+            <summary>
+            直线插补
+            </summary>
+            <param name="CrdNum">坐标系编号</param>
+            <param name="AxisList">轴编号</param>
+            <param name="PulsePosList">脉冲位置列表</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <param name="Accel">加速度时间</param>
+            <param name="Decel">减速度时间</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.ArcInterpolation(System.Int32,System.Int32[],System.Int32[],System.Int32[],System.Int32,System.Double,System.Double,System.Double)">
+            <summary>
+            圆弧插补
+            </summary>
+            <param name="CrdNum">坐标系编号</param>
+            <param name="AxisList">轴列表</param>
+            <param name="TargetPulsePosList">终点坐标(单位:脉冲)</param>
+            <param name="CenPulsePosList">圆心坐标</param>
+            <param name="ArcDir">圆弧方向:0-顺时针 1-逆时针</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <param name="Accel">加速度时间(单位:脉冲/S)</param>
+            <param name="Decel">减速度时间(预留)</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetCurSpeed(System.Int32,System.Double@)">
+            <summary>
+            获取当前速度
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Speed">速度(单位:脉冲/S)</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetCurPosition(System.Int32,System.Int32@)">
+            <summary>
+            获取当前轴位置
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="PulsePos">位置(单位:脉冲)</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.CheckMoving(System.Int32,System.Boolean@)">
+            <summary>
+            判断运动是否停止
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="IsMoving">运动标志</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.CheckMoving(System.Boolean@)">
+            <summary>
+            判断所有轴的运动是否停止
+            </summary>
+            <param name="IsMoving">运动标志</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.StopAxis(System.Int32)">
+            <summary>
+            停止单轴
+            </summary>
+            <param name="Axis">轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.StopAllAxis">
+            <summary>
+            停止所有轴
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.EStopAxis(System.Int32)">
+            <summary>
+            急停单轴
+            </summary>
+            <param name="Axis">轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.EStopAllAxis">
+            <summary>
+            急停所有轴
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.SetOutputState(System.Int32,System.Boolean)">
+            <summary>
+            设置输出IO状态
+            </summary>
+            <param name="Index">IO索引</param>
+            <param name="IsOpen">开启状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetOutputState(System.Int32,System.Boolean@)">
+            <summary>
+            获取输出IO状态
+            </summary>
+            <param name="Index">IO索引</param>
+            <param name="IsOpen">开启状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetInputState(System.Int32,System.Boolean@)">
+            <summary>
+            获取输入IO状态
+            </summary>
+            <param name="Index">索引</param>
+            <param name="IsOpen">是否开启</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.SetDAEnable(System.Boolean)">
+            <summary>
+            设置AD使能状态
+            </summary>
+            <param name="IsEnable">使能状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetDAEnable(System.Boolean@)">
+            <summary>
+            获取AD使能状态
+            </summary>
+            <param name="IsEnable">使能状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetADValue(System.Int32,System.Double@)">
+            <summary>
+            获取AD值
+            </summary>
+            <param name="Channal">AD通道</param>
+            <param name="ADValue">AD值</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.SetDAValue(System.Int32,System.Double@)">
+            <summary>
+            设置DA值
+            </summary>
+            <param name="Channal">DA通道</param>
+            <param name="DAValue">DA值</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.GetDAValue(System.Int32,System.Double@)">
+            <summary>
+            获取DA值
+            </summary>
+            <param name="Channal">DA通道</param>
+            <param name="DAValue">DA值</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.SetHomeMode(System.Int32,System.Int32,System.Int32,Framework.MotionControlCard.DataType.EHomeMode)">
+            <summary>
+            设置回零模式
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Logic">电平逻辑 0-低电平有效 1-高电平有效</param>
+            <param name="Direction">方向 0-负向 1-正向</param>
+            <param name="HomeMode">回零模式</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.Interface.IMotionCard.Home(System.Int32)">
+            <summary>
+            单轴回零
+            </summary>
+            <param name="Axis">轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="T:Framework.MotionControlCard.MotionControl">
+            <summary>
+            运动控制接口
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_Card">
+            <summary>
+            控制卡接口
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_AxisPulseEqui">
+            <summary>
+            脉冲当量
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetPulseProfile(System.Int32,Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            获取脉冲速度
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Prof">速度</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetPulseProfile(System.Int32,System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            获取脉冲速度
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Speed">速度</param>
+            <param name="Accel">加速度</param>
+            <param name="Decel">减速度</param>
+            <param name="IsWaitStop">等待运动停止标志位</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetPulsePos(System.Int32,System.Double)">
+            <summary>
+            获取脉冲位置
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Pos">点位</param>
+            <returns>脉冲位置</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetPulseLocation(Framework.MotionControlCard.DataType.Location)">
+            <summary>
+            获取脉冲位置
+            </summary>
+            <param name="Loc">物理位置</param>
+            <returns>脉冲位置</returns>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_MotionStatusMonitorLock">
+            <summary>
+            现场锁
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_MotionStatusMonitorThread">
+            <summary>
+            运动状态监控线程
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.DetectMotionStopState">
+            <summary>
+            检测运动停止状态
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.StopDetectMotionState">
+            <summary>
+            停止检测运动状态
+            </summary>
+            <returns>错误码</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.TriggerStartMotionEvent(System.Boolean)">
+            <summary>
+            触发运动开始事件
+            </summary>
+            <param name="IsForce">强制标志位,false-如果当前为停止,则触发运动开始事件,否则不触发; true-不管当前的运动状态,触发事件</param>
+            <returns>错误码</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.TriggerStopMotionEvent(System.Boolean)">
+            <summary>
+            触发运动停止事件
+            </summary>
+            <param name="bSync">
+            同步标志,
+                true-阻塞等待运动停止并触发相关事件 
+                false-建立线程去检测运动停止并触发相关事件 
+            </param>
+            <returns>错误码</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.#ctor(Framework.MotionControlCard.Interface.IMotionCard)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="Card"></param>
+        </member>
+        <member name="E:Framework.MotionControlCard.MotionControl.StartMotionEvent">
+            <summary>
+            开始运动事件
+            </summary>
+        </member>
+        <member name="E:Framework.MotionControlCard.MotionControl.StopMotionEvent">
+            <summary>
+            停止运动事件
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.MotionControl.MaxAxisNum">
+            <summary>
+            最大轴数量
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.MotionControl.IsInit">
+            <summary>
+            初始化标志
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.InitSystem">
+            <summary>
+            初始化系统
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.ResetSystem">
+            <summary>
+            复位系统
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.CloseSystem">
+            <summary>
+            关闭系统(释放资源)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetVersion(System.String@)">
+            <summary>
+            查询固件版本
+            </summary>
+            <param name="Version"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetOutputState(System.Int32,System.Boolean)">
+            <summary>
+            设置输出IO状态
+            </summary>
+            <param name="Index"></param>
+            <param name="IsOpen"></param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetOutputState(System.Int32,System.Boolean@)">
+            <summary>
+            获取输出IO状态
+            </summary>
+            <param name="Index"></param>
+            <param name="IsOpen"></param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetInputState(System.Int32,System.Boolean@)">
+            <summary>
+            获取输入IO状态
+            </summary>
+            <param name="Index">索引</param>
+            <param name="IsOpen">是否开启</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetDAEnable(System.Boolean)">
+            <summary>
+            设置AD使能状态
+            </summary>
+            <param name="IsEnable">使能状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetDAEnable(System.Boolean@)">
+            <summary>
+            获取AD使能状态
+            </summary>
+            <param name="IsEnable">使能状态</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetADValue(System.Int32,System.Double@)">
+            <summary>
+            获取AD值
+            </summary>
+            <param name="Channal">AD通道</param>
+            <param name="ADValue">AD值</param>
+            <returns>错误码</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetDAValue(System.Int32,System.Double@)">
+            <summary>
+            设置DA值
+            </summary>
+            <param name="Channal">DA通道</param>
+            <param name="DAValue">DA值</param>
+            <returns>错误码</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.GetDAValue(System.Int32,System.Double@)">
+            <summary>
+            获取DA值
+            </summary>
+            <param name="Channal">DA通道</param>
+            <param name="DAValue">DA值</param>
+            <returns>错误码</returns>
+        </member>
+        <member name="P:Framework.MotionControlCard.MotionControl.AxisPulseEqui">
+            <summary>
+            脉冲当量(单位: mm/pulse)
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.CheckMoving(System.Int32,System.Boolean@)">
+            <summary>
+            检测单轴运动状态(带互斥锁)
+            </summary>
+            <param name="Axis"></param>
+            <param name="IsMoving"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.CheckMoving(System.Boolean@)">
+            <summary>
+            检测运动状态(带互斥锁)
+            </summary>
+            <param name="IsMoving"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.WaitStop(System.Int32)">
+            <summary>
+            等待轴停止
+            </summary>
+            <param name="Axis">轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.WaitStop">
+            <summary>
+            等待轴停止
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetHomeMode(System.Int32,System.Int32,System.Int32,Framework.MotionControlCard.DataType.EHomeMode)">
+            <summary>
+            设置回零模式
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Logic">电平逻辑 0-低电平有效 1-高电平有效</param>
+            <param name="Direction">方向 0-负向 1-正向</param>
+            <param name="HomeMode">回零模式</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.Home(System.Int32)">
+            <summary>
+            单轴回零
+            </summary>
+            <param name="Axis">轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveAxis(System.Int32,System.Double,System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            单轴运动指令
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Pos">点位(单位:mm)</param>
+            <param name="Speed">速度(单位:mm/ms)</param>
+            <param name="Accel">加速度(单位:mm/(ms*ms))</param>
+            <param name="Decel">减速度(单位:mm/(ms*ms))</param>
+            <param name="IsWaitStop">等待停止标志</param>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveAxis(System.Int32,System.Double,Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            单轴运动指令
+            </summary>
+            <param name="Axis">轴</param>
+            <param name="Pos">点位(单位:mm)</param>
+            <param name="Prof">速度参数</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveMultiAxis(System.Int32,System.Int32[],System.Double[],System.Double[],System.Double[],System.Double[],System.Boolean)">
+            <summary>
+            多轴运动
+            </summary>
+            <param name="AxisCount">轴数量</param>
+            <param name="AxisList">轴列表</param>
+            <param name="PosList">点位列表(单位:mm)</param>
+            <param name="SpeedList">速度列表(单位:mm/ms)</param>
+            <param name="AccelList">加速度列表(单位:mm/(ms*ms))</param>
+            <param name="DecelList">减速度列表(单位:mm/(ms*ms))</param>
+            <param name="IsWaitStop">等待停止标志</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveMultiAxis(System.Int32,System.Int32[],System.Double[],System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            多轴运动
+            </summary>
+            <param name="AxisCount">轴数量</param>
+            <param name="AxisList">轴列表</param>
+            <param name="PosList">点位列表(单位:mm)</param>
+            <param name="Speed">速度(单位:mm/ms)</param>
+            <param name="Accel">加速度(单位:mm/(ms*ms))</param>
+            <param name="Decel">减速度(单位:mm/(ms*ms))</param>
+            <param name="IsWaitStop">等待停止标志</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveMultiAxis(System.Int32,System.Int32[],System.Double[],Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            多轴运动
+            </summary>
+            <param name="AxisCount">轴数量</param>
+            <param name="AxisList">轴列表</param>
+            <param name="PosList">点位列表(单位:mm)</param>
+            <param name="Prof">速度参数</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.MoveMultiAxis(System.Int32,System.Int32[],System.Double[],Framework.MotionControlCard.DataType.Profile[])">
+            <summary>
+            多轴运动
+            </summary>
+            <param name="AxisCount">轴数量</param>
+            <param name="AxisList">轴列表</param>
+            <param name="PosList">点位列表(单位:mm)</param>
+            <param name="ProfArray">速度列表(单位:mm/ms)</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_XAxis">
+            <summary>
+            X坐标轴编号
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_YAxis">
+            <summary>
+            Y坐标轴编号
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_ZAxis">
+            <summary>
+            Z坐标轴编号
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_YawAxis">
+            <summary>
+            Yaw轴编号
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_PitchAxis">
+            <summary>
+            Pitch轴编号
+            </summary>
+        </member>
+        <member name="F:Framework.MotionControlCard.MotionControl.m_RollAxis">
+            <summary>
+            Roll轴编号
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.MotionControl.CoordinateValidFlag">
+            <summary>
+            坐标系有效标志
+            </summary>
+        </member>
+        <member name="P:Framework.MotionControlCard.MotionControl.CoordinateSystemType">
+            <summary>
+            坐标系类型
+            </summary>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetCoordinateSystem(System.Int32,System.Int32)">
+            <summary>
+            设置笛卡尔坐标系参数
+            </summary>
+            <param name="XAxis">X轴</param>
+            <param name="YAxis">Y轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetCoordinateSystem(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            设置笛卡尔坐标系参数
+            </summary>
+            <param name="XAxis">X轴</param>
+            <param name="YAxis">Y轴</param>
+            <param name="ZAxis">Z轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetCoordinateSystem(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            设置笛卡尔坐标系参数
+            </summary>
+            <param name="XAxis">X轴</param>
+            <param name="YAxis">Y轴</param>
+            <param name="ZAxis">Z轴</param>
+            <param name="UAxis">U轴</param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.SetCoordinateSystem(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            设置笛卡尔坐标系参数
+            </summary>
+            <param name="XAxis">X轴</param>
+            <param name="YAxis">Y轴</param>
+            <param name="ZAxis">Z轴</param>
+            <param name="YawAxis">Yaw轴</param>
+            <param name="PitchAxis">Pitch轴</param>
+            <param name="RollAxis">Roll轴</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.ClearCoordinateSystem">
+            <summary>
+            清除坐标系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.LineInterpolation(Framework.MotionControlCard.DataType.Location,Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            直线插补运动
+            </summary>
+            <param name="Loc">目标点位(单位:mm)</param>
+            <param name="Prof">速度</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.Move(Framework.MotionControlCard.DataType.Location,Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            Move运动
+            </summary>
+            <param name="Loc">移动目标(笛卡尔坐标)</param>
+            <param name="Prof">运动参数</param>
+            <returns>错误码</returns>
+            注: 本接口仅笛卡尔坐标有效时才可用;
+        </member>
+        <member name="M:Framework.MotionControlCard.MotionControl.Jump(Framework.MotionControlCard.DataType.Location,System.Double,Framework.MotionControlCard.DataType.Profile)">
+            <summary>
+            Jump运动(阻塞性)
+            </summary>
+            <param name="Loc">跳转目标</param>
+            <param name="dLimZ">安全位置(Z轴)</param>
+            <param name="Prof">运动参数</param>
+            <returns>错误码</returns>
+            注1: 本接口仅笛卡尔坐标有效且为3轴/4轴模式时才可用;
+            注2: 此接口为阻塞性接口,而无论Prof中的等待停止位置是否为true;
+            
+        </member>
+    </members>
+</doc>
