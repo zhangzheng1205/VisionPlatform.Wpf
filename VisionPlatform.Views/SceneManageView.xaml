@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="VisionPlatform.Views.SceneManageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VisionPlatform.Views"
+             mc:Ignorable="d" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource DefaultFont}"
+             d:DesignHeight="600" d:DesignWidth="400"  Height="Auto" Width="Auto" MinHeight="600" MinWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" >
+            <Grid Margin="0,15,0,0">
+                <ListView x:Name="CameraListView" ItemsSource="{Binding CameraList}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="相机列表" Width="{Binding ElementName=col1, Path=ActualWidth}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button cal:Message.Attach="DeleteCamera" MinWidth="60" Panel.ZIndex="1" Margin="0, 10, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top">删除</Button>
+                <Button cal:Message.Attach="AddCamera" MinWidth="60" Panel.ZIndex="1" Margin="0, 10, 80, 0" HorizontalAlignment="Right" VerticalAlignment="Top">添加</Button>
+            </Grid>
+
+            <Grid Margin="0,15,0,0">
+                <ListView x:Name="SceneListView" ItemsSource="{Binding CameraList}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="场景列表" Width="{Binding ElementName=col1, Path=ActualWidth}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button MinWidth="60" Panel.ZIndex="1" Margin="0, 10, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top">删除</Button>
+                <Button MinWidth="60" Panel.ZIndex="1" Margin="0, 10, 80, 0" HorizontalAlignment="Right" VerticalAlignment="Top">修改</Button>
+                <Button MinWidth="60" Panel.ZIndex="1" Margin="0, 10, 150, 0" HorizontalAlignment="Right" VerticalAlignment="Top">添加</Button>
+            </Grid>
+
+            <StackPanel Height="15"/>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

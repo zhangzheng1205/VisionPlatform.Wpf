@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="VisionPlatform.Views.CameraConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VisionPlatform.Views"
+             mc:Ignorable="d" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource DefaultFont}"
+             d:DesignHeight="600" d:DesignWidth="300"  Height="Auto" Width="Auto" MinHeight="480" MinWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" >
+            <StackPanel Height="10"/>
+            <DockPanel LastChildFill="True">
+                <TextBox x:Name="CameraNameTextBox" Text="{Binding CameraName}" Margin="0,3" TextWrapping="Wrap" Height="Auto" IsReadOnly="True"
+                         materialDesign:HintAssist.Hint="相机" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+            </DockPanel>
+            <StackPanel Height="10"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="PixelFormatToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsPixelFormatEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <ComboBox x:Name="PixelFormatComboBox" 
+                          materialDesign:HintAssist.Hint="像素类型"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          IsEnabled="{Binding IsPixelFormatEnable}"
+                          ItemsSource="{Binding PixelFormatList}"
+                          SelectedItem="{Binding  PixelFormat}"/>
+            </DockPanel >
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="WidthToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsWidthEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[宽度]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <TextBox x:Name="WidthTextBox"  Height="Auto" 
+                         materialDesign:HintAssist.Hint="宽度" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         KeyUp="WidthTextBox_KeyUp"
+                         IsEnabled="{Binding IsWidthEnable}"
+                         Text="{Binding Width}"/>
+            </DockPanel >
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="HeihtToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsHeihtEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[高度]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <TextBox x:Name="HeihtTextBox" Height="Auto" 
+                         materialDesign:HintAssist.Hint="高度" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         KeyUp="HeihtTextBox_KeyUp"
+                         IsEnabled="{Binding IsHeihtEnable}"
+                         Text="{Binding Height}"/>
+            </DockPanel >
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="TriggerModeToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsTriggerModeEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <ComboBox x:Name="TriggerModeComboBox" 
+                          materialDesign:HintAssist.Hint="触发模式"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          IsEnabled="{Binding IsTriggerModeEnable}"
+                          ItemsSource="{Binding TriggerModeList}"
+                          SelectedItem="{Binding TriggerMode}"/>
+            </DockPanel >
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="TriggerSourceToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsTriggerSourceEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <ComboBox x:Name="TriggerSourceComboBox" 
+                          materialDesign:HintAssist.Hint="触发源"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          IsEnabled="{Binding IsTriggerSourceEnable}"
+                          ItemsSource="{Binding TriggerSourceList}"
+                          SelectedItem="{Binding TriggerSource}"/>
+            </DockPanel>
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="TriggerActivationToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsTriggerActivationEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <ComboBox x:Name="TriggerActivationComboBox" 
+                          materialDesign:HintAssist.Hint="硬件触发"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          IsEnabled="{Binding IsTriggerActivationEnable}"
+                          ItemsSource="{Binding TriggerActivationList}"
+                          SelectedItem="{Binding TriggerActivation}"/>
+            </DockPanel>
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="ExposureTimeToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsExposureTimeEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <TextBox x:Name="ExposureTimeTextBox" Height="Auto" 
+                         materialDesign:HintAssist.Hint="曝光值" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         KeyUp="ExposureTimeTextBox_KeyUp"
+                         IsEnabled="{Binding IsExposureTimeEnable}"
+                         Text="{Binding ExposureTime}"/>
+            </DockPanel>
+            <StackPanel Height="5"/>
+            <DockPanel LastChildFill="True">
+                <ToggleButton x:Name="GainToggleButton" Visibility="{Binding ToggleButtonVisibility}" IsChecked="{Binding IsGainEnable}" Margin="0" Style="{StaticResource MaterialDesignSwitchToggleButton}"  ToolTip="使能/禁止[像素类型]选项"/>
+                <StackPanel Width="10"></StackPanel>
+                <TextBox x:Name="GainTextBox" Height="Auto" 
+                         materialDesign:HintAssist.Hint="增益" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         KeyUp="GainTextBox_KeyUp"
+                         IsEnabled="{Binding IsGainEnable}"
+                         Text="{Binding Gain}"/>
+            </DockPanel>
+            <StackPanel Height="10"/>
+            <DockPanel >
+                <Button cal:Message.Attach="AcceptCameraConfig" Content="确认" ToolTip="保存当前配置到配置文件" Margin="10,0,0,0" DockPanel.Dock="Right"/>
+                <Button cal:Message.Attach="TriggerSoftware" Content="软触发" ToolTip="产生一次软触发" Margin="10,0,0,0" DockPanel.Dock="Right"/>
+                <Button x:Name="ResetOrSelectAllButton" cal:Message.Attach="ResetOrSelectAll" Visibility="{Binding ToggleButtonVisibility}" Content="全选/全不选" ToolTip="对相机配置项的有效性进行全选/全不选" DockPanel.Dock="Right"/>
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

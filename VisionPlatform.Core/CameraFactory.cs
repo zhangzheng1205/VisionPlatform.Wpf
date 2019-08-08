@@ -247,7 +247,7 @@ namespace VisionPlatform.Core
                 camera.TriggerMode = ETriggerModeStatus.On;
                 camera.TriggerSource = ETriggerSource.Software;
 
-                if (camera.PixelFormatTypeEnum.Contains(EPixelFormatType.GVSP_PIX_MONO8))
+                if (camera.PixelFormatTypeEnum?.Contains(EPixelFormatType.GVSP_PIX_MONO8) == true)
                 {
                     camera.PixelFormat = EPixelFormatType.GVSP_PIX_MONO8;
                 }

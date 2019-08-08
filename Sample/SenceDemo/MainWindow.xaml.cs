@@ -31,7 +31,7 @@ namespace SenceDemo
             {
                 CameraFactory.CameraAssemblyName = "VirtualCamera";
             }
-            CameraFactory.CameraAssemblyName = "Hik";
+
         }
 
 
@@ -55,7 +55,8 @@ namespace SenceDemo
                 else
                 {
                     string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
-                    string serial = @"00575388468";
+                    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
+                    //string serial = @"00575388468";
                     scene = new Scene("显示图片", "HalconVisionFrame", dllFile, serial);
                 }
 
