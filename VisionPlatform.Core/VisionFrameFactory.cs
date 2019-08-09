@@ -22,11 +22,6 @@ namespace VisionPlatform.Core
         /// </summary>
         public static string VisionFrameDllRootPath { get; } = "VisionPlatform/VisionFrame";
 
-        ///// <summary>
-        ///// Dll名
-        ///// </summary>
-        //public static List<string> DllNames { get; private set; } = new List<string>();
-
         /// <summary>
         /// 视觉平台集合字典
         /// </summary>
@@ -45,7 +40,6 @@ namespace VisionPlatform.Core
         /// </summary>
         public static void UpdateAssembly()
         {
-            //DllNames.Clear();
             VisionFrameAssemblys.Clear();
 
             //遍历目录
@@ -107,32 +101,6 @@ namespace VisionPlatform.Core
             }
         }
 
-    }
-
-    /// <summary>
-    /// 视觉平台枚举
-    /// </summary>
-    public enum EVisionFrame
-    {
-        /// <summary>
-        /// Halcon平台
-        /// </summary>
-        Halcon,
-
-        /// <summary>
-        /// VisionPro平台
-        /// </summary>
-        VisionPro,
-
-        /// <summary>
-        /// NIVision平台
-        /// </summary>
-        NIVision,
-
-        /// <summary>
-        /// 未知
-        /// </summary>
-        Unknown,
     }
 
 }

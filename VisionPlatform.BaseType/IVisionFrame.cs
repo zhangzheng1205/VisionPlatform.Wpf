@@ -13,9 +13,9 @@ namespace VisionPlatform.BaseType
         #region 属性
 
         /// <summary>
-        /// 视觉框架名
+        /// 视觉框架
         /// </summary>
-        string Name { get; }
+        EVisionFrame EVisionFrame { get; }
 
         /// <summary>
         /// 视觉算子接口

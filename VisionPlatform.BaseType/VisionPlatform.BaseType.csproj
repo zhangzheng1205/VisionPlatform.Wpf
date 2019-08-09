@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EVisionFrame.cs" />
     <Compile Include="EVisionOperaFileType.cs" />
     <Compile Include="ItemBase.cs" />
     <Compile Include="ItemCollection.cs" />

@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionPlatform.Views", "Vis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionPlatform.ViewModels", "VisionPlatform.ViewModels\VisionPlatform.ViewModels.csproj", "{0DEF1E8A-8D52-4081-84CB-AF17F4163F7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionPlatform.VisionProVisionFrame", "VisionPlatform.VisionFrame\VisionPlatform.VisionProVisionFrame\VisionPlatform.VisionProVisionFrame.csproj", "{921CD44F-D491-4A0D-8623-2C68F9C16959}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{0DEF1E8A-8D52-4081-84CB-AF17F4163F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DEF1E8A-8D52-4081-84CB-AF17F4163F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DEF1E8A-8D52-4081-84CB-AF17F4163F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921CD44F-D491-4A0D-8623-2C68F9C16959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921CD44F-D491-4A0D-8623-2C68F9C16959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921CD44F-D491-4A0D-8623-2C68F9C16959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921CD44F-D491-4A0D-8623-2C68F9C16959}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{6C974688-AE41-4197-AA0F-847301B108AD} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 		{35266A0D-3760-43FD-B023-3832382A6A1A} = {4AC99A33-CEED-4C72-A72A-0EF744579B50}
 		{16B4B5BD-6C4A-475E-97A9-43B61A204254} = {4AC99A33-CEED-4C72-A72A-0EF744579B50}
+		{921CD44F-D491-4A0D-8623-2C68F9C16959} = {1B2A17D6-9F0F-4BA5-930A-84CDEE2C0137}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EC6FD06-F01F-434E-B785-2BA965A5BD61}
