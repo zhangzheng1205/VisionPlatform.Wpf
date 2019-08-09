@@ -30,7 +30,7 @@ namespace VisionPlatform.ViewModels
         /// <summary>
         /// 配置参数
         /// </summary>
-        public Dictionary<string, object> ConfigParams { get; set; }
+        public Dictionary<string, object> ConfigParams { get; }
 
         /// <summary>
         /// 文件路径

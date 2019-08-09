@@ -34,19 +34,14 @@
             相机采集完成事件
             </summary>
         </member>
-        <member name="F:Framework.Camera.NewImageEventArgs.m_ImageBuff">
+        <member name="P:Framework.Camera.NewImageEventArgs.ImageInfo">
             <summary>
-            图像像素数组
-            </summary>
-        </member>
-        <member name="F:Framework.Camera.NewImageEventArgs.DisposeImageIntPtr">
-            <summary>
-            释放图像资源
+            图像信息
             </summary>
         </member>
         <member name="M:Framework.Camera.NewImageEventArgs.#ctor(System.IntPtr,System.Int32,System.Int32,System.Int32,Framework.Camera.EPixelFormatType,System.Action{System.IntPtr})">
             <summary>
-            构造函数
+            创建NewImageEventArgs新实例
             </summary>
             <param name="ImagePtr">图像指针</param>
             <param name="ImageSize">图像尺寸</param>
@@ -55,39 +50,15 @@
             <param name="PixelFormat">像素格式</param>
             <param name="DisposeImageIntPtr">资源释放接口</param>
         </member>
+        <member name="M:Framework.Camera.NewImageEventArgs.#ctor(Framework.Camera.ImageInfo)">
+            <summary>
+            创建NewImageEventArgs新实例
+            </summary>
+            <param name="imageInfo">图像信息</param>
+        </member>
         <member name="M:Framework.Camera.NewImageEventArgs.DisposeImage">
             <summary>
             释放图像资源
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.ImagePtr">
-            <summary>
-            图像缓冲区指针
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.ImageBuff">
-            <summary>
-            图像像素数组
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.ImageSize">
-            <summary>
-            图像尺寸(字节数)
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.Width">
-            <summary>
-            图像宽度
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.Height">
-            <summary>
-            图像高度
-            </summary>
-        </member>
-        <member name="P:Framework.Camera.NewImageEventArgs.PixelFormat">
-            <summary>
-            像素类型
             </summary>
         </member>
         <member name="M:Framework.Camera.NewImageEventArgs.ToString">
@@ -117,6 +88,46 @@
             字符串转换
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Framework.Camera.ImageInfo">
+            <summary>
+            图像信息
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ImageInfo.ImagePtr">
+            <summary>
+            图像缓冲区指针
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ImageInfo.Width">
+            <summary>
+            图像宽度
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ImageInfo.Height">
+            <summary>
+            图像高度
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ImageInfo.PixelFormat">
+            <summary>
+            像素类型
+            </summary>
+        </member>
+        <member name="P:Framework.Camera.ImageInfo.DisposeImageIntPtr">
+            <summary>
+            释放图像缓冲区指针接口
+            </summary>
+        </member>
+        <member name="M:Framework.Camera.ImageInfo.#ctor(System.IntPtr,System.Int32,System.Int32,Framework.Camera.EPixelFormatType,System.Action{System.IntPtr})">
+            <summary>
+            创建ImageInfo新实例
+            </summary>
+            <param name="imagePtr">图像指针</param>
+            <param name="width">高度</param>
+            <param name="height">宽度</param>
+            <param name="pixelFormat">像素格式</param>
+            <param name="disposeImageIntPtr">资源释放接口</param>
         </member>
         <member name="T:Framework.Camera.DeviceInfo">
             <summary>

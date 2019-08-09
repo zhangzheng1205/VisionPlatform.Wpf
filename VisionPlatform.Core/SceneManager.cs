@@ -19,10 +19,14 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 注册场景
         /// </summary>
-        /// <param name="sceneName">场景名称</param>
         /// <param name="scene">场景</param>
         public void RegisterScene(Scene scene)
         {
+            if (scene == null)
+            {
+                throw new ArgumentNullException("scene cannot be null");
+            }
+
             try
             {
                 if (!Scenes.ContainsKey(scene.Name))
@@ -33,7 +37,6 @@ namespace VisionPlatform.Core
             }
             catch (Exception)
             {
-                //Logging.Error($"{ToString()} 注册场景{sceneName}失败", ex);
                 throw;
             }
 
@@ -85,12 +88,6 @@ namespace VisionPlatform.Core
                 //Logging.Error($"{ToString()} 复位场景列表异常", ex);
                 throw;
             }
-        }
-
-
-        public void 恢复场景列表(string configFile)
-        {
-
         }
 
     }

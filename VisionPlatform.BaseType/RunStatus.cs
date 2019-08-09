@@ -8,9 +8,14 @@ namespace VisionPlatform.BaseType
     public class RunStatus
     {
         /// <summary>
-        /// 处理时间(单位:MS)
+        /// 核心算法执行时间(单位:MS)
         /// </summary>
-        public double ProcessingTime { get; } = 0;
+        public double ProcessingTime { get; set; } = 0;
+
+        /// <summary>
+        /// 总执行时间(包括图像/相机采集等时间 单位:MS)
+        /// </summary>
+        public double TotalTime { get; set; }
 
         /// <summary>
         /// 执行结果

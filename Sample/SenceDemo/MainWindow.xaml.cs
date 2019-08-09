@@ -34,7 +34,6 @@ namespace SenceDemo
 
         }
 
-
         private Scene scene;
 
         /// <summary>
@@ -48,8 +47,6 @@ namespace SenceDemo
             {
                 scene?.Dispose();
 
-                scene = Scene.Deserialize("1.json");
-
                 if (File.Exists("查找5边型.json"))
                 {
                     scene = Scene.Deserialize("查找5边型.json");
@@ -59,7 +56,7 @@ namespace SenceDemo
                     string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
                     string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
                     //string serial = @"00575388468";
-                    scene = new Scene("查找5边型", "HalconVisionFrame", dllFile, serial);
+                    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
                 }
 
                 if (scene?.IsInit == true)
@@ -85,15 +82,15 @@ namespace SenceDemo
         /// <param name="e"></param>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var ofd = new Microsoft.Win32.OpenFileDialog();
-
-            //ofd.DefaultExt = ".xml";
-            ofd.Filter = "图像文件|*.bmp;*.png;*.jpg;*.jpgtif;*.tiff;*.giff;*.bmpf;*.jpgf;*.jpegf;*.jp2f;*.pngf;*.pcxf;*.pgmf;*.ppmf;*.pbmf;*.xwdf;*.ima|其他|*.*";
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "图像文件|*.bmp;*.png;*.jpg;*.jpgtif;*.tiff;*.giff;*.bmpf;*.jpgf;*.jpegf;*.jp2f;*.pngf;*.pcxf;*.pgmf;*.ppmf;*.pbmf;*.xwdf;*.ima|其他|*.*"
+            };
 
             if (ofd.ShowDialog() == true)
             {
                 string result = "";
-                Stopwatch stopwatch = new Stopwatch();
+                var stopwatch = new Stopwatch();
                 stopwatch.Start();
                 scene?.ExecuteByFile(ofd.FileName, out result);
                 stopwatch.Stop();
@@ -116,14 +113,11 @@ namespace SenceDemo
             {
                 string result = "";
 
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
                 scene?.Execute(1000, out result);
-                stopwatch.Stop();
 
                 RunningtimeTextBox.Text = scene.VisionFrame.VisionOpera.RunStatus.ProcessingTime.ToString("F3");
-                Result1TextBox.Text = stopwatch.Elapsed.TotalMilliseconds.ToString();
                 ResultConstantsTextBox.Text = result;
+                Result1TextBox.Text = scene.VisionFrame.VisionOpera.RunStatus.TotalTime.ToString("F3");
 
             }
             catch (Exception ex)

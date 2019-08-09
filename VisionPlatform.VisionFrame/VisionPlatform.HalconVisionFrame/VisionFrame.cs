@@ -1,14 +1,11 @@
 ﻿using Framework.Camera;
 using HalconDotNet;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using VisionPlatform.BaseType;
 using ItemCollection = VisionPlatform.BaseType.ItemCollection;
-
 
 namespace VisionPlatform.HalconVisionFrame
 {
@@ -20,31 +17,6 @@ namespace VisionPlatform.HalconVisionFrame
         /// 图像变量
         /// </summary>
         private HObject hImage;
-
-        /// <summary>
-        /// 线程锁
-        /// </summary>
-        private readonly object threadLock = new object();
-
-        /// <summary>
-        /// 视觉处理完成标志
-        /// </summary>
-        private bool isVisionProcessed = false;
-
-        /// <summary>
-        /// 图像转换计时器
-        /// </summary>
-        private readonly Stopwatch imageConvertStopwatch = new Stopwatch();
-
-        /// <summary>
-        /// 图像处理计时器
-        /// </summary>
-        private readonly Stopwatch imageProcessStopwatch = new Stopwatch();
-
-        /// <summary>
-        /// 采集超时计时器
-        /// </summary>
-        private readonly Stopwatch grapTimeoutStopwatch = new Stopwatch();
 
         #endregion
 
@@ -59,11 +31,6 @@ namespace VisionPlatform.HalconVisionFrame
         /// 视觉算子接口
         /// </summary>
         public IVisionOpera VisionOpera { get; set; }
-
-        /// <summary>
-        /// 相机控制接口
-        /// </summary>
-        public ICamera Camera { get; set; }
 
         /// <summary>
         /// 视觉算子文件类型
@@ -99,7 +66,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                if ((VisionOpera != null) && (Camera != null) && (Camera.IsOpen))
+                if (VisionOpera != null)
                 {
                     return true;
                 }
@@ -107,6 +74,11 @@ namespace VisionPlatform.HalconVisionFrame
                 return false;
             }
         }
+
+        /// <summary>
+        /// 运行状态
+        /// </summary>
+        public RunStatus RunStatus { get; set; }
 
         #region 功能使能
 
@@ -221,33 +193,33 @@ namespace VisionPlatform.HalconVisionFrame
         /// <param name="imagePtr">图像指针</param>
         /// <param name="hImage">H图像</param>
         /// <returns></returns>
-        private static bool CreateHImage(EPixelFormatType ePixelFormat, int width, int height, IntPtr imagePtr, out HObject hImage)
+        private static bool CreateHImage(ImageInfo imageInfo, out HObject hImage)
         {
             HOperatorSet.GenEmptyObj(out hImage);
 
             try
             {
-                switch (ePixelFormat)
+                switch (imageInfo.PixelFormat)
                 {
                     case EPixelFormatType.GVSP_PIX_MONO8:
                         hImage?.Dispose();
-                        HOperatorSet.GenImage1(out hImage, "byte", width, height, imagePtr);
+                        HOperatorSet.GenImage1(out hImage, "byte", imageInfo.Width, imageInfo.Height, imageInfo.ImagePtr);
                         break;
                     case EPixelFormatType.GVSP_PIX_RGB8_PACKED:
                         hImage?.Dispose();
-                        HOperatorSet.GenImageInterleaved(out hImage, imagePtr, "rgb", width, height, -1, "byte", 0, 0, 0, 0, -1, 0);
+                        HOperatorSet.GenImageInterleaved(out hImage, imageInfo.ImagePtr, "rgb", imageInfo.Width, imageInfo.Height, -1, "byte", 0, 0, 0, 0, -1, 0);
                         break;
                     case EPixelFormatType.GVSP_PIX_BGR8_PACKED:
                         hImage?.Dispose();
-                        HOperatorSet.GenImageInterleaved(out hImage, imagePtr, "bgr", width, height, -1, "byte", 0, 0, 0, 0, -1, 0);
+                        HOperatorSet.GenImageInterleaved(out hImage, imageInfo.ImagePtr, "bgr", imageInfo.Width, imageInfo.Height, -1, "byte", 0, 0, 0, 0, -1, 0);
                         break;
                     case EPixelFormatType.GVSP_PIX_RGBA8_PACKED:
                         hImage?.Dispose();
-                        HOperatorSet.GenImageInterleaved(out hImage, imagePtr, "rgbx", width, height, -1, "byte", 0, 0, 0, 0, -1, 0);
+                        HOperatorSet.GenImageInterleaved(out hImage, imageInfo.ImagePtr, "rgbx", imageInfo.Width, imageInfo.Height, -1, "byte", 0, 0, 0, 0, -1, 0);
                         break;
                     case EPixelFormatType.GVSP_PIX_BGRA8_PACKED:
                         hImage?.Dispose();
-                        HOperatorSet.GenImageInterleaved(out hImage, imagePtr, "bgrx", width, height, -1, "byte", 0, 0, 0, 0, -1, 0);
+                        HOperatorSet.GenImageInterleaved(out hImage, imageInfo.ImagePtr, "bgrx", imageInfo.Width, imageInfo.Height, -1, "byte", 0, 0, 0, 0, -1, 0);
                         break;
                     case EPixelFormatType.GVSP_PIX_BAYGB8:
                         {
@@ -255,7 +227,7 @@ namespace VisionPlatform.HalconVisionFrame
 
                             //生成bayer图像
                             HObject hBayerImage;
-                            HOperatorSet.GenImage1(out hBayerImage, "byte", width, height, imagePtr);
+                            HOperatorSet.GenImage1(out hBayerImage, "byte", imageInfo.Width, imageInfo.Height, imageInfo.ImagePtr);
                             HOperatorSet.CfaToRgb(hBayerImage, out hImage, "bayer_gb", "bilinear");
                             hBayerImage?.Dispose();
                             break;
@@ -266,7 +238,7 @@ namespace VisionPlatform.HalconVisionFrame
 
                             //生成bayer图像
                             HObject hBayerImage;
-                            HOperatorSet.GenImage1(out hBayerImage, "byte", width, height, imagePtr);
+                            HOperatorSet.GenImage1(out hBayerImage, "byte", imageInfo.Width, imageInfo.Height, imageInfo.ImagePtr);
                             HOperatorSet.CfaToRgb(hBayerImage, out hImage, "bayer_gr", "bilinear");
                             hBayerImage?.Dispose();
                             break;
@@ -277,7 +249,7 @@ namespace VisionPlatform.HalconVisionFrame
 
                             //生成bayer图像
                             HObject hBayerImage;
-                            HOperatorSet.GenImage1(out hBayerImage, "byte", width, height, imagePtr);
+                            HOperatorSet.GenImage1(out hBayerImage, "byte", imageInfo.Width, imageInfo.Height, imageInfo.ImagePtr);
                             HOperatorSet.CfaToRgb(hBayerImage, out hImage, "bayer_rg", "bilinear");
                             hBayerImage?.Dispose();
                             break;
@@ -288,7 +260,7 @@ namespace VisionPlatform.HalconVisionFrame
 
                             //生成bayer图像
                             HObject hBayerImage;
-                            HOperatorSet.GenImage1(out hBayerImage, "byte", width, height, imagePtr);
+                            HOperatorSet.GenImage1(out hBayerImage, "byte", imageInfo.Width, imageInfo.Height, imageInfo.ImagePtr);
                             HOperatorSet.CfaToRgb(hBayerImage, out hImage, "bayer_bg", "bilinear");
                             hBayerImage?.Dispose();
                             break;
@@ -303,45 +275,6 @@ namespace VisionPlatform.HalconVisionFrame
             {
                 throw;
             }
-        }
-
-        /// <summary>
-        /// 图像采集完成事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Camera_NewImageEvent(object sender, NewImageEventArgs e)
-        {
-            imageConvertStopwatch.Restart();
-
-            try
-            {
-                //IntPtr转HObject
-                hImage?.Dispose();
-                CreateHImage(e.PixelFormat, e.Width, e.Height, e.ImagePtr, out hImage);
-
-                lock (threadLock)
-                {
-                    isVisionProcessed = true;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                //注销事件回调
-                var camera = sender as ICamera;
-                camera.NewImageEvent -= Camera_NewImageEvent;
-
-                //释放原始图像资源
-                e?.DisposeImage();
-
-                imageConvertStopwatch.Stop();
-                Console.WriteLine($"Camera_NewImageEvent process time: {imageConvertStopwatch.Elapsed.TotalMilliseconds}");
-            }
-
         }
 
         /// <summary>
@@ -367,94 +300,42 @@ namespace VisionPlatform.HalconVisionFrame
         /// <param name="outputs">输出结果</param>
         public void Execute(int timeout, out ItemCollection outputs)
         {
-            if (VisionOpera == null)
-            {
-                throw new NullReferenceException("VisionOpera cannot be null");
-            }
+            Exception exception = new NotImplementedException("当前视觉框架不支持此方法(HalconVisionFrame)");
+            RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
 
-            if (Camera == null)
-            {
-
-                throw new NullReferenceException("Camera cannot be null");
-            }
-
-            if (!Camera.IsOpen)
-            {
-                throw new Exception("Camera is no open");
-            }
-
-            outputs = default(ItemCollection);
-
-            try
-            {
-                lock (threadLock)
-                {
-                    isVisionProcessed = false;
-                }
-
-                //注册相机采集完成事件
-                Camera.NewImageEvent -= Camera_NewImageEvent;
-                Camera.NewImageEvent += Camera_NewImageEvent;
-
-                //触发拍照
-                Camera.TriggerSoftware();
-
-                //阻塞等待视觉处理完成
-                grapTimeoutStopwatch.Restart();
-
-                while (true)
-                {
-                    lock (threadLock)
-                    {
-                        if (isVisionProcessed)
-                        {
-                            break;
-                        }
-                    }
-
-                    if ((timeout > 0) && (grapTimeoutStopwatch.Elapsed.TotalMilliseconds > timeout))
-                    {
-                        grapTimeoutStopwatch.Stop();
-                        throw new TimeoutException("grab image timeout");
-                    }
-
-                    System.Threading.Thread.Sleep(2);
-                }
-                grapTimeoutStopwatch.Stop();
-                Console.WriteLine($"image grap time: {grapTimeoutStopwatch.Elapsed.TotalMilliseconds}");
-
-                imageProcessStopwatch.Restart();
-                VisionOpera.Execute(hImage, out outputs);
-                imageProcessStopwatch.Stop();
-                Console.WriteLine($"image process time: {imageProcessStopwatch.Elapsed.TotalMilliseconds}");
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw exception;
         }
 
         /// <summary>
-        /// 异步执行
+        /// 通过图像信息执行
         /// </summary>
-        /// <param name="timeout">超时时间,单位:ms</param>
-        /// <returns>异步任务</returns>
-        public Task<ItemCollection> ExecuteAsync(int timeout)
+        /// <param name="imageInfo">相机信息</param>
+        /// <param name="outputs">输出结果</param>
+        public void ExecuteByImageInfo(ImageInfo imageInfo, out ItemCollection outputs)
         {
+            if (VisionOpera == null)
+            {
+                Exception exception = new NullReferenceException("VisionOpera invalid");
+                RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
+
+                throw exception;
+            }
+
             try
             {
-                return Task.Run(() =>
-                {
-                    Execute(timeout, out var outputs);
+                //转换成HImage图像
+                hImage?.Dispose();
+                CreateHImage(imageInfo, out hImage);
 
-                    return outputs;
-                });
+                VisionOpera.Execute(hImage, out outputs);
+                RunStatus = VisionOpera.RunStatus;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                RunStatus = new RunStatus(0, EResult.Error, ex.Message, ex);
                 throw;
             }
+
         }
 
         /// <summary>
@@ -466,22 +347,22 @@ namespace VisionPlatform.HalconVisionFrame
         {
             if (VisionOpera == null)
             {
-                throw new NullReferenceException("VisionOpera invalid");
+                Exception exception = new NullReferenceException("VisionOpera invalid");
+                RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
+
+                throw exception;
             }
 
             try
             {
                 hImage?.Dispose();
                 HOperatorSet.ReadImage(out hImage, file);
-
-                imageProcessStopwatch.Restart();
                 VisionOpera.Execute(hImage, out outputs);
-                imageProcessStopwatch.Stop();
-                Console.WriteLine($"image process time: {imageProcessStopwatch.Elapsed.TotalMilliseconds}");
-
+                RunStatus = VisionOpera.RunStatus;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                RunStatus = new RunStatus(0, EResult.Error, ex.Message, ex);
                 throw;
             }
         }
@@ -503,7 +384,7 @@ namespace VisionPlatform.HalconVisionFrame
                 VisionOpera?.Dispose();
                 VisionOpera = null;
 
-                Camera = null;
+                //Camera = null;
 
                 disposedValue = true;
             }
@@ -524,6 +405,7 @@ namespace VisionPlatform.HalconVisionFrame
             // TODO: 如果在以上内容中替代了终结器，则取消注释以下行。
             // GC.SuppressFinalize(this);
         }
+
         #endregion
 
         #endregion

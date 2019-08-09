@@ -1,12 +1,10 @@
 ﻿using Framework.Camera;
+using Framework.Infrastructure.Serialization;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Framework.Infrastructure.Serialization;
 using VisionPlatform.BaseType;
 
 namespace VisionPlatform.Core
@@ -50,25 +48,20 @@ namespace VisionPlatform.Core
         /// 创建Scene新实例
         /// </summary>
         /// <param name="sceneName">场景名</param>
-        /// <param name="visionFrameName">视觉框架名</param>
-        public Scene(string sceneName, string visionFrameName) : this(sceneName)
+        /// <param name="eVisionFrame">视觉框架枚举</param>
+        public Scene(string sceneName, EVisionFrame eVisionFrame) : this(sceneName)
         {
-            if (string.IsNullOrEmpty(visionFrameName))
-            {
-                throw new ArgumentException("visionFrameName cannot be null");
-            }
-
-            VisionFrameName = visionFrameName;
-            VisionFrame = VisionFrameFactory.CreateInstance(VisionFrameName);
+            EVisionFrame = eVisionFrame;
+            VisionFrame = VisionFrameFactory.CreateInstance(eVisionFrame);
         }
 
         /// <summary>
         /// 创建Scene新实例
         /// </summary>
         /// <param name="sceneName">场景名</param>
-        /// <param name="visionFrameName">视觉框架名</param>
+        /// <param name="eVisionFrame">视觉框架枚举</param>
         /// <param name="visionOperaFile">算子文件路径</param>
-        public Scene(string sceneName, string visionFrameName, string visionOperaFile) : this(sceneName, visionFrameName)
+        public Scene(string sceneName, EVisionFrame eVisionFrame, string visionOperaFile) : this(sceneName, eVisionFrame)
         {
             if (VisionFrame == null)
             {
@@ -113,10 +106,10 @@ namespace VisionPlatform.Core
         /// 创建Scene新实例
         /// </summary>
         /// <param name="sceneName">场景名</param>
-        /// <param name="visionFrameName">视觉框架名</param>
+        /// <param name="eVisionFrame">视觉框架枚举</param>
         /// <param name="visionOperaFile">算子文件路径</param>
         /// <param name="cameraSerial">相机序列号</param>
-        public Scene(string sceneName, string visionFrameName, string visionOperaFile, string cameraSerial) : this(sceneName, visionFrameName, visionOperaFile)
+        public Scene(string sceneName, EVisionFrame eVisionFrame, string visionOperaFile, string cameraSerial) : this(sceneName, eVisionFrame, visionOperaFile)
         {
             if (VisionFrame.IsEnableCamera)
             {
@@ -134,6 +127,35 @@ namespace VisionPlatform.Core
             }
 
         }
+
+        #endregion
+
+        #region 字段
+
+        /// <summary>
+        /// 线程锁
+        /// </summary>
+        private readonly object threadLock = new object();
+
+        /// <summary>
+        /// 视觉处理完成标志
+        /// </summary>
+        private bool isVisionProcessed = false;
+
+        /// <summary>
+        /// 采集超时计时器
+        /// </summary>
+        private readonly Stopwatch grapTimeoutStopwatch = new Stopwatch();
+
+        /// <summary>
+        /// 总处理时间计时器
+        /// </summary>
+        private readonly Stopwatch totalProcessStopwatch = new Stopwatch();
+
+        /// <summary>
+        /// 相机信息
+        /// </summary>
+        private ImageInfo imageInfo;
 
         #endregion
 
@@ -173,7 +195,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public string VisionFrameName { get; set; }
+        public EVisionFrame EVisionFrame { get; set; }
 
         /// <summary>
         /// 视觉框架
@@ -202,21 +224,7 @@ namespace VisionPlatform.Core
         /// 相机接口
         /// </summary>
         [JsonIgnore]
-        public ICamera Camera
-        {
-            get
-            {
-                return VisionFrame?.Camera;
-            }
-            set
-            {
-                if (VisionFrame == null)
-                {
-                    throw new ArgumentNullException("VisionFrame");
-                }
-                VisionFrame.Camera = value;
-            }
-        }
+        public ICamera Camera { get; set; }
 
         /// <summary>
         /// 相机初始化标志
@@ -302,7 +310,36 @@ namespace VisionPlatform.Core
 
         #endregion
 
-        #region 方法
+        #region 基本接口
+
+        /// <summary>
+        /// 图像采集完成事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Camera_NewImageEvent(object sender, NewImageEventArgs e)
+        {
+            try
+            {
+                imageInfo = e.ImageInfo;
+
+                lock (threadLock)
+                {
+                    isVisionProcessed = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                //注销事件回调
+                var camera = sender as ICamera;
+                camera.NewImageEvent -= Camera_NewImageEvent;
+            }
+
+        }
 
         /// <summary>
         /// 转换ItemCollection为字符串
@@ -452,16 +489,15 @@ namespace VisionPlatform.Core
         {
             try
             {
-
                 //还原视觉框架
-                if (string.IsNullOrEmpty(VisionFrameName))
+                if (EVisionFrame == EVisionFrame.Unknown)
                 {
-                    throw new ArgumentException("VisionFrameName cannot be null");
+                    throw new ArgumentException("VisionFrameName invalid");
                 }
 
                 if (VisionFrame == null)
                 {
-                    VisionFrame = VisionFrameFactory.CreateInstance(VisionFrameName);
+                    VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrame);
                 }
 
                 //还原视觉算子
@@ -563,17 +599,77 @@ namespace VisionPlatform.Core
 
             try
             {
-                //执行视觉框架
                 ItemCollection outputs;
-                VisionFrame.Execute(timeout, out outputs);
 
-                //结果拼接
-                visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                //开始计时
+                totalProcessStopwatch.Restart();
+
+                //如果使能相机,则调用相机采集
+                if (VisionFrame.IsEnableCamera && IsCameraInit)
+                {
+                    lock (threadLock)
+                    {
+                        isVisionProcessed = false;
+                    }
+
+                    //注册相机采集完成事件
+                    Camera.NewImageEvent -= Camera_NewImageEvent;
+                    Camera.NewImageEvent += Camera_NewImageEvent;
+
+                    //触发拍照
+                    Camera.TriggerSoftware();
+
+                    //阻塞等待视觉处理完成
+                    grapTimeoutStopwatch.Restart();
+                    while (true)
+                    {
+                        lock (threadLock)
+                        {
+                            if (isVisionProcessed)
+                            {
+                                grapTimeoutStopwatch.Stop();
+                                break;
+                            }
+                        }
+
+                        if ((timeout > 0) && (grapTimeoutStopwatch.Elapsed.TotalMilliseconds > timeout))
+                        {
+                            grapTimeoutStopwatch.Stop();
+                            throw new TimeoutException("grab image timeout");
+                        }
+
+                        System.Threading.Thread.Sleep(2);
+                    }
+
+                    //执行视觉框架
+                    VisionFrame.ExecuteByImageInfo(imageInfo, out outputs);
+
+                    //结果拼接
+                    visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                }
+                else
+                {
+                    //执行视觉框架
+                    VisionFrame.Execute(timeout, out outputs);
+
+                    //结果拼接
+                    visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                }
             }
             catch (Exception)
             {
                 throw;
             }
+            finally
+            {
+                //释放图像资源,否则可能会导致资源泄露
+                imageInfo.DisposeImageIntPtr?.Invoke(imageInfo.ImagePtr);
+
+                //停止计时
+                totalProcessStopwatch.Stop();
+                VisionFrame.RunStatus.TotalTime = totalProcessStopwatch.Elapsed.TotalMilliseconds;
+            }
+
         }
 
         /// <summary>
@@ -583,14 +679,17 @@ namespace VisionPlatform.Core
         /// <returns>异步任务</returns>
         public Task<string> ExecuteAsync(int timeout)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 string visionResult = "";
-
-                ItemCollection outputs = await VisionFrame.ExecuteAsync(timeout).ConfigureAwait(true);
-
-                //结果拼接
-                visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                try
+                {
+                    Execute(timeout, out visionResult);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
                 return visionResult;
             });
@@ -603,7 +702,7 @@ namespace VisionPlatform.Core
         /// <param name="visionResult">视觉结果(字符串格式)</param>
         public void ExecuteByFile(string file, out string visionResult)
         {
-            if ((VisionFrame == null))
+            if ((VisionFrame == null) || (!VisionFrame.IsInit))
             {
                 throw new NullReferenceException("VisionFrame invaild");
             }

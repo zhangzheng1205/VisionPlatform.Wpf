@@ -74,25 +74,22 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 创建视觉框架实例
         /// </summary>
-        /// <param name="name">视觉框架名</param>
+        /// <param name="eVisionFrame">视觉框架</param>
         /// <returns>视觉框架实例</returns>
-        public static IVisionFrame CreateInstance(string name)
+        public static IVisionFrame CreateInstance(EVisionFrame eVisionFrame)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("name cannot be null");
-            }
-
             try
             {
-                if (VisionFrameAssemblys.ContainsKey(name))
+                string assemblyName = $"{eVisionFrame.ToString()}VisionFrame";
+
+                if (VisionFrameAssemblys.ContainsKey(assemblyName))
                 {
                     //创建视觉框架实例
-                    foreach (var item in VisionFrameAssemblys[name].ExportedTypes)
+                    foreach (var item in VisionFrameAssemblys[assemblyName].ExportedTypes)
                     {
                         if (item.Name == "VisionFrame")
                         {
-                            object obj = VisionFrameAssemblys[name].CreateInstance(item.FullName);
+                            object obj = VisionFrameAssemblys[assemblyName].CreateInstance(item.FullName);
 
                             if (obj is IVisionFrame)
                             {
@@ -102,7 +99,7 @@ namespace VisionPlatform.Core
                     }
                 }
 
-                throw new FileNotFoundException($"{nameof(name)} is not found");
+                throw new FileNotFoundException($"{nameof(assemblyName)} is not found");
             }
             catch (Exception)
             {
@@ -111,4 +108,31 @@ namespace VisionPlatform.Core
         }
 
     }
+
+    /// <summary>
+    /// 视觉平台枚举
+    /// </summary>
+    public enum EVisionFrame
+    {
+        /// <summary>
+        /// Halcon平台
+        /// </summary>
+        Halcon,
+
+        /// <summary>
+        /// VisionPro平台
+        /// </summary>
+        VisionPro,
+
+        /// <summary>
+        /// NIVision平台
+        /// </summary>
+        NIVision,
+
+        /// <summary>
+        /// 未知
+        /// </summary>
+        Unknown,
+    }
+
 }

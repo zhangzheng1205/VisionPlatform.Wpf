@@ -1,8 +1,5 @@
 ﻿using Framework.Camera;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -11,7 +8,7 @@ namespace VisionPlatform.BaseType
     /// <summary>
     /// 视觉框架接口
     /// </summary>
-    public interface IVisionFrame: IDisposable
+    public interface IVisionFrame : IDisposable
     {
         #region 属性
 
@@ -24,11 +21,6 @@ namespace VisionPlatform.BaseType
         /// 视觉算子接口
         /// </summary>
         IVisionOpera VisionOpera { get; set; }
-
-        /// <summary>
-        /// 相机控制接口
-        /// </summary>
-        ICamera Camera { get; set; }
 
         /// <summary>
         /// 视觉算子文件类型
@@ -49,6 +41,11 @@ namespace VisionPlatform.BaseType
         /// 初始化标志
         /// </summary>
         bool IsInit { get; }
+
+        /// <summary>
+        /// 运行状态
+        /// </summary>
+        RunStatus RunStatus { get; set; }
 
         #region 功能使能
 
@@ -106,11 +103,11 @@ namespace VisionPlatform.BaseType
         void Execute(int timeout, out ItemCollection outputs);
 
         /// <summary>
-        /// 异步执行
+        /// 通过图像信息执行
         /// </summary>
-        /// <param name="timeout">超时时间,单位:ms</param>
-        /// <returns>异步任务</returns>
-        Task<ItemCollection> ExecuteAsync(int timeout);
+        /// <param name="imageInfo">相机信息</param>
+        /// <param name="outputs">输出结果</param>
+        void ExecuteByImageInfo(ImageInfo imageInfo, out ItemCollection outputs);
 
         /// <summary>
         /// 通过本地图片执行
