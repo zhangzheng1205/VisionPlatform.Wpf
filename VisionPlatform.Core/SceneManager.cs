@@ -21,14 +21,14 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <param name="sceneName">场景名称</param>
         /// <param name="scene">场景</param>
-        public void RegisterScene(string sceneName, Scene scene)
+        public void RegisterScene(Scene scene)
         {
             try
             {
-                if (!Scenes.ContainsKey(sceneName))
+                if (!Scenes.ContainsKey(scene.Name))
                 {
                     //注册场景
-                    Scenes.Add(sceneName, scene);
+                    Scenes.Add(scene.Name, scene);
                 }
             }
             catch (Exception)
@@ -85,6 +85,12 @@ namespace VisionPlatform.Core
                 //Logging.Error($"{ToString()} 复位场景列表异常", ex);
                 throw;
             }
+        }
+
+
+        public void 恢复场景列表(string configFile)
+        {
+
         }
 
     }

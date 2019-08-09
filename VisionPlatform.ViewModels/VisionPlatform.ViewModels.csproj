@@ -47,16 +47,16 @@
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
     <Reference Include="Framework.Camera">
-      <HintPath>..\packages\SoftwareFramework\Framework.Camera.dll</HintPath>
+      <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Camera.dll</HintPath>
     </Reference>
     <Reference Include="Framework.Infrastructure.Logging">
-      <HintPath>..\packages\SoftwareFramework\Framework.Infrastructure.Logging.dll</HintPath>
+      <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Infrastructure.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Framework.Infrastructure.Serialization">
-      <HintPath>..\packages\SoftwareFramework\Framework.Infrastructure.Serialization.dll</HintPath>
+      <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Infrastructure.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Framework.Vision">
-      <HintPath>..\packages\SoftwareFramework\Framework.Vision.dll</HintPath>
+      <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Vision.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>

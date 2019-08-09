@@ -48,21 +48,18 @@ namespace SenceDemo
             {
                 scene?.Dispose();
 
-                if (File.Exists("1.json"))
+                scene = Scene.Deserialize("1.json");
+
+                if (File.Exists("查找5边型.json"))
                 {
-                    scene = Scene.Deserialize("1.json");
+                    scene = Scene.Deserialize("查找5边型.json");
                 }
                 else
                 {
                     string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
                     string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
                     //string serial = @"00575388468";
-                    scene = new Scene("显示图片", "HalconVisionFrame", dllFile, serial);
-                }
-
-                if ((scene?.IsInit == false) && (scene.Camera == null))
-                {
-                    scene?.SetCamera("00575388468");
+                    scene = new Scene("查找5边型", "HalconVisionFrame", dllFile, serial);
                 }
 
                 if (scene?.IsInit == true)
@@ -142,6 +139,38 @@ namespace SenceDemo
         /// <param name="e"></param>
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+
+            //SceneManager sceneManager = new SceneManager();
+            //
+            ////增
+            //sceneManager.RegisterScene(scene);
+            //
+            ////删
+            //sceneManager.DeleteScene("查找5边型");
+            //
+            ////改
+            //sceneManager.Scenes["查找5边型"].OutputParamFile = "";
+            //
+            ////查
+            //sceneManager.Scenes.ContainsKey("查找5边型");
+            //
+            ////遍历
+            //foreach (var item in sceneManager.Scenes)
+            //{
+            //
+            //}
+
+            //显示
+            //RunningWindowGrid.Children.Clear();
+            //RunningWindowGrid.Children.Add(sceneManager.Scenes["查找5边型"].VisionFrame.RunningWindow);
+            //
+            ////执行
+            //sceneManager.Scenes["查找5边型"].Execute(0, out var result);
+            //
+            ////配置界面
+            
+
+
             if (scene != null)
             {
                 Scene.Serialize(scene, "1.json");
