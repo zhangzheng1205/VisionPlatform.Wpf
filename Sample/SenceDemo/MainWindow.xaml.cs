@@ -48,17 +48,19 @@ namespace SenceDemo
             {
                 scene?.Dispose();
 
-                if (File.Exists("查找5边型.json"))
-                {
-                    scene = Scene.Deserialize("查找5边型.json");
-                }
-                else
-                {
-                    string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
-                    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
-                    //string serial = @"00575388468";
-                    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
-                }
+                //if (File.Exists("查找5边型.json"))
+                //{
+                //    scene = Scene.Deserialize("查找5边型.json");
+                //}
+                //else
+                //{
+                //    string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
+                //    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
+                //    //string serial = @"00575388468";
+                //    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
+                //}
+
+                scene = new Scene("查找5边型", EVisionFrame.VisionPro, @"E:\0. 临时目录\TestVpp.vpp");
 
                 if (scene?.IsInit == true)
                 {
@@ -116,9 +118,9 @@ namespace SenceDemo
 
                 scene?.Execute(1000, out result);
 
-                RunningtimeTextBox.Text = scene.VisionFrame.VisionOpera.RunStatus.ProcessingTime.ToString("F3");
+                RunningtimeTextBox.Text = scene.VisionFrame.RunStatus.ProcessingTime.ToString("F3");
                 ResultConstantsTextBox.Text = result;
-                Result1TextBox.Text = scene.VisionFrame.VisionOpera.RunStatus.TotalTime.ToString("F3");
+                Result1TextBox.Text = scene.VisionFrame.RunStatus.TotalTime.ToString("F3");
 
             }
             catch (Exception ex)

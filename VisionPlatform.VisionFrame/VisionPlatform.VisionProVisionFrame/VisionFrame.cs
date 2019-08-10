@@ -102,12 +102,12 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 输出参数
         /// </summary>
-        public ItemCollection Inputs { get; }
+        public ItemCollection Inputs { get; } = new ItemCollection();
 
         /// <summary>
         /// 输出参数
         /// </summary>
-        public ItemCollection Outputs { get; }
+        public ItemCollection Outputs { get; } = new ItemCollection();
 
         /// <summary>
         /// 初始化标志
@@ -117,7 +117,7 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 运行状态
         /// </summary>
-        public RunStatus RunStatus { get; set; }
+        public RunStatus RunStatus { get; set; } = new RunStatus();
 
         #region 功能使能
 
@@ -216,6 +216,8 @@ namespace VisionPlatform.VisionProVisionFrame
 
             try
             {
+                vppFilePath = filePath;
+
                 lock (threadLock)
                 {
                     IsInit = false;
@@ -271,6 +273,27 @@ namespace VisionPlatform.VisionProVisionFrame
                         }
                         outputs = new ItemCollection(Outputs);
 
+                        EResult result = EResult.Accept;
+                        switch (cogToolBlock.RunStatus.Result)
+                        {
+                            case CogToolResultConstants.Accept:
+                                result = EResult.Accept;
+                                break;
+                            case CogToolResultConstants.Warning:
+                                result = EResult.Warning;
+                                break;
+                            case CogToolResultConstants.Reject:
+                                result = EResult.Reject;
+                                break;
+                            case CogToolResultConstants.Error:
+                                result = EResult.Error;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        RunStatus = new RunStatus(cogToolBlock.RunStatus.ProcessingTime, result, cogToolBlock.RunStatus.Message, cogToolBlock.RunStatus.Exception);
+
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                     }
@@ -319,7 +342,11 @@ namespace VisionPlatform.VisionProVisionFrame
                 VisionOpera?.Dispose();
                 VisionOpera = null;
 
-                //Camera = null;
+                cogToolBlock?.Dispose();
+                cogToolBlock = null;
+
+                visionProDisplayControl = null;
+                visionProConfigControl = null;
 
                 disposedValue = true;
             }

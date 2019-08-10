@@ -15,7 +15,7 @@ namespace VisionPlatform.BaseType
         /// <summary>
         /// 总执行时间(包括图像/相机采集等时间 单位:MS)
         /// </summary>
-        public double TotalTime { get; set; }
+        public double TotalTime { get; set; } = 0;
 
         /// <summary>
         /// 执行结果
