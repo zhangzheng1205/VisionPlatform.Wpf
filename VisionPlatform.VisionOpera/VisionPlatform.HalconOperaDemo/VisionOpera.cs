@@ -124,12 +124,12 @@ namespace VisionPlatform.HalconOperaDemo
         /// <summary>
         /// 运行窗口
         /// </summary>
-        public UserControl RunningWindow { get; private set; }
+        public object RunningWindow { get; private set; }
 
         /// <summary>
         /// 配置窗口
         /// </summary>
-        public UserControl ConfigWindow { get; private set; }
+        public object ConfigWindow { get; private set; }
 
         #endregion
 

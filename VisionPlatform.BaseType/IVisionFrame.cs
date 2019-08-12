@@ -1,7 +1,5 @@
 ﻿using Framework.Camera;
 using System;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace VisionPlatform.BaseType
 {
@@ -76,12 +74,12 @@ namespace VisionPlatform.BaseType
         /// <summary>
         /// 运行窗口
         /// </summary>
-        UserControl RunningWindow { get; }
+        object RunningWindow { get; }
 
         /// <summary>
         /// 配置窗口
         /// </summary>
-        UserControl ConfigWindow { get; }
+        object ConfigWindow { get; }
 
         #endregion
 

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace VisionPlatform.BaseType
 {
     /// <summary>
     /// 视觉算子接口
     /// </summary>
-    public interface IVisionOpera: IDisposable
+    public interface IVisionOpera : IDisposable
     {
         #region 属性
 
@@ -37,12 +32,12 @@ namespace VisionPlatform.BaseType
         /// <summary>
         /// 运行窗口
         /// </summary>
-        UserControl RunningWindow { get; }
+        object RunningWindow { get; }
 
         /// <summary>
         /// 配置窗口
         /// </summary>
-        UserControl ConfigWindow { get; }
+        object ConfigWindow { get; }
 
         #endregion
 

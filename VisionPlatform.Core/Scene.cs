@@ -79,7 +79,7 @@ namespace VisionPlatform.Core
                     InputParamFile = "default.json";
                 }
 
-                string filePath = $"VisionPlatform/Scene/{Name}/InputParam/{InputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
                 if (!File.Exists(filePath))
                 {
                     JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
@@ -94,7 +94,7 @@ namespace VisionPlatform.Core
                     OutputParamFile = "default.json";
                 }
 
-                string filePath = $"VisionPlatform/Scene/{Name}/OutputParam/{OutputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
                 if (!File.Exists(filePath))
                 {
                     JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
@@ -501,15 +501,12 @@ namespace VisionPlatform.Core
                 }
 
                 //还原视觉算子
-                if (VisionFrame.IsEnableVisionOpera)
+                if (string.IsNullOrEmpty(VisionOperaFile))
                 {
-                    if (string.IsNullOrEmpty(VisionOperaFile))
-                    {
-                        throw new ArgumentException("VisionOperaFile cannot be null");
-                    }
-
-                    VisionFrame.Init(VisionOperaFile);
+                    throw new ArgumentException("VisionOperaFile cannot be null");
                 }
+
+                VisionFrame.Init(VisionOperaFile);
 
                 //还原相机
                 if (VisionFrame.IsEnableCamera)
@@ -539,7 +536,7 @@ namespace VisionPlatform.Core
                     }
 
                     //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{Name}/InputParam/{InputParamFile}";
+                    string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
                     if (!File.Exists(filePath))
                     {
                         JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
@@ -561,7 +558,7 @@ namespace VisionPlatform.Core
                     }
 
                     //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{Name}/OutputParam/{OutputParamFile}";
+                    string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
                     if (!File.Exists(filePath))
                     {
                         JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
@@ -724,6 +721,44 @@ namespace VisionPlatform.Core
         }
 
         /// <summary>
+        /// 保存参数到本地图片
+        /// </summary>
+        public void SaveParamToLocalFile()
+        {
+            if (VisionFrame == null)
+            {
+                VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrame);
+            }
+
+            //保存输入参数
+            if (VisionFrame.IsEnableInput == true)
+            {
+                if (string.IsNullOrEmpty(InputParamFile))
+                {
+                    InputParamFile = "default.json";
+                }
+
+                //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
+                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
+                JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
+            }
+
+            //保存输出参数
+            if (VisionFrame.IsEnableOutput == true)
+            {
+                if (string.IsNullOrEmpty(OutputParamFile))
+                {
+                    OutputParamFile = "default.json";
+                }
+
+                //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
+                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
+                JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
+            }
+
+        }
+
+        /// <summary>
         /// 转换成字符串
         /// </summary>
         /// <returns></returns>
@@ -757,6 +792,12 @@ namespace VisionPlatform.Core
         /// <param name="file">序列化文件(*.json)</param>
         public static void Serialize(Scene scene, string file)
         {
+            if (scene == null)
+            {
+                throw new ArgumentNullException("scene cannot be null");
+            }
+
+            scene.SaveParamToLocalFile();
             JsonSerialization.SerializeObjectToFile(scene, file);
         }
 

@@ -131,7 +131,6 @@ namespace VisionPlatform.Core
             return CreateInstance(CameraAssemblyName).GetDeviceList();
         }
 
-
         /// <summary>
         /// 添加相机
         /// </summary>

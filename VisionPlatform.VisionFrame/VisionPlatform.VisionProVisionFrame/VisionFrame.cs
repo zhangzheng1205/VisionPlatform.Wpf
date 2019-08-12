@@ -73,12 +73,12 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 线程锁
         /// </summary>
-        private object threadLock = new object();
+        private readonly object threadLock = new object();
 
         /// <summary>
         /// 全局线程锁
         /// </summary>
-        private static object globalThreadLock = new object();
+        private readonly static object globalThreadLock = new object();
 
         #endregion
 
@@ -148,7 +148,7 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 运行窗口
         /// </summary>
-        public UserControl RunningWindow
+        public object RunningWindow
         {
             get
             {
@@ -159,7 +159,7 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 配置窗口
         /// </summary>
-        public UserControl ConfigWindow
+        public object ConfigWindow
         {
             get
             {

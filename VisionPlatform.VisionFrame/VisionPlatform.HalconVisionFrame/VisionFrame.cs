@@ -109,7 +109,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 运行窗口
         /// </summary>
-        public UserControl RunningWindow
+        public object RunningWindow
         {
             get
             {
@@ -120,7 +120,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 配置窗口
         /// </summary>
-        public UserControl ConfigWindow
+        public object ConfigWindow
         {
             get
             {

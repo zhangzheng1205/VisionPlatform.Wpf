@@ -65,10 +65,10 @@ namespace SenceDemo
                 if (scene?.IsInit == true)
                 {
                     RunningWindowGrid.Children.Clear();
-                    RunningWindowGrid.Children.Add(scene.VisionFrame.RunningWindow);
+                    RunningWindowGrid.Children.Add(scene.VisionFrame.RunningWindow as UIElement);
 
                     ConfigWindowGrid.Children.Clear();
-                    ConfigWindowGrid.Children.Add(scene.VisionFrame.ConfigWindow);
+                    ConfigWindowGrid.Children.Add(scene.VisionFrame.ConfigWindow as UIElement);
                 }
             }
             catch (Exception ex)
