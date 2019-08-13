@@ -116,7 +116,6 @@ namespace VisionPlatform.Core
         /// </summary>
         public static Dictionary<string, ICamera> Cameras { get; } = new Dictionary<string, ICamera>();
 
-
         /// <summary>
         /// 获取所有的相机
         /// </summary>
@@ -162,6 +161,7 @@ namespace VisionPlatform.Core
             if (camera.Connect(cameraSerial))
             {
                 Cameras.Add(cameraSerial, camera);
+                SetToDefaultConfiguration(camera);
                 return;
             }
             else
@@ -246,6 +246,16 @@ namespace VisionPlatform.Core
                 camera.TriggerMode = ETriggerModeStatus.On;
                 camera.TriggerSource = ETriggerSource.Software;
 
+                if (camera.ExposureAuto == EExposureAutoContorl.Continuous)
+                {
+                    camera.ExposureAuto = EExposureAutoContorl.Off;
+                }
+
+                if (camera.GainAuto == EGainAutoContorl.Continuous)
+                {
+                    camera.GainAuto = EGainAutoContorl.Continuous;
+                }
+
                 if (camera.PixelFormatTypeEnum?.Contains(EPixelFormatType.GVSP_PIX_MONO8) == true)
                 {
                     camera.PixelFormat = EPixelFormatType.GVSP_PIX_MONO8;
@@ -269,7 +279,6 @@ namespace VisionPlatform.Core
             {
                 if (Cameras.ContainsKey(cameraSerial))
                 {
-                    SetToDefaultConfiguration(Cameras[cameraSerial]);
                     return Cameras[cameraSerial];
                 }
                 else
@@ -278,7 +287,6 @@ namespace VisionPlatform.Core
 
                     if (Cameras.ContainsKey(cameraSerial))
                     {
-                        SetToDefaultConfiguration(Cameras[cameraSerial]);
                         return Cameras[cameraSerial];
                     }
                 }

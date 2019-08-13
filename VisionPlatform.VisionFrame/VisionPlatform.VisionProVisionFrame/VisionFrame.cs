@@ -90,11 +90,6 @@ namespace VisionPlatform.VisionProVisionFrame
         public EVisionFrame EVisionFrame { get; } = EVisionFrame.VisionPro;
 
         /// <summary>
-        /// 视觉算子接口
-        /// </summary>
-        public IVisionOpera VisionOpera { get; set; }
-
-        /// <summary>
         /// 视觉算子文件类型
         /// </summary>
         public EVisionOperaFileType VisionOperaFileType { get; } = EVisionOperaFileType.BinFile;
@@ -339,8 +334,6 @@ namespace VisionPlatform.VisionProVisionFrame
 
                 // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
                 // TODO: 将大型字段设置为 null。
-                VisionOpera?.Dispose();
-                VisionOpera = null;
 
                 cogToolBlock?.Dispose();
                 cogToolBlock = null;

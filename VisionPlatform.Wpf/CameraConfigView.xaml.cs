@@ -16,17 +16,16 @@ using System.Windows.Shapes;
 namespace VisionPlatform.Wpf
 {
     /// <summary>
-    /// CameraView.xaml 的交互逻辑
+    /// CameraConfigView.xaml 的交互逻辑
     /// </summary>
-    public partial class CameraView : UserControl
+    public partial class CameraConfigView : UserControl
     {
         /// <summary>
-        /// 相机显示控件
+        /// 相机配置控件
         /// </summary>
-        public CameraView()
+        public CameraConfigView()
         {
             InitializeComponent();
         }
-
     }
 }

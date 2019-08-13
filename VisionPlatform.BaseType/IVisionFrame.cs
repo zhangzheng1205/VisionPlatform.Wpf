@@ -16,11 +16,6 @@ namespace VisionPlatform.BaseType
         EVisionFrame EVisionFrame { get; }
 
         /// <summary>
-        /// 视觉算子接口
-        /// </summary>
-        IVisionOpera VisionOpera { get; set; }
-
-        /// <summary>
         /// 视觉算子文件类型
         /// </summary>
         EVisionOperaFileType VisionOperaFileType { get; }

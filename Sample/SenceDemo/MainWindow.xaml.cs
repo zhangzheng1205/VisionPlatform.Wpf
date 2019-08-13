@@ -98,7 +98,7 @@ namespace SenceDemo
                 scene?.ExecuteByFile(ofd.FileName, out result);
                 stopwatch.Stop();
 
-                RunningtimeTextBox.Text = scene.VisionFrame.VisionOpera.RunStatus.ProcessingTime.ToString("F3");
+                RunningtimeTextBox.Text = scene.VisionFrame.RunStatus.ProcessingTime.ToString("F3");
                 Result1TextBox.Text = stopwatch.Elapsed.TotalMilliseconds.ToString();
                 ResultConstantsTextBox.Text = result;
             }

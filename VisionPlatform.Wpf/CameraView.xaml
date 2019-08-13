@@ -4,9 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VisionPlatform.Wpf"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" d:DesignWidth="800" Height="auto" Width="auto">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" MinWidth="250" MaxWidth="350"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray" />
+        <Image Source="{Binding CameraImage}" Grid.Column="2" Margin="5"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+            <StackPanel Margin="5">
+                <GroupBox Header="相机列表" Grid.Row="0">
+                    <StackPanel>
+                        <ListView ItemsSource="{Binding Cameras}" SelectedItem="{Binding SelectedCamera}" 
+                                  cal:Message.Attach="[Event SelectionChanged] = [Action SetCamera(CameraListComboBox.SelectedValue)]" 
+                                  x:Name="CameraListComboBox"  MinHeight="100" Margin="5" />
+                        <Button cal:Message.Attach="UpdateCameras" Content="刷新相机" Margin="0,0,5,0" MinWidth="60" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="相机参数" Grid.Row="1" Margin="0,5,0,0">
+                    <local:CameraConfigView  DataContext="{Binding CameraConfigViewModel}"/>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="VisionPlatform.Wpf.CameraConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VisionPlatform.Wpf"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="380" d:DesignWidth="220"  Height="Auto" Width="Auto" MinHeight="360" MinWidth="200">
+    <StackPanel IsEnabled="{Binding IsCameraValid}">
+            <DockPanel Margin="5,5">
+                <Label Content="相机名" MinWidth="70"/>
+                <TextBox Text="{Binding CameraName, Mode=OneWay}" IsReadOnly="True"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="像素类型" MinWidth="70"/>
+                <ComboBox ItemsSource="{Binding PixelFormatList}" SelectedItem="{Binding  PixelFormat}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="宽度" MinWidth="70"/>
+                <TextBox Text="{Binding Width}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="高度" MinWidth="70"/>
+                <TextBox Text="{Binding Height}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="触发模式" MinWidth="70"/>
+                <ComboBox ItemsSource="{Binding TriggerModeList}" SelectedItem="{Binding TriggerMode}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="触发源" MinWidth="70"/>
+                <ComboBox ItemsSource="{Binding TriggerSourceList}" SelectedItem="{Binding TriggerSource}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="硬件触发" MinWidth="70"/>
+                <ComboBox ItemsSource="{Binding TriggerActivationList}" SelectedItem="{Binding TriggerActivation}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="软触发" MinWidth="70"/>
+                <Button Content="执行" cal:Message.Attach="TriggerSoftware"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="曝光" MinWidth="70"/>
+                <TextBox Text="{Binding ExposureTime}"/>
+            </DockPanel>
+            <DockPanel Margin="5,5">
+                <Label Content="增益" MinWidth="70"/>
+                <TextBox Text="{Binding Gain, StringFormat={}{0:F3}}"/>
+            </DockPanel>
+        </StackPanel>
+</UserControl>

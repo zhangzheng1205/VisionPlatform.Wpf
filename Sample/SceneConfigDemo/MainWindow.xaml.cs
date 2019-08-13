@@ -41,17 +41,17 @@ namespace SceneConfigDemo
             
             scene?.Dispose();
             
-            if (File.Exists("查找5边型.json"))
-            {
-                scene = Scene.Deserialize("查找5边型.json");
-            }
-            else
-            {
-                string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
-                string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
-                //string serial = @"00575388468";
-                scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
-            }
+            //if (File.Exists("查找5边型.json"))
+            //{
+            //    scene = Scene.Deserialize("查找5边型.json");
+            //}
+            //else
+            //{
+            //    string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
+            //    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
+            //    //string serial = @"00575388468";
+            //    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
+            //}
 
             if (File.Exists("查找6边型.json"))
             {
