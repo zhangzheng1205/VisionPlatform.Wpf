@@ -11,7 +11,29 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 场景列表
         /// </summary>
-        public Dictionary<string, Scene> Scenes { get; }
+        private readonly Dictionary<string, Scene> Scenes = new Dictionary<string, Scene>();
+
+        #region 索引器
+
+        /// <summary>
+        /// 场景索引器
+        /// </summary>
+        /// <param name="sceneName">场景名</param>
+        /// <returns>场景</returns>
+        public Scene this[string sceneName]
+        {
+            get
+            {
+                if (Scenes.ContainsKey(sceneName))
+                {
+                    return Scenes[sceneName];
+                }
+
+                return null;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// 注册场景
@@ -55,11 +77,20 @@ namespace VisionPlatform.Core
             }
             catch (Exception)
             {
-                //Logging.Error($"{ToString()} 删除场景{sceneName}失败", ex);
                 throw;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 判断是否包含对应的场景
+        /// </summary>
+        /// <param name="sceneName">场景名</param>
+        /// <returns>结果</returns>
+        public bool Contains(string sceneName)
+        {
+            return Scenes.ContainsKey(sceneName);
         }
 
         /// <summary>
@@ -82,10 +113,10 @@ namespace VisionPlatform.Core
             }
             catch (Exception)
             {
-                //Logging.Error($"{ToString()} 复位场景列表异常", ex);
                 throw;
             }
         }
+
 
     }
 }

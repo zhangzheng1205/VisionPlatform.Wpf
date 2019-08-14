@@ -69,7 +69,6 @@ namespace VisionPlatform.Wpf
             }
         }
 
-
         private CameraConfigViewModel cameraConfigViewModel = new CameraConfigViewModel();
 
         /// <summary>
