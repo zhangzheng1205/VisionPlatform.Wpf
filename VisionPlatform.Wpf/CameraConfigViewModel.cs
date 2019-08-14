@@ -50,7 +50,17 @@ namespace VisionPlatform.Wpf
             }
             set
             {
+                if (camera != null)
+                {
+                    camera.NewImageEvent -= Camera_NewImageEvent;
+                }
+
                 camera = value;
+
+                if (camera != null)
+                {
+                    camera.NewImageEvent += Camera_NewImageEvent;
+                }
 
                 //读取相机参数列表
                 ReadCameraParamList();
@@ -477,15 +487,25 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void TriggerSoftware()
         {
-            Camera.NewImageEvent -= Camera_NewImageEvent;
-            Camera.NewImageEvent += Camera_NewImageEvent;
-
             Camera?.TriggerSoftware();
+
+            UpdateCameraParam();
         }
 
         private void Camera_NewImageEvent(object sender, NewImageEventArgs e)
         {
             OnNewImageEvent(e.ImageInfo);
+        }
+
+        /// <summary>
+        /// 卸载
+        /// </summary>
+        public void Unloaded()
+        {
+            if (camera != null)
+            {
+                camera.NewImageEvent -= Camera_NewImageEvent;
+            }
         }
 
         #endregion

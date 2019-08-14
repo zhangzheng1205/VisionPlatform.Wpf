@@ -1,11 +1,13 @@
 ﻿using Caliburn.Micro;
 using Framework.Camera;
 using Framework.Infrastructure.Image;
+using Framework.Infrastructure.Serialization;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using VisionPlatform.Core;
+
 
 namespace VisionPlatform.Wpf
 {
@@ -227,9 +229,97 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
-        /// 
+        /// 加载配置文件
         /// </summary>
-        public void LoadFromFile()
+        /// <param name="file">文件路径</param>
+        public void LoadFromFile(string file)
+        {
+            try
+            {
+                CameraConfigParam cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(file);
+
+                if (CameraConfigViewModel?.Camera?.IsOpen == true)
+                {
+                    //停止采集
+                    CameraConfigViewModel.Camera.StopGrab();
+
+                    //配置像素类型
+                    if ((CameraConfigViewModel.Camera.PixelFormatTypeEnum?.Contains(cameraConfigParam.PixelFormat) == true) && 
+                        (CameraConfigViewModel.Camera.PixelFormat != cameraConfigParam.PixelFormat) && 
+                        (cameraConfigParam.PixelFormat != EPixelFormatType.Unknown))
+                    {
+                        CameraConfigViewModel.Camera.PixelFormat = cameraConfigParam.PixelFormat;
+                    }
+
+                    //配置触发模式
+                    if ((CameraConfigViewModel.Camera.TriggerModeEnum?.Contains(cameraConfigParam.TriggerMode) == true) &&
+                        (CameraConfigViewModel.Camera.TriggerMode != cameraConfigParam.TriggerMode) && 
+                        (cameraConfigParam.TriggerMode != ETriggerModeStatus.Unknown))
+                    {
+                        CameraConfigViewModel.Camera.TriggerMode = cameraConfigParam.TriggerMode;
+                    }
+
+                    //配置触发源
+                    if ((CameraConfigViewModel.Camera.TriggerSourceEnum?.Contains(cameraConfigParam.TriggerSource) == true) &&
+                        (CameraConfigViewModel.Camera.TriggerSource != cameraConfigParam.TriggerSource) && 
+                        (cameraConfigParam.TriggerSource != ETriggerSource.Unknown))
+                    {
+                        CameraConfigViewModel.Camera.TriggerSource = cameraConfigParam.TriggerSource;
+                    }
+
+                    //有效触发信号(硬件)
+                    if ((CameraConfigViewModel.Camera.TriggerActivationEnum?.Contains(cameraConfigParam.TriggerActivation) == true) &&
+                        (CameraConfigViewModel.Camera.TriggerActivation != cameraConfigParam.TriggerActivation) &&
+                        (cameraConfigParam.TriggerActivation != ETriggerActivation.Unknown))
+                    {
+                        CameraConfigViewModel.Camera.TriggerActivation = cameraConfigParam.TriggerActivation;
+                    }
+
+                    CameraConfigViewModel.Camera.ExposureTime = cameraConfigParam.ExposureTime;
+                    CameraConfigViewModel.Camera.Gain = cameraConfigParam.Gain;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                if (CameraConfigViewModel?.Camera?.IsOpen == true)
+                {
+                    CameraConfigViewModel.Camera.Grab();
+
+                    //刷新控件显示
+                    CameraConfigViewModel.Camera = CameraConfigViewModel.Camera;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存配置文件
+        /// </summary>
+        /// <param name="file">文件路径</param>
+        public void SaveToFile(string file)
+        {
+            if (CameraConfigViewModel?.Camera?.IsOpen == true)
+            {
+                CameraConfigParam cameraConfigParam;
+
+                cameraConfigParam.PixelFormat = CameraConfigViewModel.Camera.PixelFormat;
+                cameraConfigParam.TriggerMode = CameraConfigViewModel.Camera.TriggerMode;
+                cameraConfigParam.TriggerSource = CameraConfigViewModel.Camera.TriggerSource;
+                cameraConfigParam.TriggerActivation = CameraConfigViewModel.Camera.TriggerActivation;
+                cameraConfigParam.ExposureTime = CameraConfigViewModel.Camera.ExposureTime;
+                cameraConfigParam.Gain = CameraConfigViewModel.Camera.Gain;
+
+                JsonSerialization.SerializeObjectToFile(cameraConfigParam, file);
+            }
+        }
+
+        /// <summary>
+        /// 确认
+        /// </summary>
+        public void Accept()
         {
 
         }

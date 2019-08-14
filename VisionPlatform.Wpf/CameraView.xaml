@@ -15,6 +15,16 @@
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray" />
         <Image Source="{Binding CameraImage}" Grid.Column="2" Margin="5"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+            <ScrollViewer.Resources>
+                <Style TargetType="ScrollBar">
+                    <Style.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Width" Value="10"/>
+                            <Setter Property="MinWidth" Value="5"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Resources>
             <StackPanel Margin="5">
                 <GroupBox Header="相机列表" Grid.Row="0">
                     <StackPanel>
@@ -33,8 +43,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button cal:Message.Attach="LoadFromFile" Content="加载配置" MinWidth="60" Grid.Column="0" HorizontalAlignment="Center"/>
-                            <Button cal:Message.Attach="SaveToFile" Content="保存配置" MinWidth="60" Grid.Column="1" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="LoadTextBlock" Visibility="Collapsed" />
+                            <TextBlock x:Name="SaveTextBlock" Visibility="Collapsed" />
+                            <Button cal:Message.Attach="LoadFromFile(LoadTextBlock.Text)" x:Name="LoadButton" Click="LoadButton_Click" Content="加载配置" MinWidth="60" Grid.Column="0" HorizontalAlignment="Center" Height="19" Margin="12,0,11,0" VerticalAlignment="Bottom"/>
+                            <Button cal:Message.Attach="SaveToFile(SaveTextBlock.Text)" x:Name="SaveButton" Click="SaveButton_Click" Content="保存配置" MinWidth="60" Grid.Column="1" HorizontalAlignment="Center"/>
                             <Button cal:Message.Attach="Accept" Content="确认退出" MinWidth="60" Grid.Column="2" HorizontalAlignment="Center"/>
                         </Grid>
                     </StackPanel>

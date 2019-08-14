@@ -15,6 +15,8 @@ namespace VisionPlatform.Wpf
     /// </summary>
     public class SceneParamDebugViewModel : Screen
     {
+        #region 构造函数
+
         /// <summary>
         /// 创建SceneParamDebugViewModel新实例
         /// </summary>
@@ -30,8 +32,10 @@ namespace VisionPlatform.Wpf
         public SceneParamDebugViewModel(Scene scene)
         {
             this.scene = scene;
-            
+
         }
+
+        #endregion
 
         #region 属性
 

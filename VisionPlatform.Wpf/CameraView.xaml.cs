@@ -28,5 +28,43 @@ namespace VisionPlatform.Wpf
             InitializeComponent();
         }
 
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".json",
+                Filter = "json file|*.json"
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                LoadTextBlock.Text = ofd.FileName;
+                return;
+            }
+            else
+            {
+                LoadTextBlock.Text = "";
+            }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.SaveFileDialog
+            {
+                DefaultExt = ".json",
+                Filter = "json file|*.json"
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                SaveTextBlock.Text = ofd.FileName;
+                return;
+            }
+            else
+            {
+                SaveTextBlock.Text = "";
+            }
+        }
+
     }
 }

@@ -253,7 +253,7 @@ namespace VisionPlatform.Core
 
                 if (camera.GainAuto == EGainAutoContorl.Continuous)
                 {
-                    camera.GainAuto = EGainAutoContorl.Continuous;
+                    camera.GainAuto = EGainAutoContorl.Off;
                 }
 
                 if (camera.PixelFormatTypeEnum?.Contains(EPixelFormatType.GVSP_PIX_MONO8) == true)

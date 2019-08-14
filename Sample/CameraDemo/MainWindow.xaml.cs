@@ -17,13 +17,14 @@ namespace CameraDemo
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //设置相机平台
-            if (CameraFactory.CameraAssemblys.ContainsKey("VirtualCamera"))
+            if (CameraFactory.CameraAssemblys.ContainsKey("Hik"))
             {
-                CameraFactory.CameraAssemblyName = "VirtualCamera";
+                CameraFactory.CameraAssemblyName = "Hik";
             }
 
             //打开所有的相机
-            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+            //CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+            CameraFactory.AddAllCamera();
 
             CameraView.DataContext = new CameraViewModel();
         }

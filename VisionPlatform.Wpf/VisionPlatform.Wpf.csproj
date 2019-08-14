@@ -86,6 +86,10 @@
     <Reference Include="Framework.Infrastructure">
       <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Framework.Infrastructure.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyPlatform\SoftwareFramework\Framework.Infrastructure.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -104,6 +108,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CameraConfigParam.cs" />
     <Compile Include="CameraConfigView.xaml.cs">
       <DependentUpon>CameraConfigView.xaml</DependentUpon>
     </Compile>
