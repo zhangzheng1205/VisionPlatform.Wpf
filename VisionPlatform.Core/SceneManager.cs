@@ -8,10 +8,37 @@ namespace VisionPlatform.Core
     /// </summary>
     public class SceneManager
     {
+        #region 单例模式
+
+        /// <summary>
+        /// 私有实例接口
+        /// </summary>
+        private static readonly SceneManager Instance = new SceneManager();
+
+        /// <summary>
+        /// 创建私有SceneManager新实例,保证外界无法通过new来创建新实例
+        /// </summary>
+        private SceneManager()
+        {
+
+        }
+
+        /// <summary>
+        /// 获取实例接口
+        /// </summary>
+        /// <returns></returns>
+        public static SceneManager GetInstance()
+        {
+
+            return Instance;
+        }
+
+        #endregion
+
         /// <summary>
         /// 场景列表
         /// </summary>
-        private readonly Dictionary<string, Scene> Scenes = new Dictionary<string, Scene>();
+        public Dictionary<string, Scene> Scenes { get; } = new Dictionary<string, Scene>();
 
         #region 索引器
 
@@ -34,6 +61,8 @@ namespace VisionPlatform.Core
         }
 
         #endregion
+
+        #region 场景基础操作
 
         /// <summary>
         /// 注册场景
@@ -117,6 +146,18 @@ namespace VisionPlatform.Core
             }
         }
 
+        /// <summary>
+        /// 保存场景到本地
+        /// </summary>
+        public void SaveScenes()
+        {
+            foreach (var item in Scenes.Values)
+            {
+                string file = $"VisionPaltform/Scene/{item.EVisionFrame}/{item.Name}/{item.Name}.json";
+            }
+        }
+
+        #endregion
 
     }
 }
