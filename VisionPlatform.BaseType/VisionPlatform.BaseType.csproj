@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ECameraSDK.cs" />
     <Compile Include="EVisionFrame.cs" />
     <Compile Include="EVisionOperaFileType.cs" />
     <Compile Include="ItemBase.cs" />

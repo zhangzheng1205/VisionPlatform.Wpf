@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using VisionPlatform.BaseType;
 
 namespace VisionPlatform.Core
 {
@@ -24,7 +22,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 相机集合字典
         /// </summary>
-        public static Dictionary<string, Assembly> CameraAssemblys { get; private set; } = new Dictionary<string, Assembly>();
+        public static Dictionary<ECameraSDK, Assembly> CameraAssemblys { get; private set; } = new Dictionary<ECameraSDK, Assembly>();
 
         /// <summary>
         /// 静态构造
@@ -32,6 +30,50 @@ namespace VisionPlatform.Core
         static CameraFactory()
         {
             UpdateAssembly();
+        }
+
+        /// <summary>
+        /// 目录名转换为ECameraSDK
+        /// </summary>
+        /// <param name="directoryName">目录名</param>
+        /// <returns>ECameraSDK</returns>
+        private static ECameraSDK ConvertToECameraSDK(string directoryName)
+        {
+            switch (directoryName.ToLower())
+            {
+                case "pylon": return ECameraSDK.Pylon;
+                case "ueyesdk": return ECameraSDK.uEye;
+                case "hik": return ECameraSDK.Hik;
+                case "commonsdk": return ECameraSDK.Common;
+                case "cognex": return ECameraSDK.Cognex;
+                case "daheng": return ECameraSDK.Daheng;
+                case "dalsa": return ECameraSDK.DALSA;
+                case "imagingsource": return ECameraSDK.ImagingSource;
+                case "virtualcamera": return ECameraSDK.VirtualCamera;
+                default: return ECameraSDK.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// 转换ECameraSDK为目录名
+        /// </summary>
+        /// <param name="eCameraSDK">相机SDK类型</param>
+        /// <returns>目录名</returns>
+        private static string ConvertToDirectoryName(ECameraSDK eCameraSDK)
+        {
+            switch (eCameraSDK)
+            {
+                case ECameraSDK.Pylon: return "Pylon";
+                case ECameraSDK.uEye: return "uEyeSDK";
+                case ECameraSDK.Hik: return "Hik";
+                case ECameraSDK.Common: return "CommonSDK";
+                case ECameraSDK.Cognex: return "Cognex";
+                case ECameraSDK.Daheng: return "Daheng";
+                case ECameraSDK.DALSA: return "DALSA";
+                case ECameraSDK.ImagingSource: return "ImagingSource";
+                case ECameraSDK.VirtualCamera: return "VirtualCamera";
+                default: return "";
+            }
         }
 
         /// <summary>
@@ -56,7 +98,7 @@ namespace VisionPlatform.Core
                         var assembly = Assembly.LoadFrom(dllPath);
 
                         //将dll添加到集合字典中
-                        CameraAssemblys.Add(item.Name, assembly);
+                        CameraAssemblys.Add(ConvertToECameraSDK(item.Name), assembly);
                     }
 
                 }
@@ -66,25 +108,20 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 创建相机实例
         /// </summary>
-        /// <param name="name">相机接口名</param>
+        /// <param name="eCameraSDK">相机SDK类型</param>
         /// <returns>相机实例</returns>
-        public static ICamera CreateInstance(string name)
+        public static ICamera CreateInstance(ECameraSDK eCameraSDK)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("name cannot be null");
-            }
-
             try
             {
-                if (CameraAssemblys.ContainsKey(name))
+                if (CameraAssemblys.ContainsKey(eCameraSDK))
                 {
                     //创建视觉框架实例
-                    foreach (var item in CameraAssemblys[name].ExportedTypes)
+                    foreach (var item in CameraAssemblys[eCameraSDK].ExportedTypes)
                     {
                         if (item.Name == "Camera")
                         {
-                            object obj = CameraAssemblys[name].CreateInstance(item.FullName);
+                            object obj = CameraAssemblys[eCameraSDK].CreateInstance(item.FullName);
 
                             if (obj is ICamera)
                             {
@@ -94,7 +131,7 @@ namespace VisionPlatform.Core
                     }
                 }
 
-                throw new FileNotFoundException($"{nameof(name)} is not found");
+                throw new FileNotFoundException($"{nameof(eCameraSDK)} is not found");
             }
             catch (Exception)
             {
@@ -109,7 +146,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 相机集合名
         /// </summary>
-        public static string CameraAssemblyName { get; set; }
+        public static ECameraSDK ECameraSDK { get; set; } = ECameraSDK.Unknown;
 
         /// <summary>
         /// 相机列表
@@ -122,12 +159,13 @@ namespace VisionPlatform.Core
         /// <returns>相机信息列表</returns>
         public static List<DeviceInfo> GetAllCameras()
         {
-            if (string.IsNullOrEmpty(CameraAssemblyName) || !CameraAssemblys.ContainsKey(CameraAssemblyName))
+            //校验相机SDK是否有效
+            if (!CameraAssemblys.ContainsKey(ECameraSDK))
             {
-                throw new ArgumentException("CameraAssemblyName invalid");
+                throw new ArgumentException("ECameraSDK invalid");
             }
 
-            return CreateInstance(CameraAssemblyName).GetDeviceList();
+            return CreateInstance(ECameraSDK).GetDeviceList();
         }
 
         /// <summary>
@@ -139,10 +177,10 @@ namespace VisionPlatform.Core
         /// </exception>
         public static void AddCamera(string cameraSerial)
         {
-            //校验相机SDK名是否有效
-            if (string.IsNullOrEmpty(CameraAssemblyName))
+            //校验相机SDK是否有效
+            if (!CameraAssemblys.ContainsKey(ECameraSDK))
             {
-                throw new ArgumentException("CameraAssemblyName cannot be null");
+                throw new ArgumentException("ECameraSDK invalid");
             }
 
             if (string.IsNullOrEmpty(cameraSerial))
@@ -156,7 +194,7 @@ namespace VisionPlatform.Core
                 return;
             }
 
-            ICamera camera = CreateInstance(CameraAssemblyName);
+            ICamera camera = CreateInstance(ECameraSDK);
 
             if (camera.Connect(cameraSerial))
             {
@@ -177,9 +215,9 @@ namespace VisionPlatform.Core
         public static void AddAllCamera()
         {
             //校验相机SDK名是否有效
-            if (string.IsNullOrEmpty(CameraAssemblyName))
+            if (!CameraAssemblys.ContainsKey(ECameraSDK))
             {
-                throw new ArgumentException("CameraAssemblyName cannot be null");
+                throw new ArgumentException("ECameraSDK invalid");
             }
 
             try
@@ -260,7 +298,7 @@ namespace VisionPlatform.Core
                 {
                     camera.PixelFormat = EPixelFormatType.GVSP_PIX_MONO8;
                 }
-                
+
                 camera.Grab();
             }
         }

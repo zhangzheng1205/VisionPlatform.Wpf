@@ -161,15 +161,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\VisionPlatform.ViewModels\VisionPlatform.ViewModels.csproj">
-      <Project>{0def1e8a-8d52-4081-84cb-af17f4163f7d}</Project>
-      <Name>VisionPlatform.ViewModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\VisionPlatform.Views\VisionPlatform.Views.csproj">
-      <Project>{4a00203e-d0c7-47b1-80bd-9747039d3889}</Project>
-      <Name>VisionPlatform.Views</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

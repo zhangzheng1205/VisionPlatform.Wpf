@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VisionPlatform.BaseType
+﻿namespace VisionPlatform.BaseType
 {
     /// <summary>
     /// 视觉平台枚举

@@ -29,14 +29,14 @@ namespace SceneConfigDemo
             InitializeComponent();
         }
 
-        private Scene scene;
+        private Scene scene = null;
         private Scene scene2;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (CameraFactory.CameraAssemblys.ContainsKey("VirtualCamera"))
+            if (CameraFactory.CameraAssemblys.ContainsKey(ECameraSDK.VirtualCamera))
             {
-                CameraFactory.CameraAssemblyName = "VirtualCamera";
+                CameraFactory.ECameraSDK = ECameraSDK.VirtualCamera;
             }
             
             scene?.Dispose();

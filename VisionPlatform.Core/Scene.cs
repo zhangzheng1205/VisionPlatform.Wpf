@@ -458,7 +458,7 @@ namespace VisionPlatform.Core
 
                     Camera = CameraFactory.GetCamera(cameraSerial);
 
-                    if (CameraFactory.CameraAssemblyName != "VirtualCamera")
+                    if (CameraFactory.ECameraSDK != ECameraSDK.VirtualCamera)
                     {
                         if (string.IsNullOrEmpty(CalibFile))
                         {

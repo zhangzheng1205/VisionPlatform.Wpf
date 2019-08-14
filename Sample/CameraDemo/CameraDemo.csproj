@@ -147,6 +147,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\VisionPlatform.BaseType\VisionPlatform.BaseType.csproj">
+      <Project>{F62C07D9-B7B1-45F3-BD66-9ABC817C3960}</Project>
+      <Name>VisionPlatform.BaseType</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\VisionPlatform.Core\VisionPlatform.Core.csproj">
       <Project>{C67FD7FF-D5FC-4DB9-8EFD-4EA53D40F633}</Project>
       <Name>VisionPlatform.Core</Name>
