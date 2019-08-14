@@ -26,6 +26,7 @@ namespace VisionPlatform.Wpf
         {
             UpdateCameras();
             CameraConfigViewModel.NewImageEvent += CameraConfigViewModel_NewImageEvent;
+            NotifyOfPropertyChange(() => IsCameraValid);
         }
 
         #endregion
@@ -49,6 +50,23 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => Cameras);
             }
         }
+
+        /// <summary>
+        /// 相机有效性
+        /// </summary>
+        public bool IsCameraValid
+        {
+            get
+            {
+                if (CameraConfigViewModel?.Camera?.IsOpen == true)
+                {
+                    return true;
+                }
+
+                return false; ;
+            }
+        }
+
 
         private CameraConfigViewModel cameraConfigViewModel = new CameraConfigViewModel();
 
@@ -93,7 +111,6 @@ namespace VisionPlatform.Wpf
         #endregion
 
         #region 方法
-
 
         /// <summary>
         /// 创建Bmp图像
@@ -206,6 +223,14 @@ namespace VisionPlatform.Wpf
         public void SetCamera(ICamera camera)
         {
             CameraConfigViewModel.Camera = camera;
+            NotifyOfPropertyChange(() => IsCameraValid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LoadFromFile()
+        {
 
         }
 

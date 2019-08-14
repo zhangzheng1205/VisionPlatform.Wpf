@@ -7,7 +7,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="380" d:DesignWidth="220"  Height="Auto" Width="Auto" MinHeight="360" MinWidth="200">
-    <StackPanel IsEnabled="{Binding IsCameraValid}">
+    <StackPanel>
             <DockPanel Margin="5,5">
                 <Label Content="相机名" MinWidth="70"/>
                 <TextBox Text="{Binding CameraName, Mode=OneWay}" IsReadOnly="True"/>

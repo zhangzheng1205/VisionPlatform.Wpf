@@ -25,7 +25,19 @@
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="相机参数" Grid.Row="1" Margin="0,5,0,0">
-                    <local:CameraConfigView  DataContext="{Binding CameraConfigViewModel}"/>
+                    <StackPanel IsEnabled="{Binding IsCameraValid}">
+                        <local:CameraConfigView  DataContext="{Binding CameraConfigViewModel}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button cal:Message.Attach="LoadFromFile" Content="加载配置" MinWidth="60" Grid.Column="0" HorizontalAlignment="Center"/>
+                            <Button cal:Message.Attach="SaveToFile" Content="保存配置" MinWidth="60" Grid.Column="1" HorizontalAlignment="Center"/>
+                            <Button cal:Message.Attach="Accept" Content="确认退出" MinWidth="60" Grid.Column="2" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>

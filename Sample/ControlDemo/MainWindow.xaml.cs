@@ -27,7 +27,6 @@ namespace ControlDemo
             InitializeComponent();
         }
 
-
         /// <summary>
         /// 显示标定窗口
         /// </summary>

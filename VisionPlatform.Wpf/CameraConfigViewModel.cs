@@ -52,8 +52,6 @@ namespace VisionPlatform.Wpf
             {
                 camera = value;
 
-                NotifyOfPropertyChange(() => IsCameraValid); ;
-
                 //读取相机参数列表
                 ReadCameraParamList();
 
@@ -61,23 +59,6 @@ namespace VisionPlatform.Wpf
                 UpdateCameraParam();
             }
         }
-
-        /// <summary>
-        /// 相机有效性
-        /// </summary>
-        public bool IsCameraValid
-        {
-            get
-            {
-                if (Camera?.IsOpen == true)
-                {
-                    return true;
-                }
-
-                return false; ;
-            }
-        }
-
 
         #region 相机参数
 
