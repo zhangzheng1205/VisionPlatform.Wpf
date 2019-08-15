@@ -32,5 +32,13 @@ namespace VisionPlatformDemo
                 DataContext = new CameraViewModel(),
             };
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigViewContentControl.Content = new SceneParamDebugView
+            {
+                DataContext = new SceneParamDebugViewModel(),
+            };
+        }
     }
 }

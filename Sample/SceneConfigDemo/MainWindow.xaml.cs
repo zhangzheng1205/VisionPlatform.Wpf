@@ -40,7 +40,7 @@ namespace SceneConfigDemo
             }
             
             scene?.Dispose();
-            
+
             //if (File.Exists("查找5边型.json"))
             //{
             //    scene = Scene.Deserialize("查找5边型.json");
@@ -53,18 +53,11 @@ namespace SceneConfigDemo
             //    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
             //}
 
-            if (File.Exists("查找6边型.json"))
-            {
-                scene2 = Scene.Deserialize("查找6边型.json");
-            }
-            else
-            {
-                scene2 = new Scene("查找6边型", EVisionFrame.VisionPro, @"E:\0. 临时目录\TestVpp.vpp");
-            }
+            scene2 = new Scene("查找6边型", EVisionFrame.VisionPro, @"E:\1.vpp");
 
             var viewModel = new SceneParamDebugViewModel();
             SceneParamDebugView.DataContext = viewModel;
-            viewModel.Scene = scene2;
+            //viewModel.Scene = scene2;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

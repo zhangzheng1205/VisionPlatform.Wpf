@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
-
+using VisionPlatform.Wpf;
 
 namespace VisionPlatformDemo
 {
@@ -32,7 +32,22 @@ namespace VisionPlatformDemo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new SceneCreateWindow().ShowDialog();
+            Window window = new Window();
+            SceneView control = new SceneView
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+            window.MinWidth = control.MinWidth + 50;
+            window.MinHeight = control.MinHeight + 50;
+            window.Width = control.MinWidth + 50;
+            window.Height = control.MinHeight + 50;
+            window.Content = control;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Owner = Window.GetWindow(this);
+            window.Title = "标定窗口";
+            window.WindowState = WindowState.Maximized;
+            window.ShowDialog();
         }
 
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)

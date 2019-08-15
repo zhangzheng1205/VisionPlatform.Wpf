@@ -35,10 +35,14 @@ namespace VisionPlatform.Core
 
         #endregion
 
+        #region 属性
+
         /// <summary>
         /// 场景列表
         /// </summary>
         public Dictionary<string, Scene> Scenes { get; } = new Dictionary<string, Scene>();
+
+        #endregion
 
         #region 索引器
 

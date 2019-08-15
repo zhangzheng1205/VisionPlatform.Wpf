@@ -1,6 +1,6 @@
 ﻿using Framework.Camera;
 
-namespace VisionPlatform.Wpf
+namespace VisionPlatform.BaseType
 {
     /// <summary>
     /// 相机配置参数
@@ -10,32 +10,32 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 像素格式
         /// </summary>
-        public EPixelFormatType PixelFormat;
+        public EPixelFormatType PixelFormat { get; set; }
 
         /// <summary>
         /// 触发模式
         /// </summary>
-        public ETriggerModeStatus TriggerMode;
+        public ETriggerModeStatus TriggerMode { get; set; }
 
         /// <summary>
         /// 触发源
         /// </summary>
-        public ETriggerSource TriggerSource;
+        public ETriggerSource TriggerSource { get; set; }
 
         /// <summary>
         /// 有效触发信号(硬件)
         /// </summary>
-        public ETriggerActivation TriggerActivation;
+        public ETriggerActivation TriggerActivation { get; set; }
 
         /// <summary>
         /// 曝光值
         /// </summary>
-        public double ExposureTime;
+        public double ExposureTime { get; set; }
 
         /// <summary>
         /// 增益值
         /// </summary>
-        public double Gain;
+        public double Gain { get; set; }
 
     }
 }

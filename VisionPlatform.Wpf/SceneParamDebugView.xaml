@@ -20,11 +20,11 @@
             <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="5">
-            <DockPanel>
-                <Label Content="场景名"/>
-                <TextBox Text="{Binding SceneName, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Center"/>
-            </DockPanel>
-
+            <StackPanel Margin="0,10,0,0">
+                <Label Content="场景名称:"/>
+                <TextBox Text="{Binding SceneName, Mode=OneWay}" IsReadOnly="True"/>
+            </StackPanel>
+            
             <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableInput, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Label Content="输入参数:"/>
                 <DataGrid ItemsSource="{Binding Inputs}"
@@ -57,8 +57,8 @@
             </StackPanel>
 
             <StackPanel Margin="0,10,0,0">
-                <Label Content="运行状态"/>
-                <DataGrid ItemsSource="{Binding RunStatus, Mode=TwoWay}" 
+                <Label Content="运行状态:"/>
+                <DataGrid ItemsSource="{Binding RunStatus, Mode=OneWay}" 
                           CanUserSortColumns="True" 
                           CanUserAddRows="False"
                           AutoGenerateColumns="False">
@@ -71,10 +71,12 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
+            
             <StackPanel Margin="0,10,0,0">
-                <Label Content="运行结果"/>
-                <TextBox Text="{Binding VisionResult}"/>
+                <Label Content="运行结果:"/>
+                <TextBox Text="{Binding VisionResult}" IsReadOnly="True"/>
             </StackPanel>
+            
             <StackPanel Margin="0,10,0,0">
                 <Label Content="场景控制"/>
                 <StackPanel Orientation="Horizontal">
@@ -82,7 +84,7 @@
                     <StackPanel Width="10"/>
                     <Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
                     <StackPanel Width="10"/>
-                    <Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>
+                    <!--<Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>-->
                 </StackPanel>
             </StackPanel>
         </StackPanel>

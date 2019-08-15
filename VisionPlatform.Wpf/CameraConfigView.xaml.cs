@@ -26,6 +26,8 @@ namespace VisionPlatform.Wpf
         public CameraConfigView()
         {
             InitializeComponent();
+
+            DataContext = new CameraConfigViewModel();
         }
     }
 }

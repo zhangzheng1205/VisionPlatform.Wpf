@@ -26,6 +26,8 @@ namespace VisionPlatform.Wpf
         public SceneParamDebugView()
         {
             InitializeComponent();
+
+            DataContext = new SceneParamDebugViewModel();
         }
     }
 }

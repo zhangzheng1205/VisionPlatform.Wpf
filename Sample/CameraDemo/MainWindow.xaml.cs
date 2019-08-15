@@ -17,9 +17,9 @@ namespace CameraDemo
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //设置相机平台
-            if (CameraFactory.CameraAssemblys.ContainsKey(VisionPlatform.BaseType.ECameraSDK.Hik))
+            if (CameraFactory.CameraAssemblys.ContainsKey(VisionPlatform.BaseType.ECameraSDK.Pylon))
             {
-                CameraFactory.ECameraSDK = VisionPlatform.BaseType.ECameraSDK.Hik;
+                CameraFactory.ECameraSDK = VisionPlatform.BaseType.ECameraSDK.Pylon;
             }
 
             //打开所有的相机

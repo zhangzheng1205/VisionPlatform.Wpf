@@ -6,8 +6,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using VisionPlatform.BaseType;
 using VisionPlatform.Core;
-
 
 namespace VisionPlatform.Wpf
 {
@@ -42,10 +42,7 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public ObservableCollection<ICamera> Cameras
         {
-            get
-            {
-                return cameras;
-            }
+            get => cameras;
             set
             {
                 cameras = value;
@@ -76,10 +73,7 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public CameraConfigViewModel CameraConfigViewModel
         {
-            get
-            {
-                return cameraConfigViewModel;
-            }
+            get => cameraConfigViewModel;
             set
             {
                 cameraConfigViewModel = value;
@@ -97,10 +91,7 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public BitmapImage CameraImage
         {
-            get
-            {
-                return cameraImage;
-            }
+            get => cameraImage;
             set
             {
                 //cameraImage?.StreamSource?.Dispose();
@@ -189,11 +180,11 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                using (var bitmap = CreateBmpImage(e.ImageInfo.PixelFormat, e.ImageInfo.Width, e.ImageInfo.Height, e.ImageInfo.ImagePtr))
+                using (Bitmap bitmap = CreateBmpImage(e.ImageInfo.PixelFormat, e.ImageInfo.Width, e.ImageInfo.Height, e.ImageInfo.ImagePtr))
                 {
                     if (bitmap != null)
                     {
-                        var bitmapToBitmapImage = BitmapToBitmapImage(bitmap);
+                        BitmapImage bitmapToBitmapImage = BitmapToBitmapImage(bitmap);
                         CameraImage = bitmapToBitmapImage;
                     }
 
@@ -243,8 +234,8 @@ namespace VisionPlatform.Wpf
                     CameraConfigViewModel.Camera.StopGrab();
 
                     //配置像素类型
-                    if ((CameraConfigViewModel.Camera.PixelFormatTypeEnum?.Contains(cameraConfigParam.PixelFormat) == true) && 
-                        (CameraConfigViewModel.Camera.PixelFormat != cameraConfigParam.PixelFormat) && 
+                    if ((CameraConfigViewModel.Camera.PixelFormatTypeEnum?.Contains(cameraConfigParam.PixelFormat) == true) &&
+                        (CameraConfigViewModel.Camera.PixelFormat != cameraConfigParam.PixelFormat) &&
                         (cameraConfigParam.PixelFormat != EPixelFormatType.Unknown))
                     {
                         CameraConfigViewModel.Camera.PixelFormat = cameraConfigParam.PixelFormat;
@@ -252,7 +243,7 @@ namespace VisionPlatform.Wpf
 
                     //配置触发模式
                     if ((CameraConfigViewModel.Camera.TriggerModeEnum?.Contains(cameraConfigParam.TriggerMode) == true) &&
-                        (CameraConfigViewModel.Camera.TriggerMode != cameraConfigParam.TriggerMode) && 
+                        (CameraConfigViewModel.Camera.TriggerMode != cameraConfigParam.TriggerMode) &&
                         (cameraConfigParam.TriggerMode != ETriggerModeStatus.Unknown))
                     {
                         CameraConfigViewModel.Camera.TriggerMode = cameraConfigParam.TriggerMode;
@@ -260,7 +251,7 @@ namespace VisionPlatform.Wpf
 
                     //配置触发源
                     if ((CameraConfigViewModel.Camera.TriggerSourceEnum?.Contains(cameraConfigParam.TriggerSource) == true) &&
-                        (CameraConfigViewModel.Camera.TriggerSource != cameraConfigParam.TriggerSource) && 
+                        (CameraConfigViewModel.Camera.TriggerSource != cameraConfigParam.TriggerSource) &&
                         (cameraConfigParam.TriggerSource != ETriggerSource.Unknown))
                     {
                         CameraConfigViewModel.Camera.TriggerSource = cameraConfigParam.TriggerSource;
@@ -302,7 +293,7 @@ namespace VisionPlatform.Wpf
         {
             if (CameraConfigViewModel?.Camera?.IsOpen == true)
             {
-                CameraConfigParam cameraConfigParam;
+                var cameraConfigParam = new CameraConfigParam();
 
                 cameraConfigParam.PixelFormat = CameraConfigViewModel.Camera.PixelFormat;
                 cameraConfigParam.TriggerMode = CameraConfigViewModel.Camera.TriggerMode;

@@ -26,6 +26,8 @@ namespace VisionPlatform.Wpf
         public CameraView()
         {
             InitializeComponent();
+
+            DataContext = new CameraViewModel();
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)

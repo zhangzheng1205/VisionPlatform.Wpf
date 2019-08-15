@@ -95,7 +95,7 @@ namespace VisionPlatform.Wpf
             {
                 if (Scene?.VisionFrame?.Inputs == null)
                 {
-                    return null;
+                    return new ObservableCollection<ItemBase>();
                 }
 
                 return new ObservableCollection<ItemBase>(Scene?.VisionFrame?.Inputs);
@@ -122,7 +122,7 @@ namespace VisionPlatform.Wpf
             {
                 if (Scene?.VisionFrame?.Outputs == null)
                 {
-                    return null;
+                    return new ObservableCollection<ItemBase>();
                 }
 
                 return new ObservableCollection<ItemBase>(Scene?.VisionFrame?.Outputs);
@@ -136,7 +136,7 @@ namespace VisionPlatform.Wpf
         {
             get
             {
-                return Scene?.VisionFrame?.ConfigWindow;
+                return Scene?.VisionFrame?.ConfigWindow ?? new System.Windows.Controls.Grid();
             }
         }
 
@@ -150,7 +150,11 @@ namespace VisionPlatform.Wpf
             get
             {
                 runStatus.Clear();
-                runStatus.Add(Scene?.VisionFrame?.RunStatus);
+                if (Scene?.VisionFrame?.RunStatus != null)
+                {
+                    runStatus.Add(Scene?.VisionFrame?.RunStatus);
+                }
+                
                 return runStatus;
             }
         }
@@ -214,13 +218,13 @@ namespace VisionPlatform.Wpf
             
         }
 
-        /// <summary>
-        /// 保存场景
-        /// </summary>
-        public void SaveScene()
-        {
-            Scene.Serialize(Scene, "1.json");
-        }
+        ///// <summary>
+        ///// 保存场景
+        ///// </summary>
+        //public void SaveScene()
+        //{
+        //    Scene.Serialize(Scene, "1.json");
+        //}
 
         #endregion
     }
