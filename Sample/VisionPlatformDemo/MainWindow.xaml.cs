@@ -32,42 +32,60 @@ namespace VisionPlatformDemo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            ConfigFrameButton_Click(null, null);
+
+            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
+            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
+
             Window window = new Window();
             SceneView control = new SceneView
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
-            window.MinWidth = control.MinWidth + 50;
-            window.MinHeight = control.MinHeight + 50;
-            window.Width = control.MinWidth + 50;
-            window.Height = control.MinHeight + 50;
+            window.MinWidth = 800;
+            window.MinHeight = 500;
+            window.Width = 800;
+            window.Height = 500;
             window.Content = control;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Owner = Window.GetWindow(this);
-            window.Title = "标定窗口";
+            window.Title = "场景配置窗口";
             window.WindowState = WindowState.Maximized;
+
+            //(control.DataContext as SceneViewModel).CreateScene();
+
             window.ShowDialog();
         }
 
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
         {
-            string cameraSDK = CameraSDKComboBox.SelectedItem as string;
-            ECameraSdkType eCameraSDK;
-            switch (CameraSDKComboBox.SelectedItem)
+            switch ((CameraSDKComboBox.SelectedItem as ComboBoxItem).Content)
             {
                 case "Pylon":
-                    eCameraSDK = ECameraSdkType.Pylon;
+                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.Pylon;
                     break;
                 case "VirtualCamera":
-                    eCameraSDK = ECameraSdkType.VirtualCamera;
+                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
                     break;
                 default:
-                    eCameraSDK = ECameraSdkType.Unknown;
+                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.Unknown;
                     break;
             }
 
-            CameraFactory.DefaultCameraSdkType = eCameraSDK;
+            switch ((VisionFrameComboBox.SelectedItem as ComboBoxItem).Content)
+            {
+                case "Halcon":
+                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
+                    break;
+                case "VisionPro":
+                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.VisionPro;
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 }

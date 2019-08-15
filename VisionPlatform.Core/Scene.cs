@@ -68,8 +68,13 @@ namespace VisionPlatform.Core
                 throw new ArgumentException("VisionFrame cannot be null");
             }
 
-            VisionOperaFile = visionOperaFile;
-            VisionFrame.Init(visionOperaFile);
+            if (string.IsNullOrEmpty(visionOperaFile) || !File.Exists(visionOperaFile))
+            {
+                throw new FileNotFoundException("visionOperaFile invalid");
+            }
+
+            //还原视觉算子
+            SetVisionOperaFile(visionOperaFile);
 
             //还原输入参数
             if (VisionFrame.IsEnableInput == true)
@@ -479,6 +484,62 @@ namespace VisionPlatform.Core
         }
 
         /// <summary>
+        /// 设置视觉算子文件
+        /// </summary>
+        /// <param name="file">视觉算子文件</param>
+        public void SetVisionOperaFile(string file)
+        {
+            if (VisionFrame == null)
+            {
+                throw new ArgumentException("VisionFrame cannot be null");
+            }
+
+            //还原视觉算子
+            if (string.IsNullOrEmpty(file) || !File.Exists(file))
+            {
+                throw new FileNotFoundException("visionOperaFile invalid");
+            }
+
+            //确认文件是否本地路径,如果不是,则复制到本地路径下
+            string dstDirectory = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOpera";
+            string dstFile = $"{dstDirectory}/{Path.GetFileName(file)}";
+
+            if (!Directory.Exists(dstDirectory))
+            {
+                Directory.CreateDirectory(dstDirectory);
+            }
+
+            if (Path.GetFullPath(dstFile) != file)
+            {
+                try
+                {
+                    //如果是dll,则将同级目录下所有的dll都拷贝过来
+                    if (Path.GetExtension(file) == ".dll")
+                    {
+                        FileInfo[] fileList = new DirectoryInfo(Path.GetDirectoryName(file))?.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
+
+                        foreach (var item in fileList)
+                        {
+                            File.Copy(item.FullName, $"{dstDirectory}/{Path.GetFileName(item.Name)}", true);
+                        }
+                    }
+                    else
+                    {
+                        File.Copy(file, dstFile, true);
+                    }
+                }
+                catch (IOException)
+                {
+                    //如果是同一个文件,则会报IO异常,过滤掉此异常
+                }
+            }
+
+            VisionOperaFile = Path.GetFileName(dstFile);
+            VisionFrame.Init(dstFile);
+            
+        }
+
+        /// <summary>
         /// 初始化
         /// </summary>
         /// <remarks>
@@ -506,7 +567,8 @@ namespace VisionPlatform.Core
                     throw new ArgumentException("VisionOperaFile cannot be null");
                 }
 
-                VisionFrame.Init(VisionOperaFile);
+                string visionOperaFilePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOpera/{VisionOperaFile}";
+                VisionFrame.Init(visionOperaFilePath);
 
                 //还原相机
                 if (VisionFrame.IsEnableCamera)

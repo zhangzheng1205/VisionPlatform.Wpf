@@ -179,10 +179,26 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 场景配置完成事件
+        /// </summary>
+        public event EventHandler<SceneConfigurationCompletedEventArgs> SceneConfigurationCompleted;
 
         #endregion
 
         #region 方法
+
+        /// <summary>
+        /// 触发场景配置完成事件
+        /// </summary>
+        protected void OnSceneConfigurationCompleted(Scene scene)
+        {
+            SceneConfigurationCompleted?.Invoke(this, new SceneConfigurationCompletedEventArgs(scene));
+        }
 
         /// <summary>
         /// 执行场景
@@ -216,6 +232,16 @@ namespace VisionPlatform.Wpf
 
             }
             
+        }
+
+        /// <summary>
+        /// 确认退出
+        /// </summary>
+        public void Accept()
+        {
+            string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
+            Scene.Serialize(Scene, file);
+            OnSceneConfigurationCompleted(Scene);
         }
 
         ///// <summary>

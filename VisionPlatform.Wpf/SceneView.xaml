@@ -21,47 +21,47 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="创建场景" Margin="5">
-            <StackPanel Margin="5">
+            <StackPanel Margin="5" IsEnabled="{Binding IsEnableSceneConfig}">
                 <DockPanel>
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">场景名称</TextBlock>
-                    <Button Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20" Visibility="Hidden">...</Button>
-                    <TextBox  Text="{Binding SceneName}"/>
+                    <Button cal:Message.Attach="CreateScene(SceneNameTextBox.Text)" IsEnabled="{Binding CanCreateScene}" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40" Visibility="Visible">创建</Button>
+                    <TextBox x:Name="SceneNameTextBox" Text="{Binding SceneName}"/>
                 </DockPanel>
                 <StackPanel MinHeight="10"/>
-                <DockPanel>
+                <DockPanel IsEnabled="{Binding IsSceneValid}">
                     <TextBlock x:Name="VisionOperaFileTextBlock" Visibility="Collapsed"/>
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉算子</TextBlock>
-                    <Button Click="SelectVisionOperaFileButton_Click" cal:Message.Attach="SetCameraOperaFile(VisionOperaFileTextBlock.Text)" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">...</Button>
+                    <Button Click="SelectVisionOperaFileButton_Click" cal:Message.Attach="SetVisionOperaFile(VisionOperaFileTextBlock.Text)" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">...</Button>
                     <TextBox IsReadOnly="True" Text="{Binding VisionOperaFile}" />
                 </DockPanel>
                 <StackPanel MinHeight="10"/>
                 <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
                 <StackPanel MinHeight="10"/>
-                <StackPanel Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel IsEnabled="{Binding IsSceneValid}" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock>相机配置</TextBlock>
                     <StackPanel MinHeight="10"/>
                     <DockPanel>
                         <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机</TextBlock>
-                        <Button cal:Message.Attach="UpdateCameras" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">Φ</Button>
-                        <ComboBox ItemsSource="{Binding Cameras}" />
+                        <Button cal:Message.Attach="UpdateCameras" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">Φ</Button>
+                        <ComboBox ItemsSource="{Binding Cameras}" SelectedItem="{Binding SelectedCamera}"/>
                     </DockPanel>
                     <StackPanel MinHeight="10"/>
                     <DockPanel>
                         <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机配置</TextBlock>
-                        <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">-></Button>
+                        <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
                         <ComboBox ItemsSource="{Binding CameraConfigFiles}"/>
                     </DockPanel>
                     <StackPanel MinHeight="10"/>
                     <DockPanel>
                         <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">标定文件</TextBlock>
-                        <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">-></Button>
+                        <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
                         <ComboBox ItemsSource="{Binding CameraCalibFiles}"/>
                     </DockPanel>
                 </StackPanel>
                 <StackPanel MinHeight="10"/>
                 <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
                 <StackPanel MinHeight="10"/>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsSceneValid}">
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉配置</TextBlock>
                     <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->"/>
                 </StackPanel>

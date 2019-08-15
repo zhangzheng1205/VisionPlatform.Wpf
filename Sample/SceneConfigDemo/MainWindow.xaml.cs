@@ -47,17 +47,17 @@ namespace SceneConfigDemo
             //}
             //else
             //{
-            //    string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
-            //    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
-            //    //string serial = @"00575388468";
-            //    scene = new Scene("查找5边型", EVisionFrameType.Halcon, dllFile, serial);
+                string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
+                string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
+                //string serial = @"00575388468";
+                scene = new Scene("查找5边型", EVisionFrameType.Halcon, dllFile, serial);
             //}
 
-            scene2 = new Scene("查找6边型", EVisionFrameType.VisionPro, @"E:\1.vpp");
+            //scene2 = new Scene("查找6边型", EVisionFrameType.VisionPro, @"E:\1.vpp");
 
             var viewModel = new SceneParamDebugViewModel();
             SceneParamDebugView.DataContext = viewModel;
-            //viewModel.Scene = scene2;
+            viewModel.Scene = scene;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
