@@ -31,7 +31,7 @@
                 <DockPanel>
                     <TextBlock x:Name="VisionOperaFileTextBlock" Visibility="Collapsed"/>
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉算子</TextBlock>
-                    <Button Click="SelectVisionOperaFileButton_Click" cal:Message.Attach="SetCameraOperaFile" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">...</Button>
+                    <Button Click="SelectVisionOperaFileButton_Click" cal:Message.Attach="SetCameraOperaFile(VisionOperaFileTextBlock.Text)" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="20">...</Button>
                     <TextBox IsReadOnly="True" Text="{Binding VisionOperaFile}" />
                 </DockPanel>
                 <StackPanel MinHeight="10"/>

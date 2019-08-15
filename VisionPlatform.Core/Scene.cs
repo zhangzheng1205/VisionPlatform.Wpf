@@ -49,9 +49,9 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <param name="sceneName">场景名</param>
         /// <param name="eVisionFrame">视觉框架枚举</param>
-        public Scene(string sceneName, EVisionFrame eVisionFrame) : this(sceneName)
+        public Scene(string sceneName, EVisionFrameType eVisionFrame) : this(sceneName)
         {
-            EVisionFrame = eVisionFrame;
+            EVisionFrameType = eVisionFrame;
             VisionFrame = VisionFrameFactory.CreateInstance(eVisionFrame);
         }
 
@@ -61,7 +61,7 @@ namespace VisionPlatform.Core
         /// <param name="sceneName">场景名</param>
         /// <param name="eVisionFrame">视觉框架枚举</param>
         /// <param name="visionOperaFile">算子文件路径</param>
-        public Scene(string sceneName, EVisionFrame eVisionFrame, string visionOperaFile) : this(sceneName, eVisionFrame)
+        public Scene(string sceneName, EVisionFrameType eVisionFrame, string visionOperaFile) : this(sceneName, eVisionFrame)
         {
             if (VisionFrame == null)
             {
@@ -79,7 +79,7 @@ namespace VisionPlatform.Core
                     InputParamFile = "default.json";
                 }
 
-                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
                 if (!File.Exists(filePath))
                 {
                     JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
@@ -94,7 +94,7 @@ namespace VisionPlatform.Core
                     OutputParamFile = "default.json";
                 }
 
-                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
                 if (!File.Exists(filePath))
                 {
                     JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
@@ -109,7 +109,7 @@ namespace VisionPlatform.Core
         /// <param name="eVisionFrame">视觉框架枚举</param>
         /// <param name="visionOperaFile">算子文件路径</param>
         /// <param name="cameraSerial">相机序列号</param>
-        public Scene(string sceneName, EVisionFrame eVisionFrame, string visionOperaFile, string cameraSerial) : this(sceneName, eVisionFrame, visionOperaFile)
+        public Scene(string sceneName, EVisionFrameType eVisionFrame, string visionOperaFile, string cameraSerial) : this(sceneName, eVisionFrame, visionOperaFile)
         {
             if (VisionFrame.IsEnableCamera)
             {
@@ -195,7 +195,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public EVisionFrame EVisionFrame { get; set; }
+        public EVisionFrameType EVisionFrameType { get; set; }
 
         /// <summary>
         /// 视觉框架
@@ -458,7 +458,7 @@ namespace VisionPlatform.Core
 
                     Camera = CameraFactory.GetCamera(cameraSerial);
 
-                    if (CameraFactory.ECameraSDK != ECameraSDK.VirtualCamera)
+                    if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                     {
                         if (string.IsNullOrEmpty(CalibFile))
                         {
@@ -490,14 +490,14 @@ namespace VisionPlatform.Core
             try
             {
                 //还原视觉框架
-                if (EVisionFrame == EVisionFrame.Unknown)
+                if (EVisionFrameType == EVisionFrameType.Unknown)
                 {
                     throw new ArgumentException("VisionFrameName invalid");
                 }
 
                 if (VisionFrame == null)
                 {
-                    VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrame);
+                    VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrameType);
                 }
 
                 //还原视觉算子
@@ -536,7 +536,7 @@ namespace VisionPlatform.Core
                     }
 
                     //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
+                    string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
                     if (!File.Exists(filePath))
                     {
                         JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
@@ -558,7 +558,7 @@ namespace VisionPlatform.Core
                     }
 
                     //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
+                    string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
                     if (!File.Exists(filePath))
                     {
                         JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
@@ -727,7 +727,7 @@ namespace VisionPlatform.Core
         {
             if (VisionFrame == null)
             {
-                VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrame);
+                VisionFrame = VisionFrameFactory.CreateInstance(EVisionFrameType);
             }
 
             //保存输入参数
@@ -739,7 +739,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/InputParam/{InputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
                 JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
             }
 
@@ -752,7 +752,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrame}/{Name}/OutputParam/{OutputParamFile}";
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
                 JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
             }
 

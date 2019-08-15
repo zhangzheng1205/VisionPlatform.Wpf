@@ -13,7 +13,7 @@ namespace VisionPlatform.BaseType
         /// <summary>
         /// 视觉框架
         /// </summary>
-        EVisionFrame EVisionFrame { get; }
+        EVisionFrameType EVisionFrameType { get; }
 
         /// <summary>
         /// 视觉算子文件类型

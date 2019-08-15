@@ -3,7 +3,7 @@
     /// <summary>
     /// 相机SDK
     /// </summary>
-    public enum ECameraSDK
+    public enum ECameraSdkType
     {
         /// <summary>
         /// 支持巴斯勒相机

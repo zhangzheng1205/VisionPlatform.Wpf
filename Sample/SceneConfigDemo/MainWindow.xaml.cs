@@ -34,9 +34,9 @@ namespace SceneConfigDemo
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (CameraFactory.CameraAssemblys.ContainsKey(ECameraSDK.VirtualCamera))
+            if (CameraFactory.CameraAssemblys.ContainsKey(ECameraSdkType.VirtualCamera))
             {
-                CameraFactory.ECameraSDK = ECameraSDK.VirtualCamera;
+                CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
             }
             
             scene?.Dispose();
@@ -50,10 +50,10 @@ namespace SceneConfigDemo
             //    string dllFile = @"..\..\..\..\VisionPlatform.VisionOpera\VisionPlatform.HalconOperaDemo\bin\Debug\VisionPlatform.HalconOperaDemo.dll";
             //    string serial = @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images";
             //    //string serial = @"00575388468";
-            //    scene = new Scene("查找5边型", EVisionFrame.Halcon, dllFile, serial);
+            //    scene = new Scene("查找5边型", EVisionFrameType.Halcon, dllFile, serial);
             //}
 
-            scene2 = new Scene("查找6边型", EVisionFrame.VisionPro, @"E:\1.vpp");
+            scene2 = new Scene("查找6边型", EVisionFrameType.VisionPro, @"E:\1.vpp");
 
             var viewModel = new SceneParamDebugViewModel();
             SceneParamDebugView.DataContext = viewModel;

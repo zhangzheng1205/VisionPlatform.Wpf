@@ -25,6 +25,11 @@ namespace VisionPlatform.Core
         public static Dictionary<string, Assembly> VisionFrameAssemblys { get; private set; } = new Dictionary<string, Assembly>();
 
         /// <summary>
+        /// 默认场景框架
+        /// </summary>
+        public static EVisionFrameType DefaultVisionFrameType { get; set; } = EVisionFrameType.Unknown;
+
+        /// <summary>
         /// 静态构造
         /// </summary>
         static VisionFrameFactory()
@@ -65,13 +70,13 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 创建视觉框架实例
         /// </summary>
-        /// <param name="eVisionFrame">视觉框架</param>
+        /// <param name="visionFrameType">视觉框架类型</param>
         /// <returns>视觉框架实例</returns>
-        public static IVisionFrame CreateInstance(EVisionFrame eVisionFrame)
+        public static IVisionFrame CreateInstance(EVisionFrameType visionFrameType)
         {
             try
             {
-                string assemblyName = $"{eVisionFrame.ToString()}VisionFrame";
+                string assemblyName = $"{visionFrameType.ToString()}VisionFrame";
 
                 if (VisionFrameAssemblys.ContainsKey(assemblyName))
                 {
@@ -96,6 +101,20 @@ namespace VisionPlatform.Core
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 获取视觉框架实例(按照默认的视觉框架类型进行实例化)
+        /// </summary>
+        /// <returns>视觉框架实例</returns>
+        public static IVisionFrame CreateInstance()
+        {
+            if (DefaultVisionFrameType != EVisionFrameType.Unknown)
+            {
+                return CreateInstance(DefaultVisionFrameType);
+            }
+
+            return default(IVisionFrame);
         }
 
     }

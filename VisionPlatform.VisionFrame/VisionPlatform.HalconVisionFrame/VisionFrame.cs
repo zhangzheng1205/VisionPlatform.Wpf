@@ -25,7 +25,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public EVisionFrame EVisionFrame { get; } = EVisionFrame.Halcon;
+        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.Halcon;
 
         /// <summary>
         /// 视觉算子接口

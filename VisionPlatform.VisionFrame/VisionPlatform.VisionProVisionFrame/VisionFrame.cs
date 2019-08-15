@@ -87,7 +87,7 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public EVisionFrame EVisionFrame { get; } = EVisionFrame.VisionPro;
+        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.VisionPro;
 
         /// <summary>
         /// 视觉算子文件类型

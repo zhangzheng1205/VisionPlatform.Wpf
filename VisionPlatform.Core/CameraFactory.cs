@@ -22,7 +22,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 相机集合字典
         /// </summary>
-        public static Dictionary<ECameraSDK, Assembly> CameraAssemblys { get; private set; } = new Dictionary<ECameraSDK, Assembly>();
+        public static Dictionary<ECameraSdkType, Assembly> CameraAssemblys { get; private set; } = new Dictionary<ECameraSdkType, Assembly>();
 
         /// <summary>
         /// 静态构造
@@ -33,45 +33,45 @@ namespace VisionPlatform.Core
         }
 
         /// <summary>
-        /// 目录名转换为ECameraSDK
+        /// 目录名转换为ECameraSdkType
         /// </summary>
         /// <param name="directoryName">目录名</param>
-        /// <returns>ECameraSDK</returns>
-        private static ECameraSDK ConvertToECameraSDK(string directoryName)
+        /// <returns>ECameraSdkType</returns>
+        private static ECameraSdkType ConvertToECameraSDK(string directoryName)
         {
             switch (directoryName.ToLower())
             {
-                case "pylon": return ECameraSDK.Pylon;
-                case "ueyesdk": return ECameraSDK.uEye;
-                case "hik": return ECameraSDK.Hik;
-                case "commonsdk": return ECameraSDK.Common;
-                case "cognex": return ECameraSDK.Cognex;
-                case "daheng": return ECameraSDK.Daheng;
-                case "dalsa": return ECameraSDK.DALSA;
-                case "imagingsource": return ECameraSDK.ImagingSource;
-                case "virtualcamera": return ECameraSDK.VirtualCamera;
-                default: return ECameraSDK.Unknown;
+                case "pylon": return ECameraSdkType.Pylon;
+                case "ueyesdk": return ECameraSdkType.uEye;
+                case "hik": return ECameraSdkType.Hik;
+                case "commonsdk": return ECameraSdkType.Common;
+                case "cognex": return ECameraSdkType.Cognex;
+                case "daheng": return ECameraSdkType.Daheng;
+                case "dalsa": return ECameraSdkType.DALSA;
+                case "imagingsource": return ECameraSdkType.ImagingSource;
+                case "virtualcamera": return ECameraSdkType.VirtualCamera;
+                default: return ECameraSdkType.Unknown;
             }
         }
 
         /// <summary>
-        /// 转换ECameraSDK为目录名
+        /// 转换ECameraSdkType为目录名
         /// </summary>
         /// <param name="eCameraSDK">相机SDK类型</param>
         /// <returns>目录名</returns>
-        private static string ConvertToDirectoryName(ECameraSDK eCameraSDK)
+        private static string ConvertToDirectoryName(ECameraSdkType eCameraSDK)
         {
             switch (eCameraSDK)
             {
-                case ECameraSDK.Pylon: return "Pylon";
-                case ECameraSDK.uEye: return "uEyeSDK";
-                case ECameraSDK.Hik: return "Hik";
-                case ECameraSDK.Common: return "CommonSDK";
-                case ECameraSDK.Cognex: return "Cognex";
-                case ECameraSDK.Daheng: return "Daheng";
-                case ECameraSDK.DALSA: return "DALSA";
-                case ECameraSDK.ImagingSource: return "ImagingSource";
-                case ECameraSDK.VirtualCamera: return "VirtualCamera";
+                case ECameraSdkType.Pylon: return "Pylon";
+                case ECameraSdkType.uEye: return "uEyeSDK";
+                case ECameraSdkType.Hik: return "Hik";
+                case ECameraSdkType.Common: return "CommonSDK";
+                case ECameraSdkType.Cognex: return "Cognex";
+                case ECameraSdkType.Daheng: return "Daheng";
+                case ECameraSdkType.DALSA: return "DALSA";
+                case ECameraSdkType.ImagingSource: return "ImagingSource";
+                case ECameraSdkType.VirtualCamera: return "VirtualCamera";
                 default: return "";
             }
         }
@@ -110,7 +110,7 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <param name="eCameraSDK">相机SDK类型</param>
         /// <returns>相机实例</returns>
-        public static ICamera CreateInstance(ECameraSDK eCameraSDK)
+        public static ICamera CreateInstance(ECameraSdkType eCameraSDK)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 相机集合名
         /// </summary>
-        public static ECameraSDK ECameraSDK { get; set; } = ECameraSDK.Unknown;
+        public static ECameraSdkType DefaultCameraSdkType { get; set; } = ECameraSdkType.Unknown;
 
         /// <summary>
         /// 相机列表
@@ -160,12 +160,12 @@ namespace VisionPlatform.Core
         public static List<DeviceInfo> GetAllCameras()
         {
             //校验相机SDK是否有效
-            if (!CameraAssemblys.ContainsKey(ECameraSDK))
+            if (!CameraAssemblys.ContainsKey(DefaultCameraSdkType))
             {
-                throw new ArgumentException("ECameraSDK invalid");
+                throw new ArgumentException("ECameraSdkType invalid");
             }
 
-            return CreateInstance(ECameraSDK).GetDeviceList();
+            return CreateInstance(DefaultCameraSdkType).GetDeviceList();
         }
 
         /// <summary>
@@ -178,9 +178,9 @@ namespace VisionPlatform.Core
         public static void AddCamera(string cameraSerial)
         {
             //校验相机SDK是否有效
-            if (!CameraAssemblys.ContainsKey(ECameraSDK))
+            if (!CameraAssemblys.ContainsKey(DefaultCameraSdkType))
             {
-                throw new ArgumentException("ECameraSDK invalid");
+                throw new ArgumentException("ECameraSdkType invalid");
             }
 
             if (string.IsNullOrEmpty(cameraSerial))
@@ -194,7 +194,7 @@ namespace VisionPlatform.Core
                 return;
             }
 
-            ICamera camera = CreateInstance(ECameraSDK);
+            ICamera camera = CreateInstance(DefaultCameraSdkType);
 
             if (camera.Connect(cameraSerial))
             {
@@ -215,9 +215,9 @@ namespace VisionPlatform.Core
         public static void AddAllCamera()
         {
             //校验相机SDK名是否有效
-            if (!CameraAssemblys.ContainsKey(ECameraSDK))
+            if (!CameraAssemblys.ContainsKey(DefaultCameraSdkType))
             {
-                throw new ArgumentException("ECameraSDK invalid");
+                throw new ArgumentException("ECameraSdkType invalid");
             }
 
             try

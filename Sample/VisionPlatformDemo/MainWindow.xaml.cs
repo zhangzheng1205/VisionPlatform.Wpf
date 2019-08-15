@@ -53,21 +53,21 @@ namespace VisionPlatformDemo
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
         {
             string cameraSDK = CameraSDKComboBox.SelectedItem as string;
-            ECameraSDK eCameraSDK;
+            ECameraSdkType eCameraSDK;
             switch (CameraSDKComboBox.SelectedItem)
             {
                 case "Pylon":
-                    eCameraSDK = ECameraSDK.Pylon;
+                    eCameraSDK = ECameraSdkType.Pylon;
                     break;
                 case "VirtualCamera":
-                    eCameraSDK = ECameraSDK.VirtualCamera;
+                    eCameraSDK = ECameraSdkType.VirtualCamera;
                     break;
                 default:
-                    eCameraSDK = ECameraSDK.Unknown;
+                    eCameraSDK = ECameraSdkType.Unknown;
                     break;
             }
 
-            CameraFactory.ECameraSDK = eCameraSDK;
+            CameraFactory.DefaultCameraSdkType = eCameraSDK;
         }
     }
 }

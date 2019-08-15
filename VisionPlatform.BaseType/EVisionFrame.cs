@@ -3,7 +3,7 @@
     /// <summary>
     /// 视觉平台枚举
     /// </summary>
-    public enum EVisionFrame
+    public enum EVisionFrameType
     {
         /// <summary>
         /// Halcon平台

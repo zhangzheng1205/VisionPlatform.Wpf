@@ -157,7 +157,7 @@ namespace VisionPlatform.Core
         {
             foreach (var item in Scenes.Values)
             {
-                string file = $"VisionPaltform/Scene/{item.EVisionFrame}/{item.Name}/{item.Name}.json";
+                string file = $"VisionPaltform/Scene/{item.EVisionFrameType}/{item.Name}/{item.Name}.json";
             }
         }
 
