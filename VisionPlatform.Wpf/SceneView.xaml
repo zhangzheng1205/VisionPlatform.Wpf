@@ -63,7 +63,7 @@
                 <StackPanel MinHeight="10"/>
                 <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsSceneValid}">
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉配置</TextBlock>
-                    <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->"/>
+                    <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->" MinWidth="40"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

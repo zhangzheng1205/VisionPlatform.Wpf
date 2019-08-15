@@ -253,9 +253,9 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
-        /// 打开视觉参数
+        /// 打开相机显示控件
         /// </summary>
-        public void OpenSceneParamDebugView()
+        public void OpenCameraView()
         {
             if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
             {
@@ -263,6 +263,32 @@ namespace VisionPlatform.Wpf
             }
 
             Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+
+            var view = new CameraView();
+            var viewModel = (view.DataContext as CameraViewModel);
+            viewModel.CameraConfigurationCompleted -= ViewModel_CameraConfigurationCompleted;
+            viewModel.CameraConfigurationCompleted += ViewModel_CameraConfigurationCompleted;
+            viewModel.SetCamera(Scene.Camera);
+
+            SceneConfigView = view;
+            IsEnableSceneConfig = false;
+        }
+
+        private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
+        {
+            SceneConfigView = null;
+            IsEnableSceneConfig = true;
+        }
+
+        /// <summary>
+        /// 打开视觉参数
+        /// </summary>
+        public void OpenSceneParamDebugView()
+        {
+            if ((Scene?.VisionFrame.IsEnableCamera == true) && (!string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+            {
+                Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+            }
 
             var view = new SceneParamDebugView();
             var viewModel = (view.DataContext as SceneParamDebugViewModel);

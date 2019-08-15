@@ -201,6 +201,24 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
+        /// 通过本地图片执行
+        /// </summary>
+        /// <param name="file"></param>
+        public void ExecuteByFile(string file)
+        {
+            try
+            {
+                string visionResult = "";
+                Scene?.ExecuteByFile(file, out visionResult);
+                VisionResult = visionResult;
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        /// <summary>
         /// 执行场景
         /// </summary>
         public void Execute()

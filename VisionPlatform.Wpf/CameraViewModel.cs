@@ -73,7 +73,10 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public CameraConfigViewModel CameraConfigViewModel
         {
-            get => cameraConfigViewModel;
+            get
+            {
+                return cameraConfigViewModel;
+            }
             set
             {
                 cameraConfigViewModel = value;
@@ -99,6 +102,15 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => CameraImage);
             }
         }
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 相机配置完成事件
+        /// </summary>
+        public event EventHandler<CameraConfigurationCompletedEventArgs> CameraConfigurationCompleted;
 
         #endregion
 
@@ -198,6 +210,15 @@ namespace VisionPlatform.Wpf
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+        }
+
+        /// <summary>
+        /// 触发相机配置完成事件
+        /// </summary>
+        /// <param name="camera">相机实例</param>
+        protected void OnCameraConfigurationCompleted(ICamera camera)
+        {
+            CameraConfigurationCompleted?.Invoke(this, new CameraConfigurationCompletedEventArgs(camera));
         }
 
         /// <summary>
@@ -311,7 +332,7 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
-
+            OnCameraConfigurationCompleted(CameraConfigViewModel.Camera);
         }
 
         #endregion
