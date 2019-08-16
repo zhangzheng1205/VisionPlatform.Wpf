@@ -27,7 +27,14 @@ namespace VisionPlatform.Wpf
         {
             InitializeComponent();
 
-            DataContext = new SceneParamDebugViewModel();
+            var viewModel = new SceneParamDebugViewModel();
+            DataContext = viewModel;
+            viewModel.ExceptionRaised += ViewModel_ExceptionRaised;
+        }
+
+        private void ViewModel_ExceptionRaised(object sender, Exception e)
+        {
+            MessageBox.Show(e.Message);
         }
 
         private void ExecuteImageButton_Click(object sender, RoutedEventArgs e)

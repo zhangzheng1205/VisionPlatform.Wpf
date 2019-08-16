@@ -656,6 +656,8 @@ namespace VisionPlatform.Core
                 throw new Exception("scene is uninitialized");
             }
 
+            bool isTimeout = false;
+
             try
             {
                 ItemCollection outputs;
@@ -693,6 +695,7 @@ namespace VisionPlatform.Core
 
                         if ((timeout > 0) && (grapTimeoutStopwatch.Elapsed.TotalMilliseconds > timeout))
                         {
+                            isTimeout = true;
                             grapTimeoutStopwatch.Stop();
                             throw new TimeoutException("grab image timeout");
                         }
@@ -721,12 +724,21 @@ namespace VisionPlatform.Core
             }
             finally
             {
-                //释放图像资源,否则可能会导致资源泄露
-                imageInfo.DisposeImageIntPtr?.Invoke(imageInfo.ImagePtr);
-
                 //停止计时
                 totalProcessStopwatch.Stop();
                 VisionFrame.RunStatus.TotalTime = totalProcessStopwatch.Elapsed.TotalMilliseconds;
+
+                if (!isTimeout)
+                {
+                    try
+                    {
+                        //释放图像资源,否则可能会导致资源泄露
+                        imageInfo.DisposeImageIntPtr?.Invoke(imageInfo.ImagePtr);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
             }
 
         }

@@ -35,9 +35,9 @@
                     <TextBox IsReadOnly="True" Text="{Binding VisionOperaFile}" />
                 </DockPanel>
                 <StackPanel MinHeight="10"/>
-                <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
-                <StackPanel MinHeight="10"/>
-                <StackPanel IsEnabled="{Binding IsSceneValid}" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel IsEnabled="{Binding IsSceneValid}" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
+                    <StackPanel MinHeight="10"/>
                     <TextBlock>相机配置</TextBlock>
                     <StackPanel MinHeight="10"/>
                     <DockPanel>
@@ -45,23 +45,25 @@
                         <Button cal:Message.Attach="UpdateCameras" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">Φ</Button>
                         <ComboBox ItemsSource="{Binding Cameras}" SelectedItem="{Binding SelectedCamera}"/>
                     </DockPanel>
-                    <StackPanel MinHeight="10"/>
-                    <DockPanel>
-                        <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机配置</TextBlock>
-                        <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
-                        <ComboBox ItemsSource="{Binding CameraConfigFiles}"/>
-                    </DockPanel>
-                    <StackPanel MinHeight="10"/>
-                    <DockPanel>
-                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">标定文件</TextBlock>
-                        <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
-                        <ComboBox ItemsSource="{Binding CameraCalibFiles}"/>
-                    </DockPanel>
+                    <StackPanel IsEnabled="{Binding IsNotVirtualCamera, Mode=OneWay}">
+                        <StackPanel MinHeight="10"/>
+                        <DockPanel>
+                            <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机配置</TextBlock>
+                            <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
+                            <ComboBox ItemsSource="{Binding CameraConfigFiles}"/>
+                        </DockPanel>
+                        <StackPanel MinHeight="10"/>
+                        <DockPanel>
+                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">标定文件</TextBlock>
+                            <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
+                            <ComboBox ItemsSource="{Binding CameraCalibFiles}"/>
+                        </DockPanel>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel MinHeight="10"/>
                 <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
                 <StackPanel MinHeight="10"/>
-                <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsSceneValid}">
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsVisionFrameValid}">
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉配置</TextBlock>
                     <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->" MinWidth="40"/>
                 </StackPanel>

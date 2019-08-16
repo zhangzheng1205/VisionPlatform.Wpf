@@ -56,6 +56,8 @@ namespace VisionPlatform.Wpf
 
                 NotifyOfPropertyChange(() => Scene);
                 NotifyOfPropertyChange(() => SceneName);
+                NotifyOfPropertyChange(() => IsEnableCamera);
+                NotifyOfPropertyChange(() => CameraName);
                 NotifyOfPropertyChange(() => IsEnableInput);
                 NotifyOfPropertyChange(() => Inputs);
                 NotifyOfPropertyChange(() => IsEnableOutput);
@@ -72,6 +74,28 @@ namespace VisionPlatform.Wpf
             get
             {
                 return Scene?.Name;
+            }
+        }
+
+        /// <summary>
+        /// 使能相机
+        /// </summary>
+        public bool IsEnableCamera
+        {
+            get
+            {
+                return Scene?.VisionFrame?.IsEnableCamera ?? false;
+            }
+        }
+
+        /// <summary>
+        /// 相机名
+        /// </summary>
+        public string CameraName
+        {
+            get
+            {
+                return Scene?.Camera?.ToString() ?? "无效相机";
             }
         }
 
@@ -188,6 +212,11 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public event EventHandler<SceneConfigurationCompletedEventArgs> SceneConfigurationCompleted;
 
+        /// <summary>
+        /// 异常触发
+        /// </summary>
+        public event EventHandler<Exception> ExceptionRaised;
+
         #endregion
 
         #region 方法
@@ -201,20 +230,34 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
+        /// 触发异常事件
+        /// </summary>
+        /// <param name="e">异常</param>
+        protected void OnExceptionRaised(Exception e)
+        {
+            ExceptionRaised?.Invoke(this, e);
+        }
+
+        /// <summary>
         /// 通过本地图片执行
         /// </summary>
         /// <param name="file"></param>
         public void ExecuteByFile(string file)
         {
+            if (string.IsNullOrEmpty(file))
+            {
+                return;
+            }
+
             try
             {
                 string visionResult = "";
                 Scene?.ExecuteByFile(file, out visionResult);
                 VisionResult = visionResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                OnExceptionRaised(ex);
             }
         }
 
@@ -229,11 +272,10 @@ namespace VisionPlatform.Wpf
                 Scene?.Execute(2000, out visionResult);
                 VisionResult = visionResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                OnExceptionRaised(ex);
             }
-            
         }
 
         /// <summary>
@@ -245,11 +287,10 @@ namespace VisionPlatform.Wpf
             {
                 VisionResult = await Scene?.ExecuteAsync(2000);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                OnExceptionRaised(ex);
             }
-            
         }
 
         /// <summary>

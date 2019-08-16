@@ -22,9 +22,14 @@
         <StackPanel Grid.Column="0" Margin="5">
             <StackPanel Margin="0,10,0,0">
                 <Label Content="场景名称:"/>
-                <TextBox Text="{Binding SceneName, Mode=OneWay}" IsReadOnly="True"/>
+                <Label Content="{Binding SceneName, Mode=OneWay}"/>
             </StackPanel>
-            
+
+            <StackPanel Margin="0,10,0,0" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Label Content="绑定相机:"/>
+                <Label Content="{Binding CameraName, Mode=OneWay}" MinHeight="17" />
+            </StackPanel>
+
             <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableInput, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Label Content="输入参数:"/>
                 <DataGrid ItemsSource="{Binding Inputs}"

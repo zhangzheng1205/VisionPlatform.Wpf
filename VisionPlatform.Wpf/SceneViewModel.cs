@@ -51,6 +51,8 @@ namespace VisionPlatform.Wpf
             set
             {
                 scene = value;
+                NotifyOfPropertyChange(() => IsEnableCamera);
+                NotifyOfPropertyChange(() => IsVisionFrameValid);
                 NotifyOfPropertyChange(() => IsSceneValid);
                 NotifyOfPropertyChange(() => CanCreateScene);
             }
@@ -64,6 +66,17 @@ namespace VisionPlatform.Wpf
             get
             {
                 return (Scene == null) ? false : true;
+            }
+        }
+
+        /// <summary>
+        /// 视觉框架有效标志
+        /// </summary>
+        public bool IsVisionFrameValid
+        {
+            get
+            {
+                return Scene?.IsVisionFrameInit == true;
             }
         }
 
@@ -112,6 +125,7 @@ namespace VisionPlatform.Wpf
                     Scene.VisionOperaFile = value;
                 }
                 NotifyOfPropertyChange(() => VisionOperaFile);
+                NotifyOfPropertyChange(() => IsVisionFrameValid);
             }
         }
 
@@ -134,7 +148,18 @@ namespace VisionPlatform.Wpf
         }
 
         #region 相机
-        
+
+        /// <summary>
+        /// 使能相机
+        /// </summary>
+        public bool IsEnableCamera
+        {
+            get
+            {
+                return Scene?.VisionFrame?.IsEnableCamera == true;
+            }
+        }
+
         private ObservableCollection<ICamera> cameras = new ObservableCollection<ICamera>();
 
         /// <summary>
@@ -171,6 +196,16 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        /// <summary>
+        /// 非虚拟相机
+        /// </summary>
+        public bool IsNotVirtualCamera
+        {
+            get
+            {
+                return CameraFactory.DefaultCameraSdkType != BaseType.ECameraSdkType.VirtualCamera;
+            }
+        }
 
         #endregion
 
@@ -183,9 +218,23 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public event EventHandler<SceneConfigurationCompletedEventArgs> SceneConfigurationCompleted;
 
+        /// <summary>
+        /// 异常触发
+        /// </summary>
+        public event EventHandler<Exception> ExceptionRaised;
+
         #endregion
 
         #region 方法
+
+        /// <summary>
+        /// 触发异常事件
+        /// </summary>
+        /// <param name="e">异常</param>
+        protected void OnExceptionRaised(Exception e)
+        {
+            ExceptionRaised?.Invoke(this, e);
+        }
 
         /// <summary>
         /// 设置视觉算子文件
@@ -193,25 +242,33 @@ namespace VisionPlatform.Wpf
         /// <param name="file"></param>
         public void SetVisionOperaFile(string file)
         {
-            if (string.IsNullOrEmpty(file))
+            try
             {
-                return;
-            }
+                if (string.IsNullOrEmpty(file))
+                {
+                    return;
+                }
 
-            //校验场景实例
-            if (string.IsNullOrEmpty(SceneName))
+                //校验场景实例
+                if (string.IsNullOrEmpty(SceneName))
+                {
+                    throw new ArgumentException("Scene invalid");
+                }
+
+                //校验文件路径合法性
+                if (!File.Exists(file))
+                {
+                    throw new FileNotFoundException("Vision opera file invalid");
+                }
+
+                Scene.SetVisionOperaFile(file);
+                VisionOperaFile = Scene.VisionOperaFile;
+                
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentException("Scene invalid");
+                OnExceptionRaised(ex);
             }
-
-            //校验文件路径合法性
-            if (!File.Exists(file))
-            {
-                throw new FileNotFoundException("Vision opera file invalid");
-            }
-
-            Scene.SetVisionOperaFile(file);
-            VisionOperaFile = Scene.VisionOperaFile;
 
         }
 
@@ -220,15 +277,23 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void CreateScene(string sceneName)
         {
-            if (VisionFrameFactory.DefaultVisionFrameType != BaseType.EVisionFrameType.Unknown)
+            try
             {
-                Scene = new Scene(sceneName, VisionFrameFactory.DefaultVisionFrameType);
-
-                if (Scene.VisionFrame.IsEnableCamera == true)
+                if (VisionFrameFactory.DefaultVisionFrameType != BaseType.EVisionFrameType.Unknown)
                 {
-                    UpdateCameras();
+                    Scene = new Scene(sceneName, VisionFrameFactory.DefaultVisionFrameType);
+
+                    if (Scene.VisionFrame.IsEnableCamera == true)
+                    {
+                        UpdateCameras();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                OnExceptionRaised(ex);
+            }
+
         }
 
         /// <summary>
@@ -257,21 +322,28 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void OpenCameraView()
         {
-            if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+            try
             {
-                throw new DriveNotFoundException("没有选定相机");
+                if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+                {
+                    throw new DriveNotFoundException("没有选定相机");
+                }
+
+                Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+
+                var view = new CameraView();
+                var viewModel = (view.DataContext as CameraViewModel);
+                viewModel.CameraConfigurationCompleted -= ViewModel_CameraConfigurationCompleted;
+                viewModel.CameraConfigurationCompleted += ViewModel_CameraConfigurationCompleted;
+                viewModel.SetCamera(Scene.Camera);
+
+                SceneConfigView = view;
+                IsEnableSceneConfig = false;
             }
-
-            Scene.SetCamera(SelectedCamera.Info.Manufacturer);
-
-            var view = new CameraView();
-            var viewModel = (view.DataContext as CameraViewModel);
-            viewModel.CameraConfigurationCompleted -= ViewModel_CameraConfigurationCompleted;
-            viewModel.CameraConfigurationCompleted += ViewModel_CameraConfigurationCompleted;
-            viewModel.SetCamera(Scene.Camera);
-
-            SceneConfigView = view;
-            IsEnableSceneConfig = false;
+            catch (Exception ex)
+            {
+                OnExceptionRaised(ex);
+            }
         }
 
         private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
@@ -285,19 +357,26 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void OpenSceneParamDebugView()
         {
-            if ((Scene?.VisionFrame.IsEnableCamera == true) && (!string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+            try
             {
-                Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+                if ((Scene?.VisionFrame.IsEnableCamera == true) && (!string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+                {
+                    Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+                }
+
+                var view = new SceneParamDebugView();
+                var viewModel = (view.DataContext as SceneParamDebugViewModel);
+                viewModel.Scene = Scene;
+                viewModel.SceneConfigurationCompleted -= ViewModel_SceneConfigurationCompleted;
+                viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
+
+                SceneConfigView = view;
+                IsEnableSceneConfig = false;
             }
-
-            var view = new SceneParamDebugView();
-            var viewModel = (view.DataContext as SceneParamDebugViewModel);
-            viewModel.Scene = Scene;
-            viewModel.SceneConfigurationCompleted -= ViewModel_SceneConfigurationCompleted;
-            viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
-
-            SceneConfigView = view;
-            IsEnableSceneConfig = false;
+            catch (Exception ex)
+            {
+                OnExceptionRaised(ex);
+            }
         }
 
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)

@@ -27,7 +27,14 @@ namespace VisionPlatform.Wpf
         {
             InitializeComponent();
 
-            DataContext = new SceneViewModel();
+            var viewModel = new SceneViewModel();
+            DataContext = viewModel;
+            viewModel.ExceptionRaised += ViewModel_ExceptionRaised;
+        }
+
+        private void ViewModel_ExceptionRaised(object sender, Exception e)
+        {
+            MessageBox.Show(e.Message);
         }
 
         /// <summary>
