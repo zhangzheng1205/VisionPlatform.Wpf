@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace VisionPlatform.Core
 {
@@ -159,6 +160,42 @@ namespace VisionPlatform.Core
             {
                 string file = $"VisionPaltform/Scene/{item.EVisionFrameType}/{item.Name}/{item.Name}.json";
             }
+        }
+
+        /// <summary>
+        /// 恢复场景列表
+        /// </summary>
+        public void RecoverScenes()
+        {
+            Scenes.Clear();
+            if (VisionFrameFactory.DefaultVisionFrameType != BaseType.EVisionFrameType.Unknown)
+            {
+                var baseSceneDirectory = $"VisionPlatform/Scene/{VisionFrameFactory.DefaultVisionFrameType}";
+
+                if (Directory.Exists(baseSceneDirectory))
+                {
+                    //场景目录
+                    DirectoryInfo[] sceneDirectories = new DirectoryInfo(baseSceneDirectory)?.GetDirectories();
+
+                    foreach (var item in sceneDirectories)
+                    {
+                        string file = $"{item.FullName}\\Scene.json";
+
+                        try
+                        {
+                            Scene scene = Scene.Deserialize(file);
+                            if (scene != null)
+                            {
+                                Scenes.Add(scene.Name, scene);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+            }
+
         }
 
         #endregion

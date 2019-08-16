@@ -24,12 +24,78 @@ namespace VisionPlatformDemo
     public partial class MainWindow : Window
     {
 
+        public SceneManager SceneManager { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            //更新视觉框架集合
+            VisionFrameFactory.UpdateAssembly();
+
+            //更新相机框架集合
+            CameraFactory.UpdateAssembly();
+
+            //获取场景管理器实例(单例)
+            SceneManager = SceneManager.GetInstance();
+
+            //更新控件
+            VisionFrameComboBox.Items.Clear();
+            VisionFrameComboBox.ItemsSource = new List<string> { "Halcon", "VisionPro"};
+            CameraSDKComboBox.Items.Clear();
+            CameraSDKComboBox.ItemsSource = CameraFactory.CameraAssemblys.Keys;
         }
 
+
+        private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
+        {
+            CameraFactory.DefaultCameraSdkType = (ECameraSdkType)CameraSDKComboBox.SelectedItem;
+
+            switch (VisionFrameComboBox.SelectedItem as string)
+            {
+                case "Halcon":
+                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
+                    break;
+                case "VisionPro":
+                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.VisionPro;
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        private void VisionFrameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                if ((string)(e.AddedItems[0] as string) == "VisionPro")
+                {
+                    CameraSdkDockPanel.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    CameraSdkDockPanel.Visibility = Visibility.Visible;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 恢复场景列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RecoverScenesButton_Click(object sender, RoutedEventArgs e)
+        {
+            SceneManager.RecoverScenes();
+        }
+
+        /// <summary>
+        /// 打开创建场景窗口
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ConfigFrameButton_Click(null, null);
@@ -60,51 +126,6 @@ namespace VisionPlatformDemo
             //(control.DataContext as SceneViewModel).CreateScene();
 
             window.ShowDialog();
-        }
-
-        private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
-        {
-            switch ((CameraSDKComboBox.SelectedItem as ComboBoxItem).Content)
-            {
-                case "Pylon":
-                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.Pylon;
-                    break;
-                case "VirtualCamera":
-                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
-                    break;
-                default:
-                    CameraFactory.DefaultCameraSdkType = ECameraSdkType.Unknown;
-                    break;
-            }
-
-            switch ((VisionFrameComboBox.SelectedItem as ComboBoxItem).Content)
-            {
-                case "Halcon":
-                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
-                    break;
-                case "VisionPro":
-                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.VisionPro;
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
-        private void VisionFrameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                if ((string)(e.AddedItems[0] as ComboBoxItem).Content == "VisionPro")
-                {
-                    CameraSdkDockPanel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    CameraSdkDockPanel.Visibility = Visibility.Visible;
-                }
-            }
-
         }
     }
 }
