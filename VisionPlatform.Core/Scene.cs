@@ -730,14 +730,8 @@ namespace VisionPlatform.Core
 
                 if (!isTimeout)
                 {
-                    try
-                    {
-                        //释放图像资源,否则可能会导致资源泄露
-                        imageInfo.DisposeImageIntPtr?.Invoke(imageInfo.ImagePtr);
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    //释放图像资源,否则可能会导致资源泄露
+                    imageInfo.DisposeImageIntPtr?.Invoke(imageInfo.ImagePtr);
                 }
             }
 

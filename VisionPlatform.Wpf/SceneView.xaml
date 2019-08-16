@@ -67,6 +67,14 @@
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉配置</TextBlock>
                     <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->" MinWidth="40"/>
                 </StackPanel>
+                <StackPanel>
+                    <StackPanel MinHeight="10"/>
+                    <StackPanel MinHeight="2" Margin="10,0" Background="LightGray"/>
+                    <StackPanel MinHeight="10"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button cal:Message.Attach="Accept" MinWidth="60">确认退出</Button>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </GroupBox>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>

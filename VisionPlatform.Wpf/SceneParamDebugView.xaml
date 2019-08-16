@@ -68,8 +68,8 @@
                           CanUserAddRows="False"
                           AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding ProcessingTime}" Header="算法时间" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding TotalTime}" Header="总时间" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn Binding="{Binding ProcessingTime, StringFormat={}{0:F3}}" Header="算法时间" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn Binding="{Binding TotalTime, StringFormat={}{0:F3}}" Header="总时间" IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding Result}" Header="执行结果" IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding Message}" Header="错误信息"  IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding Exception}" Header="异常"  IsReadOnly="True" Width="Auto"/>

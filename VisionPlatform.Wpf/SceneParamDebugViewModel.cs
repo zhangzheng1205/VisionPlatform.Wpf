@@ -178,6 +178,10 @@ namespace VisionPlatform.Wpf
                 {
                     runStatus.Add(Scene?.VisionFrame?.RunStatus);
                 }
+                else
+                {
+                    runStatus.Add(new BaseType.RunStatus());
+                }
                 
                 return runStatus;
             }
@@ -302,14 +306,6 @@ namespace VisionPlatform.Wpf
             Scene.Serialize(Scene, file);
             OnSceneConfigurationCompleted(Scene);
         }
-
-        ///// <summary>
-        ///// 保存场景
-        ///// </summary>
-        //public void SaveScene()
-        //{
-        //    Scene.Serialize(Scene, "1.json");
-        //}
 
         #endregion
     }

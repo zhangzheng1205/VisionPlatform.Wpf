@@ -385,7 +385,23 @@ namespace VisionPlatform.Wpf
             IsEnableSceneConfig = true;
         }
 
-        #endregion
+        /// <summary>
+        /// 触发场景配置完成事件
+        /// </summary>
+        /// <param name="scene"></param>
+        protected void OnSceneConfigurationCompleted(Scene scene)
+        {
+            SceneConfigurationCompleted?.Invoke(this, new SceneConfigurationCompletedEventArgs(scene));
+        }
 
+        /// <summary>
+        /// 确认退出
+        /// </summary>
+        public void Accept()
+        {
+            OnSceneConfigurationCompleted(Scene);
+        }
+
+        #endregion
     }
 }

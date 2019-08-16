@@ -18,7 +18,7 @@
                 <StackPanel MinHeight="5"/>
                 <DockPanel Margin="0,10,0,0">
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉框架</TextBlock>
-                    <ComboBox x:Name="VisionFrameComboBox" SelectedIndex="0">
+                    <ComboBox x:Name="VisionFrameComboBox" SelectedIndex="0" SelectionChanged="VisionFrameComboBox_SelectionChanged">
                         <ComboBoxItem Content="Halcon"/>
                         <ComboBoxItem Content="VisionPro"/>
                         <ComboBoxItem Content="NiVision"/>
@@ -26,7 +26,7 @@
                 </DockPanel>
 
                 <StackPanel MinHeight="10"/>
-                <DockPanel>
+                <DockPanel x:Name="CameraSdkDockPanel">
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">相机框架</TextBlock>
                     <ComboBox x:Name="CameraSDKComboBox" SelectedIndex="0">
                         <ComboBoxItem Content="Pylon"/>

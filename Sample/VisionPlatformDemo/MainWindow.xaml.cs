@@ -34,9 +34,12 @@ namespace VisionPlatformDemo
         {
             ConfigFrameButton_Click(null, null);
 
-            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
-            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
-            CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
+            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
+            {
+                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
+                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
+            }
 
             Window window = new Window();
             SceneView control = new SceneView
@@ -84,6 +87,22 @@ namespace VisionPlatformDemo
                     break;
                 default:
                     break;
+            }
+
+        }
+
+        private void VisionFrameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                if ((string)(e.AddedItems[0] as ComboBoxItem).Content == "VisionPro")
+                {
+                    CameraSdkDockPanel.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    CameraSdkDockPanel.Visibility = Visibility.Visible;
+                }
             }
 
         }
