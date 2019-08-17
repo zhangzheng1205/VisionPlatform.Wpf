@@ -22,7 +22,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 视觉平台集合字典
         /// </summary>
-        public static Dictionary<string, Assembly> VisionFrameAssemblys { get; private set; } = new Dictionary<string, Assembly>();
+        public static Dictionary<EVisionFrameType, Assembly> VisionFrameAssemblys { get; private set; } = new Dictionary<EVisionFrameType, Assembly>();
 
         /// <summary>
         /// 默认场景框架
@@ -36,6 +36,24 @@ namespace VisionPlatform.Core
         {
             UpdateAssembly();
         }
+
+
+        /// <summary>
+        /// 目录名转换为ECameraSdkType
+        /// </summary>
+        /// <param name="directoryName">目录名</param>
+        /// <returns>ECameraSdkType</returns>
+        private static EVisionFrameType ConvertToEVisionFrameType(string directoryName)
+        {
+            switch (directoryName)
+            {
+                case "HalconVisionFrame": return EVisionFrameType.Halcon;
+                case "VisionProVisionFrame": return EVisionFrameType.VisionPro;
+                case "NiVisionVisionFrame": return EVisionFrameType.NIVision;
+                default: return EVisionFrameType.Unknown;
+            }
+        }
+
 
         /// <summary>
         /// 更新集合
@@ -59,7 +77,7 @@ namespace VisionPlatform.Core
                         var assembly = Assembly.LoadFrom(dllPath);
 
                         //将dll添加到集合字典中
-                        VisionFrameAssemblys.Add(item.Name, assembly);
+                        VisionFrameAssemblys.Add(ConvertToEVisionFrameType(item.Name), assembly);
                     }
 
                 }
@@ -76,16 +94,14 @@ namespace VisionPlatform.Core
         {
             try
             {
-                string assemblyName = $"{visionFrameType.ToString()}VisionFrame";
-
-                if (VisionFrameAssemblys.ContainsKey(assemblyName))
+                if (VisionFrameAssemblys.ContainsKey(visionFrameType))
                 {
                     //创建视觉框架实例
-                    foreach (var item in VisionFrameAssemblys[assemblyName].ExportedTypes)
+                    foreach (var item in VisionFrameAssemblys[visionFrameType].ExportedTypes)
                     {
                         if (item.Name == "VisionFrame")
                         {
-                            object obj = VisionFrameAssemblys[assemblyName].CreateInstance(item.FullName);
+                            object obj = VisionFrameAssemblys[visionFrameType].CreateInstance(item.FullName);
 
                             if (obj is IVisionFrame)
                             {
@@ -95,7 +111,7 @@ namespace VisionPlatform.Core
                     }
                 }
 
-                throw new FileNotFoundException($"{nameof(assemblyName)} is not found");
+                throw new FileNotFoundException($"{nameof(visionFrameType)} is not found");
             }
             catch (Exception)
             {

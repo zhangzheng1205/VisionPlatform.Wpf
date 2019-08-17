@@ -41,35 +41,25 @@ namespace VisionPlatformDemo
 
             //更新控件
             VisionFrameComboBox.Items.Clear();
-            VisionFrameComboBox.ItemsSource = new List<string> { "Halcon", "VisionPro"};
+            VisionFrameComboBox.ItemsSource = VisionFrameFactory.VisionFrameAssemblys.Keys;
+            VisionFrameComboBox.SelectedIndex = 0;
             CameraSDKComboBox.Items.Clear();
             CameraSDKComboBox.ItemsSource = CameraFactory.CameraAssemblys.Keys;
+            CameraSDKComboBox.SelectedIndex = 0;
         }
 
 
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
         {
             CameraFactory.DefaultCameraSdkType = (ECameraSdkType)CameraSDKComboBox.SelectedItem;
-
-            switch (VisionFrameComboBox.SelectedItem as string)
-            {
-                case "Halcon":
-                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
-                    break;
-                case "VisionPro":
-                    VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.VisionPro;
-                    break;
-                default:
-                    break;
-            }
-
+            VisionFrameFactory.DefaultVisionFrameType = (EVisionFrameType)VisionFrameComboBox.SelectedItem;
         }
 
         private void VisionFrameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
-                if ((string)(e.AddedItems[0] as string) == "VisionPro")
+                if ((EVisionFrameType)e.AddedItems[0] == EVisionFrameType.VisionPro)
                 {
                     CameraSdkDockPanel.Visibility = Visibility.Hidden;
                 }
@@ -122,8 +112,6 @@ namespace VisionPlatformDemo
             window.Owner = Window.GetWindow(this);
             window.Title = "场景配置窗口";
             window.WindowState = WindowState.Maximized;
-
-            //(control.DataContext as SceneViewModel).CreateScene();
 
             window.ShowDialog();
         }
