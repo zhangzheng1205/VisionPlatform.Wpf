@@ -51,7 +51,7 @@
                 <StackPanel MinHeight="10"/>
                 <StackPanel>
                     <TextBlock>场景列表</TextBlock>
-                    <ListBox MinHeight="100"/>
+                    <ListBox x:Name="ScenesListView" MinHeight="100"/>
                 </StackPanel>
 
                 <StackPanel MinHeight="10"/>

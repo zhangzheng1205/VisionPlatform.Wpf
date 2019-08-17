@@ -39,6 +39,11 @@ namespace VisionPlatformDemo
             //获取场景管理器实例(单例)
             SceneManager = SceneManager.GetInstance();
 
+            //恢复场景
+            SceneManager.RecoverScenes();
+
+            ScenesListView.ItemsSource = SceneManager.Scenes;
+
             //更新控件
             VisionFrameComboBox.Items.Clear();
             VisionFrameComboBox.ItemsSource = VisionFrameFactory.VisionFrameAssemblys.Keys;
@@ -81,6 +86,8 @@ namespace VisionPlatformDemo
             SceneManager.RecoverScenes();
         }
 
+        private Window SceneConfigWindow;
+
         /// <summary>
         /// 打开创建场景窗口
         /// </summary>
@@ -97,23 +104,46 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
             }
 
-            Window window = new Window();
-            SceneView control = new SceneView
+            
+            var view = new SceneView
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
-            window.MinWidth = 800;
-            window.MinHeight = 500;
-            window.Width = 800;
-            window.Height = 500;
-            window.Content = control;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Owner = Window.GetWindow(this);
-            window.Title = "场景配置窗口";
-            window.WindowState = WindowState.Maximized;
 
-            window.ShowDialog();
+            var viewModel = (view.DataContext as SceneViewModel);
+
+            //注册场景配置完成事件
+            viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
+
+            //将控件嵌入窗口之中
+            SceneConfigWindow = new Window();
+            SceneConfigWindow.MinWidth = 800;
+            SceneConfigWindow.MinHeight = 500;
+            SceneConfigWindow.Width = 800;
+            SceneConfigWindow.Height = 500;
+            SceneConfigWindow.Content = view;
+            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            SceneConfigWindow.Owner = Window.GetWindow(this);
+            SceneConfigWindow.Title = "场景配置窗口";
+            SceneConfigWindow.WindowState = WindowState.Maximized;
+
+            SceneConfigWindow.ShowDialog();
+        }
+
+
+
+        /// <summary>
+        /// 场景配置完成事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
+        {
+            
+            //注册场景
+            SceneManager.RegisterScene(e.Scene);
+            SceneConfigWindow.Close();
         }
     }
 }
