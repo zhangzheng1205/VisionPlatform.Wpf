@@ -642,23 +642,26 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <param name="timeout">处理超时时间,若小于等于0,则无限等待.单位:毫秒</param>
         /// <param name="visionResult">视觉结果(字符串格式)</param>
-        public void Execute(int timeout, out string visionResult)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        public RunStatus Execute(int timeout, out string visionResult)
         {
-            //参数校验
-            if (VisionFrame == null)
-            {
-                throw new NullReferenceException("VisionFrame cannot be null");
-            }
-
-            if (!IsInit)
-            {
-                throw new Exception("scene is uninitialized");
-            }
-
             bool isTimeout = false;
+            var runStatus = new RunStatus();
+            visionResult = "";
 
             try
             {
+                //参数校验
+                if (VisionFrame == null)
+                {
+                    throw new NullReferenceException("VisionFrame cannot be null");
+                }
+
+                if (!IsInit)
+                {
+                    throw new Exception("scene is uninitialized");
+                }
+
                 ItemCollection outputs;
 
                 //开始计时
@@ -717,9 +720,9 @@ namespace VisionPlatform.Core
                     visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new RunStatus(0, EResult.Error, ex.Message);
             }
             finally
             {
@@ -734,6 +737,7 @@ namespace VisionPlatform.Core
                 }
             }
 
+            return VisionFrame.RunStatus;
         }
 
         /// <summary>
@@ -764,15 +768,18 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <param name="file">本地图片路径</param>
         /// <param name="visionResult">视觉结果(字符串格式)</param>
-        public void ExecuteByFile(string file, out string visionResult)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        public RunStatus ExecuteByFile(string file, out string visionResult)
         {
-            if ((VisionFrame == null) || (!VisionFrame.IsInit))
-            {
-                throw new NullReferenceException("VisionFrame invaild");
-            }
+            visionResult = "";
 
             try
             {
+                if ((VisionFrame == null) || (!VisionFrame.IsInit))
+                {
+                    throw new NullReferenceException("VisionFrame invaild");
+                }
+
                 //执行视觉框架
                 ItemCollection outputs;
                 VisionFrame.ExecuteByFile(file, out outputs);
@@ -780,11 +787,12 @@ namespace VisionPlatform.Core
                 //结果拼接
                 visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new RunStatus(0, EResult.Error, ex.Message);
             }
 
+            return VisionFrame.RunStatus;
         }
 
         /// <summary>
