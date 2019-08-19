@@ -29,10 +29,10 @@ namespace VisionPlatform.Wpf
 
             var viewModel = new SceneViewModel();
             DataContext = viewModel;
-            viewModel.ExceptionRaised += ViewModel_ExceptionRaised;
+            viewModel.MessageRaised += ViewModel_MessageRaised;
         }
 
-        private void ViewModel_ExceptionRaised(object sender, Exception e)
+        private void ViewModel_MessageRaised(object sender, MessageRaisedEventArgs e)
         {
             MessageBox.Show(e.Message);
         }

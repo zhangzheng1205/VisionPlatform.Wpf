@@ -87,6 +87,7 @@ namespace VisionPlatformDemo
         {
             SceneManager.RecoverScenes();
             ScenesListView.ItemsSource = SceneManager.Scenes.Values;
+            ScenesListView.UpdateLayout();
         }
 
         private Window SceneConfigWindow;

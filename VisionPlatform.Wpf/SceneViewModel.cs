@@ -1,14 +1,9 @@
 ﻿using Caliburn.Micro;
 using Framework.Camera;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VisionPlatform.Core;
-using System.Windows.Controls;
 
 namespace VisionPlatform.Wpf
 {
@@ -219,21 +214,17 @@ namespace VisionPlatform.Wpf
         public event EventHandler<SceneConfigurationCompletedEventArgs> SceneConfigurationCompleted;
 
         /// <summary>
-        /// 异常触发
+        /// 消息触发事件
         /// </summary>
-        public event EventHandler<Exception> ExceptionRaised;
+        internal event EventHandler<MessageRaisedEventArgs> MessageRaised;
 
         #endregion
 
         #region 方法
 
-        /// <summary>
-        /// 触发异常事件
-        /// </summary>
-        /// <param name="e">异常</param>
-        protected void OnExceptionRaised(Exception e)
+        internal void OnMessageRaised(MessageLevel messageLevel, string message, Exception exception = null)
         {
-            ExceptionRaised?.Invoke(this, e);
+            MessageRaised?.Invoke(this, new MessageRaisedEventArgs(messageLevel, message, exception));
         }
 
         /// <summary>
@@ -263,11 +254,11 @@ namespace VisionPlatform.Wpf
 
                 Scene.SetVisionOperaFile(file);
                 VisionOperaFile = Scene.VisionOperaFile;
-                
+
             }
             catch (Exception ex)
             {
-                OnExceptionRaised(ex);
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
 
         }
@@ -291,7 +282,7 @@ namespace VisionPlatform.Wpf
             }
             catch (Exception ex)
             {
-                OnExceptionRaised(ex);
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
 
         }
@@ -342,7 +333,7 @@ namespace VisionPlatform.Wpf
             }
             catch (Exception ex)
             {
-                OnExceptionRaised(ex);
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 
@@ -375,7 +366,7 @@ namespace VisionPlatform.Wpf
             }
             catch (Exception ex)
             {
-                OnExceptionRaised(ex);
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 

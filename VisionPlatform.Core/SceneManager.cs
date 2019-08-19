@@ -183,15 +183,14 @@ namespace VisionPlatform.Core
 
                         try
                         {
-                            Scene scene = Scene.Deserialize(file);
+                            var scene = Scene.Deserialize(file);
                             if (scene != null)
                             {
                                 Scenes.Add(scene.Name, scene);
                             }
                         }
-                        catch (Exception ex)
+                        catch (ArgumentException)
                         {
-                            Console.WriteLine(ex);
                         }
                     }
                 }

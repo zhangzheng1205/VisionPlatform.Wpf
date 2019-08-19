@@ -20,14 +20,14 @@
             <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="5">
-            <StackPanel Margin="0,10,0,0">
-                <Label Content="场景名称:"/>
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                <Label Content="场景名称:" Margin="0,0,10,0"/>
                 <Label Content="{Binding SceneName, Mode=OneWay}"/>
             </StackPanel>
 
-            <StackPanel Margin="0,10,0,0" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Label Content="绑定相机:"/>
-                <Label Content="{Binding CameraName, Mode=OneWay}" MinHeight="17" />
+            <StackPanel Margin="0,10,0,0" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal">
+                <Label Content="绑定相机:" Margin="0,0,10,0"/>
+                <Label Content="{Binding CameraName, Mode=OneWay}" />
             </StackPanel>
 
             <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableInput, Converter={StaticResource BoolToVisibilityConverter}}">
