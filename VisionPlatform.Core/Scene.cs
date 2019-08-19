@@ -573,20 +573,19 @@ namespace VisionPlatform.Core
                 //还原相机
                 if (VisionFrame.IsEnableCamera)
                 {
-                    if (string.IsNullOrEmpty(CameraSerial))
+                    if (!string.IsNullOrEmpty(CameraSerial))
                     {
-                        throw new ArgumentException("CameraSerial cannot be null");
+                        //若相机无效,则不报异常
+                        try
+                        {
+                            SetCamera(CameraSerial);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            //若打开相机失败,不抛异常
+                        }
                     }
-
-                    //若相机无效,则不报异常
-                    try
-                    {
-                        SetCamera(CameraSerial);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        //若打开相机失败,不抛异常
-                    }
+                    
                 }
 
                 //还原输入参数

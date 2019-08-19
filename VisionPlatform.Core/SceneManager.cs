@@ -189,8 +189,9 @@ namespace VisionPlatform.Core
                                 Scenes.Add(scene.Name, scene);
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            Console.WriteLine(ex);
                         }
                     }
                 }

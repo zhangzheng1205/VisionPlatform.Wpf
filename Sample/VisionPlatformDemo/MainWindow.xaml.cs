@@ -32,9 +32,11 @@ namespace VisionPlatformDemo
 
             //更新视觉框架集合
             VisionFrameFactory.UpdateAssembly();
+            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
 
             //获取场景管理器实例(单例)
             SceneManager = SceneManager.GetInstance();
@@ -42,17 +44,17 @@ namespace VisionPlatformDemo
             //恢复场景
             SceneManager.RecoverScenes();
 
-            ScenesListView.ItemsSource = SceneManager.Scenes;
+            ScenesListView.ItemsSource = SceneManager.Scenes.Values;
 
             //更新控件
             VisionFrameComboBox.Items.Clear();
             VisionFrameComboBox.ItemsSource = VisionFrameFactory.VisionFrameAssemblys.Keys;
-            VisionFrameComboBox.SelectedIndex = 0;
+            VisionFrameComboBox.SelectedItem = VisionFrameFactory.DefaultVisionFrameType;
+
             CameraSDKComboBox.Items.Clear();
             CameraSDKComboBox.ItemsSource = CameraFactory.CameraAssemblys.Keys;
-            CameraSDKComboBox.SelectedIndex = 0;
+            CameraSDKComboBox.SelectedItem = CameraFactory.DefaultCameraSdkType;
         }
-
 
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
         {
@@ -84,6 +86,7 @@ namespace VisionPlatformDemo
         private void RecoverScenesButton_Click(object sender, RoutedEventArgs e)
         {
             SceneManager.RecoverScenes();
+            ScenesListView.ItemsSource = SceneManager.Scenes.Values;
         }
 
         private Window SceneConfigWindow;
@@ -144,6 +147,7 @@ namespace VisionPlatformDemo
             //注册场景
             SceneManager.RegisterScene(e.Scene);
             SceneConfigWindow.Close();
+            ScenesListView.ItemsSource = SceneManager.Scenes.Values;
         }
     }
 }
