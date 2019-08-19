@@ -50,6 +50,8 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => IsVisionFrameValid);
                 NotifyOfPropertyChange(() => IsSceneValid);
                 NotifyOfPropertyChange(() => CanCreateScene);
+                NotifyOfPropertyChange(() => SeparatorChar);
+                NotifyOfPropertyChange(() => TerminatorChar);
             }
         }
 
@@ -204,6 +206,52 @@ namespace VisionPlatform.Wpf
 
         #endregion
 
+        #region 分隔符
+
+        /// <summary>
+        /// 分隔符
+        /// </summary>
+        public string SeparatorChar
+        {
+            get
+            {
+                return Scene?.SeparatorChar.ToString();
+            }
+            set
+            {
+                var chars = value.ToCharArray();
+
+                if ((chars?.Length > 0) && (Scene != null))
+                {
+                    Scene.SeparatorChar = chars[0];
+                }
+                NotifyOfPropertyChange(() => SeparatorChar);
+            }
+        }
+
+        /// <summary>
+        /// 结束符
+        /// </summary>
+        public string TerminatorChar
+        {
+            get
+            {
+                return Scene?.TerminatorChar.ToString();
+            }
+            set
+            {
+                var chars = value.ToCharArray();
+
+                if ((chars?.Length > 0) && (Scene != null))
+                {
+                    Scene.TerminatorChar = chars[0];
+                }
+                NotifyOfPropertyChange(() => TerminatorChar);
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region 事件
@@ -344,6 +392,38 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
+        /// 打开标定控件
+        /// </summary>
+        public void OpenCalibrationView()
+        {
+            if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+            {
+                throw new DriveNotFoundException("没有选定相机");
+            }
+
+            try
+            {
+                var view = new CalibrationView();
+                var viewModel = (view.DataContext as CalibrationViewModel);
+                viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted; ;
+                viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted; ;
+
+                SceneConfigView = view;
+                IsEnableSceneConfig = false;
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        private void ViewModel_CalibrationConfigurationCompleted(object sender, CalibrationConfigurationCompletedEventArgs e)
+        {
+            SceneConfigView = null;
+            IsEnableSceneConfig = true;
+        }
+
+        /// <summary>
         /// 打开视觉参数
         /// </summary>
         public void OpenSceneParamDebugView()
@@ -390,6 +470,12 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
+            if (Scene != null)
+            {
+                string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
+                Scene.Serialize(Scene, file);
+            }
+            
             OnSceneConfigurationCompleted(Scene);
         }
 

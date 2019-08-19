@@ -298,8 +298,6 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
-            string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
-            Scene.Serialize(Scene, file);
             OnSceneConfigurationCompleted(Scene);
         }
 
