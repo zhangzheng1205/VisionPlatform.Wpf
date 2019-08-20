@@ -44,7 +44,11 @@ namespace VisionPlatformDemo
             //恢复场景
             SceneManager.RecoverScenes();
 
-            ScenesListView.ItemsSource = SceneManager.Scenes.Values;
+            ScenesListView.Items.Clear();
+            foreach (var item in SceneManager.Scenes.Values)
+            {
+                ScenesListView.Items.Add(item);
+            }
 
             //更新控件
             VisionFrameComboBox.Items.Clear();
@@ -106,8 +110,8 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
+                CameraFactory.AddCamera(@"E:\测试图像");
             }
-
             
             var view = new SceneView
             {
@@ -148,7 +152,43 @@ namespace VisionPlatformDemo
             //注册场景
             SceneManager.RegisterScene(e.Scene);
             SceneConfigWindow.Close();
-            ScenesListView.ItemsSource = SceneManager.Scenes.Values;
+
+            ScenesListView.Items.Clear();
+            foreach (var item in SceneManager.Scenes.Values)
+            {
+                ScenesListView.Items.Add(item);
+            }
+        }
+
+        private void ModifySceneButton_Click(object sender, RoutedEventArgs e)
+        {
+            //ScenesListView.SelectedItem
+            var view = new SceneView(ScenesListView.SelectedItem as Scene)
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            var viewModel = (view.DataContext as SceneViewModel);
+
+            //注册场景配置完成事件
+            viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
+
+            //将控件嵌入窗口之中
+            SceneConfigWindow = new Window();
+            SceneConfigWindow.MinWidth = 800;
+            SceneConfigWindow.MinHeight = 500;
+            SceneConfigWindow.Width = 800;
+            SceneConfigWindow.Height = 500;
+            SceneConfigWindow.Content = view;
+            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            SceneConfigWindow.Owner = Window.GetWindow(this);
+            SceneConfigWindow.Title = "场景配置窗口";
+            SceneConfigWindow.WindowState = WindowState.Maximized;
+
+            SceneConfigWindow.ShowDialog();
+
+
         }
     }
 }

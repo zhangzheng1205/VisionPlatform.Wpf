@@ -12,6 +12,34 @@ namespace VisionPlatform.Wpf
     /// </summary>
     public class SceneViewModel : Screen
     {
+        /// <summary>
+        /// 创建SceneViewModel
+        /// </summary>
+        public SceneViewModel()
+        {
+
+        }
+
+        /// <summary>
+        /// 创建SceneViewModel
+        /// </summary>
+        /// <param name="scene"></param>
+        public SceneViewModel(Scene scene)
+        {
+            if (scene != null)
+            {
+                Scene = scene;
+
+                SceneName = scene.Name;
+                UpdateCameras();
+
+                if (Cameras.Contains(CameraFactory.Cameras[Scene.CameraSerial]))
+                {
+                    SelectedCamera = CameraFactory.Cameras[Scene.CameraSerial];
+                }
+            }
+        }
+
         #region 属性
 
         private bool isEnableSceneConfig = true;
@@ -46,12 +74,14 @@ namespace VisionPlatform.Wpf
             set
             {
                 scene = value;
+                NotifyOfPropertyChange(() => SceneName);
                 NotifyOfPropertyChange(() => IsEnableCamera);
                 NotifyOfPropertyChange(() => IsVisionFrameValid);
                 NotifyOfPropertyChange(() => IsSceneValid);
                 NotifyOfPropertyChange(() => CanCreateScene);
                 NotifyOfPropertyChange(() => SeparatorChar);
                 NotifyOfPropertyChange(() => TerminatorChar);
+                NotifyOfPropertyChange(() => Cameras);
             }
         }
 
@@ -470,11 +500,11 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
-            if (Scene != null)
-            {
-                string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
-                Scene.Serialize(Scene, file);
-            }
+            //if (Scene != null)
+            //{
+            //    string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
+            //    Scene.Serialize(Scene, file);
+            //}
             
             OnSceneConfigurationCompleted(Scene);
         }

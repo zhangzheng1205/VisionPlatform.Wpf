@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VisionPlatform.Core;
 
 namespace VisionPlatform.Wpf
 {
@@ -28,6 +29,19 @@ namespace VisionPlatform.Wpf
             InitializeComponent();
 
             var viewModel = new SceneViewModel();
+            DataContext = viewModel;
+            viewModel.MessageRaised += ViewModel_MessageRaised;
+        }
+
+        /// <summary>
+        /// 创建SceneView新实例
+        /// </summary>
+        /// <param name="scene">场景实例</param>
+        public SceneView(Scene scene)
+        {
+            InitializeComponent();
+
+            var viewModel = new SceneViewModel(scene);
             DataContext = viewModel;
             viewModel.MessageRaised += ViewModel_MessageRaised;
         }
