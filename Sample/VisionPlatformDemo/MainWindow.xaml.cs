@@ -140,8 +140,6 @@ namespace VisionPlatformDemo
             SceneConfigWindow.ShowDialog();
         }
 
-
-
         /// <summary>
         /// 场景配置完成事件
         /// </summary>
@@ -190,6 +188,18 @@ namespace VisionPlatformDemo
             SceneConfigWindow.ShowDialog();
 
 
+        }
+
+        private void DeleteSceneButton_Click(object sender, RoutedEventArgs e)
+        {
+            var scene = ScenesListView.SelectedItem as Scene;
+            SceneManager.DeleteScene(scene.Name);
+
+            ScenesListView.Items.Clear();
+            foreach (var item in SceneManager.Scenes.Values)
+            {
+                ScenesListView.Items.Add(item);
+            }
         }
     }
 }

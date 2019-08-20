@@ -108,9 +108,17 @@ namespace VisionPlatform.Core
         {
             try
             {
-                if (!Scenes.ContainsKey(sceneName))
+                //若场景存在,则删除场景以及对应目录
+                if (Scenes.ContainsKey(sceneName))
                 {
-                    return Scenes.Remove(sceneName);
+                    //释放场景
+                    Scenes[sceneName].Dispose();
+
+                    string file = $"VisionPlatform/Scene/{Scenes[sceneName].EVisionFrameType}/{Scenes[sceneName].Name}/Scene.json";
+                    Scenes.Remove(sceneName);
+                    File.Delete(file);
+
+                    return true;
                 }
             }
             catch (Exception)
