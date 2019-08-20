@@ -5,8 +5,9 @@ using System.IO;
 using System.Threading;
 using VisionPlatform.BaseType;
 
-namespace UncalibratedDeformableModel
+namespace VisionOperationTemplate
 {
+
     public class VisionOpera : IVisionOpera
     {
         #region 构造函数
@@ -24,13 +25,9 @@ namespace UncalibratedDeformableModel
 
             //配置输入参数
             Inputs.Clear();
-            Inputs.Add(new ItemBase("ModelPath", @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\hdevelop\Matching\Deformable\brake_disk_bike.dxf", typeof(string), "模板文件(.dxf)路径"));
 
             //配置输出参数
             Outputs.Clear();
-            Outputs.Add(new ItemBase("MatchCount", typeof(int), "匹配数量"));
-            Outputs.Add(new ItemBase("Scores", typeof(double[]), "匹配分数(List列表)"));
-
         }
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
@@ -66,24 +63,6 @@ namespace UncalibratedDeformableModel
         /// 计时器
         /// </summary>
         private readonly Stopwatch stopwatch = new Stopwatch();
-
-        /// <summary>
-        /// 模板骨架
-        /// </summary>
-        private HObject ho_Contours;
-
-        /// <summary>
-        /// 模板骨架
-        /// </summary>
-        private HObject ho_ModelContours;
-
-        /// <summary>
-        /// 模板ID
-        /// </summary>
-        private HTuple hv_ModelID = new HTuple();
-
-
-        private HTuple hv_GenParamValue = new HTuple();
 
         #endregion
 
@@ -228,63 +207,12 @@ namespace UncalibratedDeformableModel
                 //若未初始化,则进行初始化
                 if (!isInit)
                 {
-                    HTuple hv_DxfStatus = new HTuple();
-
-                    if (!File.Exists(Inputs["ModelPath"].Value as string))
-                    {
-                        throw new FileNotFoundException("ModelPath is no found");
-                    }
-
-                    HOperatorSet.GenEmptyObj(out ho_Contours);
-                    HOperatorSet.GenEmptyObj(out ho_ModelContours);
-
-                    //读取骨架
-                    HOperatorSet.ReadContourXldDxf(out ho_Contours, (Inputs["ModelPath"].Value as string), new HTuple(), new HTuple(), out hv_DxfStatus);
-
-                    //创建模板
-                    HOperatorSet.CreatePlanarUncalibDeformableModelXld(ho_Contours, "auto", new HTuple(),
-                        new HTuple(), "auto", 1.0, new HTuple(), "auto", 1.0, new HTuple(), "auto",
-                        "point_reduction_high", "ignore_part_polarity", 5, new HTuple(), new HTuple(),
-                        out hv_ModelID);
-                    if (hv_ModelID < 0)
-                    {
-                        return;
-                    }
-
-                    HOperatorSet.GetDeformableModelParams(hv_ModelID, "num_levels", out hv_GenParamValue);
-                    ho_ModelContours.Dispose();
-                    HOperatorSet.GetDeformableModelContours(out ho_ModelContours, hv_ModelID, 1);
 
                     isInit = true;
                 }
 
-                HTuple hv_HomMat2D, hv_Score;
-                HOperatorSet.FindPlanarUncalibDeformableModel(hImage, hv_ModelID, 0, 0.78, 1, 1, 1, 1, 0.6, 1, 0.5, 0, 0.9, "subpixel", "least_squares", out hv_HomMat2D, out hv_Score);
 
-                Outputs["MatchCount"].Value = hv_Score.Length;
-                Outputs["Scores"].Value = hv_Score.DArr;
 
-                for (int i = 0; i < hv_Score.Length; i++)
-                {
-                    HTuple hv_HomMatSelected;
-
-                    HOperatorSet.TupleSelectRange(hv_HomMat2D, i * 9, ((i + 1) * 9) - 1, out hv_HomMatSelected);
-                    ho_ContoursProjTrans.Dispose();
-                    HOperatorSet.ProjectiveTransContourXld(ho_ModelContours, out ho_ContoursProjTrans,
-                        hv_HomMatSelected);
-
-                    if (runningWindowHandle != IntPtr.Zero)
-                    {
-                        HOperatorSet.DispObj(hImage, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, runningWindowHandle);
-                    }
-
-                    if (configWindowHandle != IntPtr.Zero)
-                    {
-                        HOperatorSet.DispObj(hImage, configWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, configWindowHandle);
-                    }
-                }
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
 

@@ -111,6 +111,7 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
                 CameraFactory.AddCamera(@"E:\测试图像");
+                CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
             }
             
             var view = new SceneView

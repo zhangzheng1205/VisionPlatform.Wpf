@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading;
 using VisionPlatform.BaseType;
 
-namespace UncalibratedDeformableModel
+namespace CalibrationPlateIdentify
 {
     public class VisionOpera : IVisionOpera
     {
@@ -24,13 +24,14 @@ namespace UncalibratedDeformableModel
 
             //配置输入参数
             Inputs.Clear();
-            Inputs.Add(new ItemBase("ModelPath", @"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\hdevelop\Matching\Deformable\brake_disk_bike.dxf", typeof(string), "模板文件(.dxf)路径"));
 
             //配置输出参数
-            Outputs.Clear();
-            Outputs.Add(new ItemBase("MatchCount", typeof(int), "匹配数量"));
-            Outputs.Add(new ItemBase("Scores", typeof(double[]), "匹配分数(List列表)"));
-
+            Outputs = new ItemCollection()
+            {
+                new ItemBase("BaseX", typeof(double), "基准点X"),
+                new ItemBase("BaseY", typeof(double), "基准点Y"),
+                new ItemBase("Angle", typeof(double), "角度(弧度)"),
+            };
         }
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
@@ -38,6 +39,7 @@ namespace UncalibratedDeformableModel
             runningWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
             HOperatorSet.SetColor(runningWindowHandle, "lime green");
             HOperatorSet.SetLineWidth(runningWindowHandle, 3);
+            HOperatorSet.SetDraw(runningWindowHandle, "margin");
         }
 
         private void ConfigSmartWindow_HInitWindow(object sender, EventArgs e)
@@ -45,6 +47,7 @@ namespace UncalibratedDeformableModel
             configWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
             HOperatorSet.SetColor(configWindowHandle, "lime green");
             HOperatorSet.SetLineWidth(configWindowHandle, 3);
+            HOperatorSet.SetDraw(configWindowHandle, "margin");
         }
 
         #endregion
@@ -66,24 +69,6 @@ namespace UncalibratedDeformableModel
         /// 计时器
         /// </summary>
         private readonly Stopwatch stopwatch = new Stopwatch();
-
-        /// <summary>
-        /// 模板骨架
-        /// </summary>
-        private HObject ho_Contours;
-
-        /// <summary>
-        /// 模板骨架
-        /// </summary>
-        private HObject ho_ModelContours;
-
-        /// <summary>
-        /// 模板ID
-        /// </summary>
-        private HTuple hv_ModelID = new HTuple();
-
-
-        private HTuple hv_GenParamValue = new HTuple();
 
         #endregion
 
@@ -180,8 +165,26 @@ namespace UncalibratedDeformableModel
 
             stopwatch.Restart();
 
-            HObject ho_ContoursProjTrans;
-            HOperatorSet.GenEmptyObj(out ho_ContoursProjTrans);
+            //初始化变量
+            HObject ho_GrayImage, ho_Regions;
+            HObject ho_ConnectedRegions, ho_SelectedRegions, ho_SelectedRegions1;
+            HObject ho_Cross1 = null, ho_Cross2 = null;
+
+            // Local control variables 
+            HTuple hv_Area = null, hv_Row = null, hv_Column = null;
+            HTuple hv_Area1 = null, hv_Row1 = null, hv_Column1 = null;
+            HTuple hv_DistanceMin = new HTuple(), hv_DistanceMax = new HTuple();
+            HTuple hv_Index = new HTuple(), hv_TempDistance = new HTuple();
+            HTuple hv_Distance = new HTuple(), hv_Indices = new HTuple();
+            HTuple hv_Angle = new HTuple(), hv_Deg = new HTuple();
+            // Initialize local and output iconic variables 
+            HOperatorSet.GenEmptyObj(out ho_GrayImage);
+            HOperatorSet.GenEmptyObj(out ho_Regions);
+            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions1);
+            HOperatorSet.GenEmptyObj(out ho_Cross1);
+            HOperatorSet.GenEmptyObj(out ho_Cross2);
 
             try
             {
@@ -197,12 +200,12 @@ namespace UncalibratedDeformableModel
                             System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
                             System.Threading.SynchronizationContext.Current.Send(pl =>
                             {
-                                //执行相关任务.....
                                 SetWindowPart((RunningWindow as HSmartWindowControlWPF).HalconWindow, width, height);
                             }, null);
                         });
                     }).Start();
 
+                    HOperatorSet.ClearWindow(runningWindowHandle);
                     HOperatorSet.DispObj(hImage, runningWindowHandle);
                 }
 
@@ -221,75 +224,108 @@ namespace UncalibratedDeformableModel
                         });
                     }).Start();
 
-                    //SetWindowPart(new HWindow(configWindowHandle), width, height);
+                    HOperatorSet.ClearWindow(configWindowHandle);
                     HOperatorSet.DispObj(hImage, configWindowHandle);
                 }
 
                 //若未初始化,则进行初始化
                 if (!isInit)
                 {
-                    HTuple hv_DxfStatus = new HTuple();
-
-                    if (!File.Exists(Inputs["ModelPath"].Value as string))
-                    {
-                        throw new FileNotFoundException("ModelPath is no found");
-                    }
-
-                    HOperatorSet.GenEmptyObj(out ho_Contours);
-                    HOperatorSet.GenEmptyObj(out ho_ModelContours);
-
-                    //读取骨架
-                    HOperatorSet.ReadContourXldDxf(out ho_Contours, (Inputs["ModelPath"].Value as string), new HTuple(), new HTuple(), out hv_DxfStatus);
-
-                    //创建模板
-                    HOperatorSet.CreatePlanarUncalibDeformableModelXld(ho_Contours, "auto", new HTuple(),
-                        new HTuple(), "auto", 1.0, new HTuple(), "auto", 1.0, new HTuple(), "auto",
-                        "point_reduction_high", "ignore_part_polarity", 5, new HTuple(), new HTuple(),
-                        out hv_ModelID);
-                    if (hv_ModelID < 0)
-                    {
-                        return;
-                    }
-
-                    HOperatorSet.GetDeformableModelParams(hv_ModelID, "num_levels", out hv_GenParamValue);
-                    ho_ModelContours.Dispose();
-                    HOperatorSet.GetDeformableModelContours(out ho_ModelContours, hv_ModelID, 1);
 
                     isInit = true;
                 }
 
-                HTuple hv_HomMat2D, hv_Score;
-                HOperatorSet.FindPlanarUncalibDeformableModel(hImage, hv_ModelID, 0, 0.78, 1, 1, 1, 1, 0.6, 1, 0.5, 0, 0.9, "subpixel", "least_squares", out hv_HomMat2D, out hv_Score);
+                //执行主任务
+                ho_GrayImage.Dispose();
+                HOperatorSet.Rgb1ToGray(hImage, out ho_GrayImage);
 
-                Outputs["MatchCount"].Value = hv_Score.Length;
-                Outputs["Scores"].Value = hv_Score.DArr;
+                //Blob
+                ho_Regions.Dispose();
+                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, 100, 255);
+                ho_ConnectedRegions.Dispose();
+                HOperatorSet.Connection(ho_Regions, out ho_ConnectedRegions);
 
-                for (int i = 0; i < hv_Score.Length; i++)
+                //选择圆
+                ho_SelectedRegions.Dispose();
+                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions, (new HTuple("circularity")).TupleConcat(
+                    "area"), "and", (new HTuple(0.85)).TupleConcat(7000), (new HTuple(1)).TupleConcat(
+                    8000));
+                HOperatorSet.AreaCenter(ho_SelectedRegions, out hv_Area, out hv_Row, out hv_Column);
+
+                //选择Mask点
+                ho_SelectedRegions1.Dispose();
+                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions1, ((new HTuple("height")).TupleConcat(
+                    "area")).TupleConcat("width"), "and", ((new HTuple(35)).TupleConcat(1000)).TupleConcat(
+                    35), ((new HTuple(70)).TupleConcat(1600)).TupleConcat(70));
+                HOperatorSet.AreaCenter(ho_SelectedRegions1, out hv_Area1, out hv_Row1, out hv_Column1);
+
+                if ((int)((new HTuple((new HTuple(hv_Row.TupleLength())).TupleGreater(1))).TupleAnd(
+                    new HTuple((new HTuple(hv_Row1.TupleLength())).TupleGreater(0)))) != 0)
                 {
-                    HTuple hv_HomMatSelected;
 
-                    HOperatorSet.TupleSelectRange(hv_HomMat2D, i * 9, ((i + 1) * 9) - 1, out hv_HomMatSelected);
-                    ho_ContoursProjTrans.Dispose();
-                    HOperatorSet.ProjectiveTransContourXld(ho_ModelContours, out ho_ContoursProjTrans,
-                        hv_HomMatSelected);
+                    //找出与Mask点距离最短的原点
+                    HOperatorSet.DistancePr(ho_SelectedRegions, hv_Row1, hv_Column1, out hv_DistanceMin,
+                        out hv_DistanceMax);
+                    for (hv_Index = 1; (int)hv_Index <= (int)(new HTuple(hv_Row.TupleLength())); hv_Index = (int)hv_Index + 1)
+                    {
+                        HOperatorSet.DistancePp(hv_Row.TupleSelect(hv_Index - 1), hv_Column.TupleSelect(
+                            hv_Index - 1), hv_Row1.TupleSelect(0), hv_Column1.TupleSelect(0), out hv_TempDistance);
+                        hv_Distance = hv_Distance.TupleConcat(hv_TempDistance);
+                    }
+                    HOperatorSet.TupleSortIndex(hv_Distance, out hv_Indices);
+
+                    //原点角度
+                    HOperatorSet.AngleLx(hv_Row.TupleSelect(hv_Indices.TupleSelect(0)), hv_Column.TupleSelect(
+                        hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength()
+                        )) - 1)), hv_Column.TupleSelect(hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength()
+                        )) - 1)), out hv_Angle);
+                    HOperatorSet.TupleDeg(hv_Angle, out hv_Deg);
+
+                    Outputs["BaseX"].Value = hv_Column.TupleSelect(hv_Indices.TupleSelect(0)).D;
+                    Outputs["BaseY"].Value = hv_Row.TupleSelect(hv_Indices.TupleSelect(0)).D;
+                    Outputs["Angle"].Value = hv_Angle;
+
+                    //显示结果
+                    ho_Cross1.Dispose();
+                    HOperatorSet.GenCrossContourXld(out ho_Cross1, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), 24, 0.785398);
+                    ho_Cross2.Dispose();
+                    HOperatorSet.GenCrossContourXld(out ho_Cross2, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        (new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(hv_Indices.TupleSelect(
+                        (new HTuple(hv_Indices.TupleLength())) - 1)), 24, 0.785398);
+
 
                     if (runningWindowHandle != IntPtr.Zero)
                     {
                         HOperatorSet.DispObj(hImage, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, runningWindowHandle);
+                        HOperatorSet.DispObj(ho_SelectedRegions, runningWindowHandle);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, runningWindowHandle);
+                        HOperatorSet.DispObj(ho_Cross1, runningWindowHandle);
+                        HOperatorSet.DispObj(ho_Cross2, runningWindowHandle);
+                        HOperatorSet.DispLine(runningWindowHandle, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                            0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
                     }
 
                     if (configWindowHandle != IntPtr.Zero)
                     {
                         HOperatorSet.DispObj(hImage, configWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, configWindowHandle);
+                        HOperatorSet.DispObj(ho_SelectedRegions, configWindowHandle);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, configWindowHandle);
+                        HOperatorSet.DispObj(ho_Cross1, configWindowHandle);
+                        HOperatorSet.DispObj(ho_Cross2, configWindowHandle);
+                        HOperatorSet.DispLine(configWindowHandle, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                            0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
                     }
                 }
+
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
 
                 outputs = new ItemCollection(Outputs);
-
             }
             catch (Exception ex)
             {
@@ -299,8 +335,15 @@ namespace UncalibratedDeformableModel
             }
             finally
             {
+                //释放本次运行的临时资源
                 hImage.Dispose();
-                ho_ContoursProjTrans.Dispose();
+                ho_GrayImage.Dispose();
+                ho_Regions.Dispose();
+                ho_ConnectedRegions.Dispose();
+                ho_SelectedRegions.Dispose();
+                ho_SelectedRegions1.Dispose();
+                ho_Cross1.Dispose();
+                ho_Cross2.Dispose();
             }
         }
 
