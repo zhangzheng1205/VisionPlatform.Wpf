@@ -42,7 +42,10 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public ObservableCollection<ICamera> Cameras
         {
-            get => cameras;
+            get
+            {
+                return cameras;
+            }
             set
             {
                 cameras = value;
@@ -94,7 +97,10 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public BitmapImage CameraImage
         {
-            get => cameraImage;
+            get
+            {
+                return cameraImage;
+            }
             set
             {
                 //cameraImage?.StreamSource?.Dispose();
