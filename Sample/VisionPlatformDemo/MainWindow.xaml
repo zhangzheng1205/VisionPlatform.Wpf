@@ -84,6 +84,7 @@
                     <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" MinWidth="60" Click="ExecuteSceneButton_Click">执行场景</Button>
                     <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" MinWidth="60" Click="RecoverScenesButton_Click">还原场景</Button>
                     <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" MinWidth="60" Click="AotoExecuteButton_Click">自动执行</Button>
+                    <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" MinWidth="60" Click="EscThreadButton_Click">停止线程</Button>
                 </Grid>
             </StackPanel>
         </GroupBox>

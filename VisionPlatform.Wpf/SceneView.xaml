@@ -64,11 +64,11 @@
                 <StackPanel IsEnabled="{Binding IsVisionFrameValid}">
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
                     <StackPanel Orientation="Horizontal" MinHeight="21">
-                        <TextBlock Text="分隔符" Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center"/>
+                        <TextBlock Text="一级分隔符" Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding SeparatorChar}" MinWidth="80"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" MinHeight="21">
-                        <TextBlock Text="结束符" Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center"/>
+                        <TextBlock Text="二级分隔符" Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding TerminatorChar}" MinWidth="80"/>
                     </StackPanel>
                 </StackPanel>
@@ -76,13 +76,22 @@
                 <StackPanel>
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
                     <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsVisionFrameValid}">
-                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">视觉配置</TextBlock>
-                        <Button cal:Message.Attach="OpenSceneParamDebugView" Content="->" MinWidth="40"/>
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">高级配置</TextBlock>
+                        <Button cal:Message.Attach="OpenSceneParamDebugView" Content="..." MinWidth="40"/>
                     </StackPanel>
                 </StackPanel>
+
+                <StackPanel IsEnabled="{Binding IsVisionFrameValid}">
+                    <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
+                    <StackPanel>
+                        <Label Content="运行结果:"/>
+                        <TextBox Text="{Binding VisionResult}" IsReadOnly="True"/>
+                    </StackPanel>
+                </StackPanel>
+
                 <StackPanel>
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
-                    <Button cal:Message.Attach="Accept" MinWidth="60" HorizontalAlignment="Right">确认退出</Button>
+                    <Button cal:Message.Attach="Accept" MinWidth="60" HorizontalAlignment="Right">确认</Button>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

@@ -205,6 +205,9 @@ namespace VisionPlatformDemo
         Thread thread1;
         Thread thread2;
 
+        bool isEsc = false;
+        object lockObj = new object();
+
         /// <summary>
         /// 自动执行
         /// </summary>
@@ -227,6 +230,11 @@ namespace VisionPlatformDemo
                     RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
                 }
 
+                lock (lockObj)
+                {
+                    isEsc = false;
+                }
+
                 thread1 = new Thread(() =>
                 {
                     string result;
@@ -234,7 +242,16 @@ namespace VisionPlatformDemo
                     {
                         var random = new Random();
                         scene1.Execute(1000, out result);
-                        Thread.Sleep(random.Next(10,20));
+
+                        lock (lockObj)
+                        {
+                            if (isEsc)
+                            {
+                                break;
+                            }
+                        }
+
+                        Thread.Sleep(random.Next(100, 300));
                     }
 
                 });
@@ -246,7 +263,16 @@ namespace VisionPlatformDemo
                     {
                         var random = new Random();
                         scene2.Execute(1000, out result);
-                        Thread.Sleep(random.Next(10, 20));
+
+                        lock (lockObj)
+                        {
+                            if (isEsc)
+                            {
+                                break;
+                            }
+                        }
+
+                        Thread.Sleep(random.Next(100, 200));
                     }
 
                 });
@@ -260,8 +286,10 @@ namespace VisionPlatformDemo
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            thread1?.Abort();
-            thread2?.Abort();
+            lock (lockObj)
+            {
+                isEsc = true;
+            }
         }
 
         private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)
@@ -280,6 +308,14 @@ namespace VisionPlatformDemo
 
             }
             scene1.Execute(1000, out result);
+        }
+
+        private void EscThreadButton_Click(object sender, RoutedEventArgs e)
+        {
+            lock (this)
+            {
+                isEsc = true;
+            }
         }
     }
 }
