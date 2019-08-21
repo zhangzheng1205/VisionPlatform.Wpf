@@ -35,25 +35,27 @@ namespace UncalibratedDeformableModel
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
         {
-            runningWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
-            HOperatorSet.SetColor(runningWindowHandle, "lime green");
-            HOperatorSet.SetLineWidth(runningWindowHandle, 3);
+            runningWindow = (sender as HSmartWindowControlWPF).HalconWindow;
+            HOperatorSet.SetColor(runningWindow, "lime green");
+            HOperatorSet.SetLineWidth(runningWindow, 3);
+            HOperatorSet.SetDraw(runningWindow, "margin");
         }
 
         private void ConfigSmartWindow_HInitWindow(object sender, EventArgs e)
         {
-            configWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
-            HOperatorSet.SetColor(configWindowHandle, "lime green");
-            HOperatorSet.SetLineWidth(configWindowHandle, 3);
+            configWindow = (sender as HSmartWindowControlWPF).HalconWindow;
+            HOperatorSet.SetColor(configWindow, "lime green");
+            HOperatorSet.SetLineWidth(configWindow, 3);
+            HOperatorSet.SetDraw(configWindow, "margin");
         }
 
         #endregion
 
         #region 字段
 
-        private IntPtr runningWindowHandle;
+        private HWindow runningWindow;
 
-        private IntPtr configWindowHandle;
+        private HWindow configWindow;
 
         private bool isInit = false;
 
@@ -188,41 +190,40 @@ namespace UncalibratedDeformableModel
                 HTuple width, height;
                 HOperatorSet.GetImageSize(hImage, out width, out height);
 
-                if (runningWindowHandle != IntPtr.Zero)
+                if (runningWindow == null)
                 {
-                    new Thread(delegate ()
+                    try
                     {
-                        ThreadPool.QueueUserWorkItem(delegate
-                        {
-                            System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
-                            System.Threading.SynchronizationContext.Current.Send(pl =>
-                            {
-                                //执行相关任务.....
-                                SetWindowPart((RunningWindow as HSmartWindowControlWPF).HalconWindow, width, height);
-                            }, null);
-                        });
-                    }).Start();
-
-                    HOperatorSet.DispObj(hImage, runningWindowHandle);
+                        runningWindow = (RunningWindow as HSmartWindowControlWPF).HalconWindow;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
 
-                if (configWindowHandle != IntPtr.Zero)
+                if (configWindow == null)
                 {
-                    new Thread(delegate ()
+                    try
                     {
-                        ThreadPool.QueueUserWorkItem(delegate
-                        {
-                            System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
-                            System.Threading.SynchronizationContext.Current.Send(pl =>
-                            {
-                                SetWindowPart((ConfigWindow as HSmartWindowControlWPF).HalconWindow, width, height);
+                        configWindow = (ConfigWindow as HSmartWindowControlWPF).HalconWindow;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
 
-                            }, null);
-                        });
-                    }).Start();
+                if (runningWindow != null)
+                {
+                    SetWindowPart(runningWindow, width, height);
+                    HOperatorSet.ClearWindow(runningWindow);
+                    HOperatorSet.DispObj(hImage, runningWindow);
+                }
 
-                    //SetWindowPart(new HWindow(configWindowHandle), width, height);
-                    HOperatorSet.DispObj(hImage, configWindowHandle);
+                if (configWindow != null)
+                {
+                    SetWindowPart(configWindow, width, height);
+                    HOperatorSet.ClearWindow(configWindow);
+                    HOperatorSet.DispObj(hImage, configWindow);
                 }
 
                 //若未初始化,则进行初始化
@@ -273,16 +274,16 @@ namespace UncalibratedDeformableModel
                     HOperatorSet.ProjectiveTransContourXld(ho_ModelContours, out ho_ContoursProjTrans,
                         hv_HomMatSelected);
 
-                    if (runningWindowHandle != IntPtr.Zero)
+                    if (runningWindow != null)
                     {
-                        HOperatorSet.DispObj(hImage, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, runningWindowHandle);
+                        HOperatorSet.DispObj(hImage, runningWindow);
+                        HOperatorSet.DispObj(ho_ContoursProjTrans, runningWindow);
                     }
 
-                    if (configWindowHandle != IntPtr.Zero)
+                    if (configWindow != null)
                     {
-                        HOperatorSet.DispObj(hImage, configWindowHandle);
-                        HOperatorSet.DispObj(ho_ContoursProjTrans, configWindowHandle);
+                        HOperatorSet.DispObj(hImage, configWindow);
+                        HOperatorSet.DispObj(ho_ContoursProjTrans, configWindow);
                     }
                 }
                 stopwatch.Stop();

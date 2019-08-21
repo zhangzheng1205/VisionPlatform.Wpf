@@ -86,11 +86,11 @@ namespace VisionPlatform.Core
                 {
                     //注册场景
                     Scenes.Add(scene.Name, scene);
-
-                    //保存场景到本地
-                    string file = $"VisionPlatform/Scene/{scene.EVisionFrameType}/{scene.Name}/Scene.json";
-                    Scene.Serialize(scene, file);
                 }
+
+                //保存场景到本地
+                string file = $"VisionPlatform/Scene/{scene.EVisionFrameType}/{scene.Name}/Scene.json";
+                Scene.Serialize(scene, file);
             }
             catch (Exception)
             {

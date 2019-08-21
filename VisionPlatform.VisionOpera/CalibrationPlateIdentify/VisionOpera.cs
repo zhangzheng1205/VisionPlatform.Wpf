@@ -36,27 +36,27 @@ namespace CalibrationPlateIdentify
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
         {
-            runningWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
-            HOperatorSet.SetColor(runningWindowHandle, "lime green");
-            HOperatorSet.SetLineWidth(runningWindowHandle, 3);
-            HOperatorSet.SetDraw(runningWindowHandle, "margin");
+            runningWindow = (sender as HSmartWindowControlWPF).HalconWindow;
+            HOperatorSet.SetColor(runningWindow, "lime green");
+            HOperatorSet.SetLineWidth(runningWindow, 3);
+            HOperatorSet.SetDraw(runningWindow, "margin");
         }
 
         private void ConfigSmartWindow_HInitWindow(object sender, EventArgs e)
         {
-            configWindowHandle = (sender as HSmartWindowControlWPF).HalconID;
-            HOperatorSet.SetColor(configWindowHandle, "lime green");
-            HOperatorSet.SetLineWidth(configWindowHandle, 3);
-            HOperatorSet.SetDraw(configWindowHandle, "margin");
+            configWindow = (sender as HSmartWindowControlWPF).HalconWindow;
+            HOperatorSet.SetColor(configWindow, "lime green");
+            HOperatorSet.SetLineWidth(configWindow, 3);
+            HOperatorSet.SetDraw(configWindow, "margin");
         }
 
         #endregion
 
         #region 字段
 
-        private IntPtr runningWindowHandle;
+        private HWindow runningWindow;
 
-        private IntPtr configWindowHandle;
+        private HWindow configWindow;
 
         private bool isInit = false;
 
@@ -191,48 +191,47 @@ namespace CalibrationPlateIdentify
                 HTuple width, height;
                 HOperatorSet.GetImageSize(hImage, out width, out height);
 
-                if (runningWindowHandle != IntPtr.Zero)
-                {
-                    new Thread(delegate ()
-                    {
-                        ThreadPool.QueueUserWorkItem(delegate
-                        {
-                            System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
-                            System.Threading.SynchronizationContext.Current.Send(pl =>
-                            {
-                                SetWindowPart((RunningWindow as HSmartWindowControlWPF).HalconWindow, width, height);
-                            }, null);
-                        });
-                    }).Start();
-
-                    HOperatorSet.ClearWindow(runningWindowHandle);
-                    HOperatorSet.DispObj(hImage, runningWindowHandle);
-                }
-
-                if (configWindowHandle != IntPtr.Zero)
-                {
-                    new Thread(delegate ()
-                    {
-                        ThreadPool.QueueUserWorkItem(delegate
-                        {
-                            System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
-                            System.Threading.SynchronizationContext.Current.Send(pl =>
-                            {
-                                SetWindowPart((ConfigWindow as HSmartWindowControlWPF).HalconWindow, width, height);
-
-                            }, null);
-                        });
-                    }).Start();
-
-                    HOperatorSet.ClearWindow(configWindowHandle);
-                    HOperatorSet.DispObj(hImage, configWindowHandle);
-                }
-
                 //若未初始化,则进行初始化
                 if (!isInit)
                 {
-
                     isInit = true;
+                }
+
+                if (runningWindow == null)
+                {
+                    try
+                    {
+                        runningWindow = (RunningWindow as HSmartWindowControlWPF).HalconWindow;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                if (configWindow == null)
+                {
+                    try
+                    {
+                        configWindow = (ConfigWindow as HSmartWindowControlWPF).HalconWindow;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                HOperatorSet.SetSystem("flush_graphic", "false");
+                if (runningWindow != null)
+                {
+                    SetWindowPart(runningWindow, width, height);
+                    HOperatorSet.ClearWindow(runningWindow);
+                    HOperatorSet.DispObj(hImage, runningWindow);
+                }
+
+                if (configWindow != null)
+                {
+                    SetWindowPart(configWindow, width, height);
+                    HOperatorSet.ClearWindow(configWindow);
+                    HOperatorSet.DispObj(hImage, configWindow);
                 }
 
                 //执行主任务
@@ -295,27 +294,26 @@ namespace CalibrationPlateIdentify
                         (new HTuple(hv_Indices.TupleLength())) - 1)), 24, 0.785398);
 
 
-                    if (runningWindowHandle != IntPtr.Zero)
+                    if (runningWindow != null)
                     {
-                        HOperatorSet.DispObj(hImage, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_SelectedRegions, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_SelectedRegions1, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_Cross1, runningWindowHandle);
-                        HOperatorSet.DispObj(ho_Cross2, runningWindowHandle);
-                        HOperatorSet.DispLine(runningWindowHandle, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        HOperatorSet.DispObj(hImage, runningWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions, runningWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, runningWindow);
+                        HOperatorSet.DispObj(ho_Cross1, runningWindow);
+                        HOperatorSet.DispObj(ho_Cross2, runningWindow);
+                        HOperatorSet.DispLine(runningWindow, hv_Row.TupleSelect(hv_Indices.TupleSelect(
                             0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
                             hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
                             hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
                     }
 
-                    if (configWindowHandle != IntPtr.Zero)
+                    if (configWindow != null)
                     {
-                        HOperatorSet.DispObj(hImage, configWindowHandle);
-                        HOperatorSet.DispObj(ho_SelectedRegions, configWindowHandle);
-                        HOperatorSet.DispObj(ho_SelectedRegions1, configWindowHandle);
-                        HOperatorSet.DispObj(ho_Cross1, configWindowHandle);
-                        HOperatorSet.DispObj(ho_Cross2, configWindowHandle);
-                        HOperatorSet.DispLine(configWindowHandle, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        HOperatorSet.DispObj(ho_SelectedRegions, configWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, configWindow);
+                        HOperatorSet.DispObj(ho_Cross1, configWindow);
+                        HOperatorSet.DispObj(ho_Cross2, configWindow);
+                        HOperatorSet.DispLine(configWindow, hv_Row.TupleSelect(hv_Indices.TupleSelect(
                             0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
                             hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
                             hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
@@ -335,6 +333,8 @@ namespace CalibrationPlateIdentify
             }
             finally
             {
+                HOperatorSet.SetSystem("flush_graphic", "true");
+
                 //释放本次运行的临时资源
                 hImage.Dispose();
                 ho_GrayImage.Dispose();

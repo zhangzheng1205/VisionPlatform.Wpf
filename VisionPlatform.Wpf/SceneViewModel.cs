@@ -500,11 +500,23 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
-            //if (Scene != null)
-            //{
-            //    string file = $"VisionPlatform/Scene/{Scene.EVisionFrameType}/{Scene.Name}/Scene.json";
-            //    Scene.Serialize(Scene, file);
-            //}
+            //保存配置信息
+            if (Scene != null)
+            {
+                if (Scene.VisionFrame?.IsEnableCamera == true)
+                {
+                    Scene.CameraSerial = SelectedCamera?.Info.SerialNumber;
+                }
+
+                try
+                {
+                    Scene.Init();
+                }
+                catch (Exception)
+                {
+
+                }
+            }
             
             OnSceneConfigurationCompleted(Scene);
         }

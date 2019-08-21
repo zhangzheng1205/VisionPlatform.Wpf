@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,10 +111,10 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
-                CameraFactory.AddCamera(@"E:\测试图像");
+                CameraFactory.AddCamera(@"E:\测试图像\刹车片");
                 CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
             }
-            
+
             var view = new SceneView
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -147,7 +148,7 @@ namespace VisionPlatformDemo
         /// <param name="e"></param>
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
         {
-            
+
             //注册场景
             SceneManager.RegisterScene(e.Scene);
             SceneConfigWindow.Close();
@@ -187,7 +188,6 @@ namespace VisionPlatformDemo
 
             SceneConfigWindow.ShowDialog();
 
-
         }
 
         private void DeleteSceneButton_Click(object sender, RoutedEventArgs e)
@@ -200,6 +200,86 @@ namespace VisionPlatformDemo
             {
                 ScenesListView.Items.Add(item);
             }
+        }
+
+        Thread thread1;
+        Thread thread2;
+
+        /// <summary>
+        /// 自动执行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AotoExecuteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ScenesListView.Items.Count >= 2)
+            {
+                var scene1 = ScenesListView.Items[0] as Scene;
+                var scene2 = ScenesListView.Items[1] as Scene;
+
+                if (RunningWindow1.Content == null)
+                {
+                    RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
+                }
+
+                if (RunningWindow2.Content == null)
+                {
+                    RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
+                }
+
+                thread1 = new Thread(() =>
+                {
+                    string result;
+                    while (true)
+                    {
+                        var random = new Random();
+                        scene1.Execute(1000, out result);
+                        Thread.Sleep(random.Next(10,20));
+                    }
+
+                });
+
+                thread2 = new Thread(() =>
+                {
+                    string result;
+                    while (true)
+                    {
+                        var random = new Random();
+                        scene2.Execute(1000, out result);
+                        Thread.Sleep(random.Next(10, 20));
+                    }
+
+                });
+
+                thread1.Start();
+                thread2.Start();
+
+            }
+
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            thread1?.Abort();
+            thread2?.Abort();
+        }
+
+        private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)
+        {
+            string result;
+            var scene1 = ScenesListView.SelectedItem as Scene;
+
+            if (scene1 == null)
+            {
+                return;
+            }
+
+            if (RunningWindow1.Content != scene1.VisionFrame.RunningWindow)
+            {
+                RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
+
+            }
+            scene1.Execute(1000, out result);
         }
     }
 }
