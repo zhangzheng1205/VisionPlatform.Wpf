@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Windows;
 using VisionPlatform.BaseType;
 
 namespace UncalibratedDeformableModel
@@ -16,10 +17,12 @@ namespace UncalibratedDeformableModel
             //创建运行时/配置窗口控件
             var runningSmartWindow = new HSmartWindowControlWPF();
             runningSmartWindow.HInitWindow += RunningSmartWindow_HInitWindow;
+            runningSmartWindow.Unloaded += RunningSmartWindow_Unloaded;
             RunningWindow = runningSmartWindow;
 
             var configSmartWindow = new HSmartWindowControlWPF();
-            configSmartWindow.HInitWindow += ConfigSmartWindow_HInitWindow; ;
+            configSmartWindow.HInitWindow += ConfigSmartWindow_HInitWindow;
+            configSmartWindow.Unloaded += ConfigSmartWindow_Unloaded;
             ConfigWindow = configSmartWindow;
 
             //配置输入参数
@@ -49,14 +52,39 @@ namespace UncalibratedDeformableModel
             HOperatorSet.SetDraw(configWindow, "margin");
         }
 
+        private void RunningSmartWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var runningSmartWindow = new HSmartWindowControlWPF();
+            runningSmartWindow.HInitWindow += RunningSmartWindow_HInitWindow;
+            runningSmartWindow.Unloaded += RunningSmartWindow_Unloaded;
+            RunningWindow = runningSmartWindow;
+        }
+
+        private void ConfigSmartWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var configSmartWindow = new HSmartWindowControlWPF();
+            configSmartWindow.HInitWindow += ConfigSmartWindow_HInitWindow;
+            configSmartWindow.Unloaded += ConfigSmartWindow_Unloaded;
+            ConfigWindow = configSmartWindow;
+        }
+
         #endregion
 
         #region 字段
 
+        /// <summary>
+        /// 运行时窗口
+        /// </summary>
         private HWindow runningWindow;
 
+        /// <summary>
+        /// 配置窗口
+        /// </summary>
         private HWindow configWindow;
 
+        /// <summary>
+        /// 初始化标志
+        /// </summary>
         private bool isInit = false;
 
         /// <summary>
@@ -124,12 +152,12 @@ namespace UncalibratedDeformableModel
         /// <summary>
         /// 运行窗口
         /// </summary>
-        public object RunningWindow { get; }
+        public object RunningWindow { get; private set; }
 
         /// <summary>
         /// 配置窗口
         /// </summary>
-        public object ConfigWindow { get; }
+        public object ConfigWindow { get; private set; }
 
         #endregion
 

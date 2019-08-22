@@ -37,7 +37,6 @@ namespace VisionPlatform.Core
             UpdateAssembly();
         }
 
-
         /// <summary>
         /// 目录名转换为ECameraSdkType
         /// </summary>
@@ -53,7 +52,6 @@ namespace VisionPlatform.Core
                 default: return EVisionFrameType.Unknown;
             }
         }
-
 
         /// <summary>
         /// 更新集合

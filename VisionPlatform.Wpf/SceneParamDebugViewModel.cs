@@ -31,7 +31,7 @@ namespace VisionPlatform.Wpf
         /// <param name="scene">场景实例</param>
         public SceneParamDebugViewModel(Scene scene)
         {
-            this.scene = scene;
+            Scene = scene;
 
         }
 

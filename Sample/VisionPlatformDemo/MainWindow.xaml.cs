@@ -223,15 +223,8 @@ namespace VisionPlatformDemo
                 var scene1 = ScenesListView.Items[0] as Scene;
                 var scene2 = ScenesListView.Items[1] as Scene;
 
-                if (RunningWindow1.Content == null)
-                {
-                    RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
-                }
-
-                if (RunningWindow2.Content == null)
-                {
-                    RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
-                }
+                RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
+                RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
 
                 lock (lockObj)
                 {

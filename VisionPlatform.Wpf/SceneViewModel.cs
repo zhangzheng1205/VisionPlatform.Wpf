@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
 
@@ -35,7 +36,6 @@ namespace VisionPlatform.Wpf
                 Scene = scene;
 
                 SceneName = scene.Name;
-                UpdateCameras();
 
                 if (Cameras.Contains(CameraFactory.Cameras[Scene.CameraSerial]))
                 {
@@ -62,6 +62,12 @@ namespace VisionPlatform.Wpf
             set
             {
                 scene = value;
+
+                if (scene?.VisionFrame?.IsEnableCamera == true)
+                {
+                    UpdateCameras();
+                }
+
                 NotifyOfPropertyChange(() => SceneName);
                 NotifyOfPropertyChange(() => IsEnableCamera);
                 NotifyOfPropertyChange(() => IsVisionFrameValid);
@@ -70,6 +76,7 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => SeparatorChar);
                 NotifyOfPropertyChange(() => TerminatorChar);
                 NotifyOfPropertyChange(() => Cameras);
+                NotifyOfPropertyChange(() => SceneRunningWindow);
             }
         }
 
@@ -144,26 +151,6 @@ namespace VisionPlatform.Wpf
             }
         }
 
-        private object sceneConfigView;
-
-        /// <summary>
-        /// 场景配置窗口
-        /// </summary>
-        public object SceneConfigView
-        {
-            get
-            {
-                return sceneConfigView;
-            }
-            set
-            {
-                sceneConfigView = value;
-                NotifyOfPropertyChange(() => SceneConfigView);
-            }
-        }
-
-        private object sceneRunningWindow;
-
         /// <summary>
         /// 场景配置窗口
         /// </summary>
@@ -171,12 +158,7 @@ namespace VisionPlatform.Wpf
         {
             get
             {
-                return sceneRunningWindow;
-            }
-            set
-            {
-                sceneRunningWindow = value;
-                NotifyOfPropertyChange(() => SceneRunningWindow);
+                return Scene?.VisionFrame?.RunningWindow ?? new Grid();
             }
         }
 
@@ -369,7 +351,7 @@ namespace VisionPlatform.Wpf
 
                 if (Scene.IsVisionFrameInit)
                 {
-                    SceneRunningWindow = Scene.VisionFrame.RunningWindow;
+                    NotifyOfPropertyChange(() => SceneRunningWindow);
                 }
 
             }
@@ -391,10 +373,6 @@ namespace VisionPlatform.Wpf
                 {
                     Scene = new Scene(sceneName, VisionFrameFactory.DefaultVisionFrameType);
 
-                    if (Scene.VisionFrame.IsEnableCamera == true)
-                    {
-                        UpdateCameras();
-                    }
                 }
             }
             catch (Exception ex)
@@ -516,8 +494,6 @@ namespace VisionPlatform.Wpf
                 SceneParamDebugWindow.WindowState = WindowState.Maximized;
 
                 SceneParamDebugWindow.ShowDialog();
-
-                SceneConfigView = view;
             }
             catch (Exception ex)
             {
@@ -528,6 +504,8 @@ namespace VisionPlatform.Wpf
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
         {
             SceneParamDebugWindow.Close();
+
+            NotifyOfPropertyChange(() => SceneRunningWindow);
         }
 
         /// <summary>
