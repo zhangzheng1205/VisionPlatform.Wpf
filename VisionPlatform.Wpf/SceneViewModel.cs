@@ -495,7 +495,7 @@ namespace VisionPlatform.Wpf
                 SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 //SceneParamDebugWindow.Owner = Window.GetWindow(this);
                 SceneParamDebugWindow.Title = "场景参数配置窗口";
-                SceneParamDebugWindow.WindowState = WindowState.Maximized;
+                //SceneParamDebugWindow.WindowState = WindowState.Maximized;
 
                 SceneParamDebugWindow.ShowDialog();
             }
