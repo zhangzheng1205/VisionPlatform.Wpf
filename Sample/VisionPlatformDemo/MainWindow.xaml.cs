@@ -115,7 +115,7 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
             }
 
-            var view = new SceneView
+            var view = new SceneView(new Scene("EmptyScene", VisionFrameFactory.DefaultVisionFrameType), false)
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
@@ -166,7 +166,7 @@ namespace VisionPlatformDemo
         private void ModifySceneButton_Click(object sender, RoutedEventArgs e)
         {
             //ScenesListView.SelectedItem
-            var view = new SceneView(ScenesListView.SelectedItem as Scene)
+            var view = new SceneView(ScenesListView.SelectedItem as Scene, true)
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch

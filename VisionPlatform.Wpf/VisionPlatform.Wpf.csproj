@@ -123,6 +123,7 @@
       <DependentUpon>CameraView.xaml</DependentUpon>
     </Compile>
     <Compile Include="CameraViewModel.cs" />
+    <Compile Include="Converters\BoolInvertConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="EventArgs\CalibrationConfigurationCompletedEventArgs.cs" />
     <Compile Include="EventArgs\CameraConfigurationCompletedEventArgs.cs" />

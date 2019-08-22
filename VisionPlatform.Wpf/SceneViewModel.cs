@@ -84,6 +84,25 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        private bool isSceneNameReadOnly = false;
+
+        /// <summary>
+        /// 场景名只读标志
+        /// </summary>
+        public bool IsSceneNameReadOnly
+        {
+            get
+            {
+                return isSceneNameReadOnly;
+            }
+            set
+            {
+                isSceneNameReadOnly = value;
+                NotifyOfPropertyChange(() => IsSceneNameReadOnly);
+            }
+        }
+
+
         /// <summary>
         /// 场景有效标志
         /// </summary>
@@ -117,8 +136,6 @@ namespace VisionPlatform.Wpf
             }
         }
 
-        private string sceneName;
-
         /// <summary>
         /// 场景名称
         /// </summary>
@@ -126,11 +143,14 @@ namespace VisionPlatform.Wpf
         {
             get
             {
-                return sceneName;
+                return Scene?.Name ?? "EmptyScene";
             }
             set
             {
-                sceneName = value;
+                if (Scene != null)
+                {
+                    Scene.Name = value;
+                }
                 NotifyOfPropertyChange(() => SceneName);
             }
         }

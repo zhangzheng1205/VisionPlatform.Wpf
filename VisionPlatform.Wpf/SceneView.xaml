@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolInvertConverter x:Key="BoolInvertConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -26,8 +27,8 @@
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
                     <DockPanel>
                         <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">场景名称</TextBlock>
-                        <Button cal:Message.Attach="CreateScene(SceneNameTextBox.Text)" IsEnabled="{Binding CanCreateScene}" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40" Visibility="Visible">创建</Button>
-                        <TextBox x:Name="SceneNameTextBox" Text="{Binding SceneName}"/>
+                        <Button cal:Message.Attach="CreateScene(SceneNameTextBox.Text)" IsEnabled="{Binding CanCreateScene}" Visibility="Hidden" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">创建</Button>
+                        <TextBox x:Name="SceneNameTextBox" Text="{Binding SceneName}" IsEnabled="{Binding IsSceneNameReadOnly, Converter={StaticResource BoolInvertConverter}}"/>
                     </DockPanel>
                     <StackPanel MinHeight="10"/>
                     <DockPanel IsEnabled="{Binding IsSceneValid}">

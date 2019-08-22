@@ -46,6 +46,17 @@ namespace VisionPlatform.Wpf
             viewModel.MessageRaised += ViewModel_MessageRaised;
         }
 
+        /// <summary>
+        /// 创建SceneView新实例
+        /// </summary>
+        /// <param name="scene">场景实例</param>
+        /// <param name="isSceneNameReadOnly">场景名只读标志</param>
+        public SceneView(Scene scene, bool isSceneNameReadOnly) : this(scene)
+        {
+            var viewModel = DataContext as SceneViewModel;
+            viewModel.IsSceneNameReadOnly = isSceneNameReadOnly;
+        }
+
         private void ViewModel_MessageRaised(object sender, MessageRaisedEventArgs e)
         {
             MessageBox.Show(e.Message);
