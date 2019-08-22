@@ -861,8 +861,15 @@ namespace VisionPlatform.Core
         {
             var scene = JsonSerialization.DeserializeObjectFromFile<Scene>(file);
 
-            scene?.Init();
+            try
+            {
+                scene?.Init();
+            }
+            catch (ArgumentException)
+            {
 
+            }
+            
             return scene;
         }
 

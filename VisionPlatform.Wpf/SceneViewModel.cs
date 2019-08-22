@@ -37,9 +37,13 @@ namespace VisionPlatform.Wpf
 
                 SceneName = scene.Name;
 
-                if (Cameras.Contains(CameraFactory.Cameras[Scene.CameraSerial]))
+                //还原已选择的相机
+                if ((Scene?.VisionFrame?.IsEnableCamera == true) && (Scene?.IsCameraInit == true))
                 {
-                    SelectedCamera = CameraFactory.Cameras[Scene.CameraSerial];
+                    if ((CameraFactory.Cameras.ContainsKey(Scene.CameraSerial ?? "")) && (Cameras.Contains(CameraFactory.Cameras[Scene.CameraSerial])))
+                    {
+                        SelectedCamera = CameraFactory.Cameras[Scene.CameraSerial];
+                    }
                 }
             }
         }

@@ -148,7 +148,7 @@ namespace VisionPlatformDemo
         /// <param name="e"></param>
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
         {
-            if (e.Scene?.IsInit == true)
+            if (e.Scene != null)
             {
                 //注册场景
                 SceneManager.RegisterScene(e.Scene);
@@ -218,6 +218,14 @@ namespace VisionPlatformDemo
         /// <param name="e"></param>
         private void AotoExecuteButton_Click(object sender, RoutedEventArgs e)
         {
+            lock (lockObj)
+            {
+                if (isEsc == false)
+                {
+                    return;
+                }
+            }
+
             if (ScenesListView.Items.Count >= 2)
             {
                 var scene1 = ScenesListView.Items[0] as Scene;
@@ -275,7 +283,6 @@ namespace VisionPlatformDemo
 
                 thread1.Start();
                 thread2.Start();
-
             }
 
         }
@@ -290,20 +297,34 @@ namespace VisionPlatformDemo
 
         private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)
         {
-            string result;
-            var scene1 = ScenesListView.SelectedItem as Scene;
-
-            if (scene1 == null)
+            try
             {
-                return;
-            }
+                string result;
+                var scene1 = ScenesListView.SelectedItem as Scene;
 
-            if (RunningWindow1.Content != scene1.VisionFrame.RunningWindow)
+                if (scene1 == null)
+                {
+                    return;
+                }
+
+                if (RunningWindow1.Content != scene1.VisionFrame.RunningWindow)
+                {
+                    RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
+
+                }
+                RunStatus runStatus = scene1.Execute(1000, out result);
+
+                if (runStatus.Result == EResult.Error)
+                {
+                    MessageBox.Show(runStatus.Message);
+                }
+
+            }
+            catch (Exception ex)
             {
-                RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
-
+                MessageBox.Show(ex.Message);
             }
-            scene1.Execute(1000, out result);
+           
         }
 
         private void EscThreadButton_Click(object sender, RoutedEventArgs e)

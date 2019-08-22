@@ -95,8 +95,7 @@
                         <TextBlock x:Name="ImagePathTextBlock" Visibility="Collapsed"/>
                         <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" IsEnabled="{Binding IsVisionFrameValid}" MinWidth="60" Margin="0,0,10,0">执行图片</Button>
                         <Button cal:Message.Attach="Execute" IsEnabled="{Binding IsVisionFrameValid}" MinWidth="60" Margin="0,0,10,0">执行</Button>
-                        <Button cal:Message.Attach="Accept" MinWidth="60" Margin="0,0,10,0">确认</Button>
-
+                        <Button cal:Message.Attach="Accept" MinWidth="60" Margin="0,0,10,0">保存</Button>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

@@ -55,6 +55,7 @@ namespace CalibrationPlateIdentify
 
         private void RunningSmartWindow_Unloaded(object sender, RoutedEventArgs e)
         {
+            runningWindow = null;
             var runningSmartWindow = new HSmartWindowControlWPF();
             runningSmartWindow.HInitWindow += RunningSmartWindow_HInitWindow;
             runningSmartWindow.Unloaded += RunningSmartWindow_Unloaded;
@@ -63,6 +64,7 @@ namespace CalibrationPlateIdentify
 
         private void ConfigSmartWindow_Unloaded(object sender, RoutedEventArgs e)
         {
+            configWindow = null;
             var configSmartWindow = new HSmartWindowControlWPF();
             configSmartWindow.HInitWindow += ConfigSmartWindow_HInitWindow;
             configSmartWindow.Unloaded += ConfigSmartWindow_Unloaded;

@@ -193,17 +193,21 @@ namespace VisionPlatform.Core
                     {
                         string file = $"{item.FullName}\\Scene.json";
 
-                        try
+                        if (File.Exists(file))
                         {
-                            var scene = Scene.Deserialize(file);
-                            if (scene != null)
+                            try
                             {
-                                Scenes.Add(scene.Name, scene);
+                                var scene = Scene.Deserialize(file);
+                                if (scene != null)
+                                {
+                                    Scenes.Add(scene.Name, scene);
+                                }
+                            }
+                            catch (ArgumentException)
+                            {
                             }
                         }
-                        catch (ArgumentException)
-                        {
-                        }
+
                     }
                 }
             }

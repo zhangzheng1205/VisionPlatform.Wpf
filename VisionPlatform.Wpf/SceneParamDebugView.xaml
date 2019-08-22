@@ -90,7 +90,7 @@
                     <Button cal:Message.Attach="Execute" Content="执行" MinWidth="60" Margin="0,0,10,0"/>
                     <!--<Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
                     <StackPanel Width="10"/>-->
-                    <Button cal:Message.Attach="Accept" Content="确认" MinWidth="60" Margin="0,0,10,0"/>
+                    <Button cal:Message.Attach="Accept" Content="保存" MinWidth="60" Margin="0,0,10,0"/>
                     <!--<Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>-->
                 </StackPanel>
             </StackPanel>
