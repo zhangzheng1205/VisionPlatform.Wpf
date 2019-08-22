@@ -148,16 +148,19 @@ namespace VisionPlatformDemo
         /// <param name="e"></param>
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
         {
-
-            //注册场景
-            SceneManager.RegisterScene(e.Scene);
-            SceneConfigWindow.Close();
-
-            ScenesListView.Items.Clear();
-            foreach (var item in SceneManager.Scenes.Values)
+            if (e.Scene?.IsInit == true)
             {
-                ScenesListView.Items.Add(item);
+                //注册场景
+                SceneManager.RegisterScene(e.Scene);
+                
+                ScenesListView.Items.Clear();
+                foreach (var item in SceneManager.Scenes.Values)
+                {
+                    ScenesListView.Items.Add(item);
+                }
             }
+
+            SceneConfigWindow.Close();
         }
 
         private void ModifySceneButton_Click(object sender, RoutedEventArgs e)

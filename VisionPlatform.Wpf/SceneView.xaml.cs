@@ -75,5 +75,23 @@ namespace VisionPlatform.Wpf
             }
 
         }
+
+        private void ExecuteImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "图像文件|*.bmp;*.png;*.jpg;*.jpgtif;*.tiff;*.giff;*.bmpf;*.jpgf;*.jpegf;*.jp2f;*.pngf;*.pcxf;*.pgmf;*.ppmf;*.pbmf;*.xwdf;*.ima|其他|*.*"
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                ImagePathTextBlock.Text = ofd.FileName;
+                return;
+            }
+            else
+            {
+                ImagePathTextBlock.Text = "";
+            }
+        }
     }
 }

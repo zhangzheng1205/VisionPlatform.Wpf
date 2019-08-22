@@ -75,36 +75,7 @@ namespace VisionPlatform.Core
 
             //还原视觉算子
             SetVisionOperaFile(visionOperaFile);
-
-            //还原输入参数
-            if (VisionFrame.IsEnableInput == true)
-            {
-                if (string.IsNullOrEmpty(InputParamFile))
-                {
-                    InputParamFile = "default.json";
-                }
-
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
-                if (!File.Exists(filePath))
-                {
-                    JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
-                }
-            }
-
-            //还原输出参数
-            if (VisionFrame.IsEnableOutput == true)
-            {
-                if (string.IsNullOrEmpty(OutputParamFile))
-                {
-                    OutputParamFile = "default.json";
-                }
-
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
-                if (!File.Exists(filePath))
-                {
-                    JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
-                }
-            }
+            
         }
 
         /// <summary>
@@ -484,6 +455,74 @@ namespace VisionPlatform.Core
         }
 
         /// <summary>
+        /// 还原输入参数文件
+        /// </summary>
+        /// <param name="isForceDefault">强制默认</param>
+        private void RecoverInputFile(bool isForceDefault = false)
+        {
+            if (VisionFrame.IsEnableInput == true)
+            {
+                if (string.IsNullOrEmpty(InputParamFile))
+                {
+                    InputParamFile = "default.json";
+                }
+
+                //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
+
+                if (isForceDefault)
+                {
+                    JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
+                }
+                else
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
+                    }
+                    else
+                    {
+                        VisionFrame.Inputs.Clear();
+                        VisionFrame.Inputs.AddRange(JsonSerialization.DeserializeObjectFromFile<ItemCollection>(filePath));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 还原输出文件
+        /// </summary>
+        private void RecoverOutputFile(bool isForceDefault = false)
+        {
+            if (VisionFrame.IsEnableOutput == true)
+            {
+                if (string.IsNullOrEmpty(OutputParamFile))
+                {
+                    OutputParamFile = "default.json";
+                }
+
+                //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
+                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
+                if (isForceDefault)
+                {
+                    JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
+                }
+                else
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
+                    }
+                    else
+                    {
+                        VisionFrame.Outputs.Clear();
+                        VisionFrame.Outputs.AddRange(JsonSerialization.DeserializeObjectFromFile<ItemCollection>(filePath));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 设置视觉算子文件
         /// </summary>
         /// <param name="file">视觉算子文件</param>
@@ -536,7 +575,10 @@ namespace VisionPlatform.Core
 
             VisionOperaFile = Path.GetFileName(dstFile);
             VisionFrame.Init(dstFile);
-            
+
+            //创建默认输入输出参数文件
+            RecoverInputFile(true);
+            RecoverOutputFile(true);
         }
 
         /// <summary>
@@ -570,6 +612,12 @@ namespace VisionPlatform.Core
                 string visionOperaFilePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOpera/{VisionOperaFile}";
                 VisionFrame.Init(visionOperaFilePath);
 
+                //还原输入参数
+                RecoverInputFile();
+
+                //还原输出参数
+                RecoverOutputFile();
+
                 //还原相机
                 if (VisionFrame.IsEnableCamera)
                 {
@@ -585,51 +633,9 @@ namespace VisionPlatform.Core
                             //若打开相机失败,不抛异常
                         }
                     }
-                    
-                }
-
-                //还原输入参数
-                if (VisionFrame.IsEnableInput == true)
-                {
-                    if (string.IsNullOrEmpty(InputParamFile))
-                    {
-                        InputParamFile = "default.json";
-                    }
-
-                    //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
-                    if (!File.Exists(filePath))
-                    {
-                        JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
-                    }
-                    else
-                    {
-                        VisionFrame.Inputs.Clear();
-                        VisionFrame.Inputs.AddRange(JsonSerialization.DeserializeObjectFromFile<ItemCollection>(filePath));
-                    }
 
                 }
 
-                //还原输出参数
-                if (VisionFrame.IsEnableOutput == true)
-                {
-                    if (string.IsNullOrEmpty(OutputParamFile))
-                    {
-                        OutputParamFile = "default.json";
-                    }
-
-                    //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                    string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
-                    if (!File.Exists(filePath))
-                    {
-                        JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
-                    }
-                    else
-                    {
-                        VisionFrame.Outputs.Clear();
-                        VisionFrame.Outputs.AddRange(JsonSerialization.DeserializeObjectFromFile<ItemCollection>(filePath));
-                    }
-                }
             }
             catch (Exception)
             {
@@ -659,7 +665,7 @@ namespace VisionPlatform.Core
 
                 if (!IsInit)
                 {
-                    throw new Exception("scene is uninitialized");
+                    throw new Exception($"scene is uninitialized({nameof(IsVisionFrameInit)}:{IsVisionFrameInit} {nameof(IsCameraInit)}:{IsCameraInit})");
                 }
 
                 ItemCollection outputs;

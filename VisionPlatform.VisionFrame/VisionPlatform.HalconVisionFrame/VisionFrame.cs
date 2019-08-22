@@ -78,7 +78,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 运行状态
         /// </summary>
-        public RunStatus RunStatus { get; set; }
+        public RunStatus RunStatus { get; set; } = new RunStatus();
 
         #region 功能使能
 

@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:VisionPlatform.Wpf.Converters"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" MinHeight="450" MinWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -86,13 +86,11 @@
                 <Label Content="场景控制"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="ImagePathTextBlock" Visibility="Collapsed"/>
-                    <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" Content="执行图片" MinWidth="60"/>
-                    <StackPanel Width="10"/>
-                    <Button cal:Message.Attach="Execute" Content="执行" MinWidth="60"/>
-                    <StackPanel Width="10"/>
-                    <Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
-                    <StackPanel Width="10"/>
-                    <Button cal:Message.Attach="Accept" Content="确认退出" MinWidth="60"/>
+                    <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" Content="执行图片" MinWidth="60" Margin="0,0,10,0"/>
+                    <Button cal:Message.Attach="Execute" Content="执行" MinWidth="60" Margin="0,0,10,0"/>
+                    <!--<Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
+                    <StackPanel Width="10"/>-->
+                    <Button cal:Message.Attach="Accept" Content="确认" MinWidth="60" Margin="0,0,10,0"/>
                     <!--<Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>-->
                 </StackPanel>
             </StackPanel>

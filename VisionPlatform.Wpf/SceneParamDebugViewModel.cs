@@ -252,8 +252,15 @@ namespace VisionPlatform.Wpf
             try
             {
                 string visionResult = "";
-                Scene?.ExecuteByFile(file, out visionResult);
-                VisionResult = visionResult;
+                RunStatus runStatus = Scene?.ExecuteByFile(file, out visionResult);
+                if (runStatus.Result == EResult.Accept)
+                {
+                    VisionResult = visionResult;
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
+                }
             }
             catch (Exception ex)
             {
@@ -269,8 +276,15 @@ namespace VisionPlatform.Wpf
             try
             {
                 string visionResult = "";
-                Scene?.Execute(2000, out visionResult);
-                VisionResult = visionResult;
+                RunStatus runStatus = Scene?.Execute(2000, out visionResult);
+                if (runStatus.Result == EResult.Accept)
+                {
+                    VisionResult = visionResult;
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
+                }
             }
             catch (Exception ex)
             {

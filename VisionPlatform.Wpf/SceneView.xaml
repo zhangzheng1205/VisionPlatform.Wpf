@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:VisionPlatform.Wpf.Converters"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" MinHeight="450" MinWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="创建/修改场景" Margin="5">
-            <StackPanel Margin="5" IsEnabled="{Binding IsEnableSceneConfig}">
+            <StackPanel Margin="5">
                 <StackPanel>
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
                     <DockPanel>
@@ -38,7 +38,7 @@
                     </DockPanel>
                 </StackPanel>
 
-                <StackPanel IsEnabled="{Binding IsSceneValid}" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <StackPanel  IsEnabled="{Binding IsVisionFrameValid}" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <StackPanel MinHeight="2" Margin="5,10" Background="LightGray"/>
                     <DockPanel>
                         <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机</TextBlock>
@@ -49,13 +49,13 @@
                         <StackPanel MinHeight="10"/>
                         <DockPanel>
                             <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机配置</TextBlock>
-                            <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
+                            <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">...</Button>
                             <ComboBox ItemsSource="{Binding CameraConfigFiles}"/>
                         </DockPanel>
                         <StackPanel MinHeight="10"/>
                         <DockPanel>
                             <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">标定文件</TextBlock>
-                            <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">-></Button>
+                            <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">刷新</Button>
                             <ComboBox ItemsSource="{Binding CameraCalibFiles}"/>
                         </DockPanel>
                     </StackPanel>
@@ -73,9 +73,9 @@
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel>
+                <StackPanel  IsEnabled="{Binding IsVisionFrameValid}">
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
-                    <StackPanel Orientation="Horizontal" IsEnabled="{Binding IsVisionFrameValid}">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">高级配置</TextBlock>
                         <Button cal:Message.Attach="OpenSceneParamDebugView" Content="..." MinWidth="40"/>
                     </StackPanel>
@@ -83,21 +83,27 @@
 
                 <StackPanel IsEnabled="{Binding IsVisionFrameValid}">
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
-                    <StackPanel>
-                        <Label Content="运行结果:"/>
+                    <DockPanel>
+                        <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">运行结果</TextBlock>
                         <TextBox Text="{Binding VisionResult}" IsReadOnly="True"/>
-                    </StackPanel>
+                    </DockPanel>
                 </StackPanel>
 
                 <StackPanel>
                     <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
-                    <Button cal:Message.Attach="Accept" MinWidth="60" HorizontalAlignment="Right">确认</Button>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock x:Name="ImagePathTextBlock" Visibility="Collapsed"/>
+                        <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" IsEnabled="{Binding IsVisionFrameValid}" MinWidth="60" Margin="0,0,10,0">执行图片</Button>
+                        <Button cal:Message.Attach="Execute" IsEnabled="{Binding IsVisionFrameValid}" MinWidth="60" Margin="0,0,10,0">执行</Button>
+                        <Button cal:Message.Attach="Accept" MinWidth="60" Margin="0,0,10,0">确认</Button>
+
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>
         <GroupBox Grid.Column="2" Header="场景配置界面" Margin="5">
-            <ContentControl Margin="5" Content="{Binding SceneConfigView}"/>
+            <ContentControl Margin="5" Content="{Binding SceneRunningWindow}"/>
         </GroupBox>
     </Grid>
 </UserControl>

@@ -3,6 +3,8 @@ using Framework.Camera;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
+using VisionPlatform.BaseType;
 using VisionPlatform.Core;
 
 namespace VisionPlatform.Wpf
@@ -12,6 +14,8 @@ namespace VisionPlatform.Wpf
     /// </summary>
     public class SceneViewModel : Screen
     {
+        #region 构造函数
+
         /// <summary>
         /// 创建SceneViewModel
         /// </summary>
@@ -40,25 +44,9 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        #endregion
+
         #region 属性
-
-        private bool isEnableSceneConfig = true;
-
-        /// <summary>
-        /// 锁场景标志,在设置子窗口时为true
-        /// </summary>
-        public bool IsEnableSceneConfig
-        {
-            get
-            {
-                return isEnableSceneConfig;
-            }
-            set
-            {
-                isEnableSceneConfig = value;
-                NotifyOfPropertyChange(() => IsEnableSceneConfig);
-            }
-        }
 
         private Scene scene;
 
@@ -174,6 +162,24 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        private object sceneRunningWindow;
+
+        /// <summary>
+        /// 场景配置窗口
+        /// </summary>
+        public object SceneRunningWindow
+        {
+            get
+            {
+                return sceneRunningWindow;
+            }
+            set
+            {
+                sceneRunningWindow = value;
+                NotifyOfPropertyChange(() => SceneRunningWindow);
+            }
+        }
+
         #region 相机
 
         /// <summary>
@@ -220,6 +226,11 @@ namespace VisionPlatform.Wpf
             {
                 selectedCamera = value;
                 NotifyOfPropertyChange(() => SelectedCamera);
+
+                if (value != null)
+                {
+                    Scene?.SetCamera(value.Info.SerialNumber);
+                }
             }
         }
 
@@ -282,6 +293,29 @@ namespace VisionPlatform.Wpf
 
         #endregion
 
+        #region 场景控制
+
+
+        private string visionResult;
+
+        /// <summary>
+        /// 视觉结果
+        /// </summary>
+        public string VisionResult
+        {
+            get
+            {
+                return visionResult;
+            }
+            set
+            {
+                visionResult = value;
+                NotifyOfPropertyChange(() => VisionResult);
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region 事件
@@ -319,7 +353,7 @@ namespace VisionPlatform.Wpf
                 }
 
                 //校验场景实例
-                if (string.IsNullOrEmpty(SceneName))
+                if (string.IsNullOrEmpty(SceneName) || (Scene == null))
                 {
                     throw new ArgumentException("Scene invalid");
                 }
@@ -332,6 +366,11 @@ namespace VisionPlatform.Wpf
 
                 Scene.SetVisionOperaFile(file);
                 VisionOperaFile = Scene.VisionOperaFile;
+
+                if (Scene.IsVisionFrameInit)
+                {
+                    SceneRunningWindow = Scene.VisionFrame.RunningWindow;
+                }
 
             }
             catch (Exception ex)
@@ -405,9 +444,6 @@ namespace VisionPlatform.Wpf
                 viewModel.CameraConfigurationCompleted -= ViewModel_CameraConfigurationCompleted;
                 viewModel.CameraConfigurationCompleted += ViewModel_CameraConfigurationCompleted;
                 viewModel.SetCamera(Scene.Camera);
-
-                SceneConfigView = view;
-                IsEnableSceneConfig = false;
             }
             catch (Exception ex)
             {
@@ -417,8 +453,7 @@ namespace VisionPlatform.Wpf
 
         private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
         {
-            SceneConfigView = null;
-            IsEnableSceneConfig = true;
+
         }
 
         /// <summary>
@@ -438,8 +473,6 @@ namespace VisionPlatform.Wpf
                 viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted; ;
                 viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted; ;
 
-                SceneConfigView = view;
-                IsEnableSceneConfig = false;
             }
             catch (Exception ex)
             {
@@ -449,9 +482,9 @@ namespace VisionPlatform.Wpf
 
         private void ViewModel_CalibrationConfigurationCompleted(object sender, CalibrationConfigurationCompletedEventArgs e)
         {
-            SceneConfigView = null;
-            IsEnableSceneConfig = true;
         }
+
+        private Window SceneParamDebugWindow;
 
         /// <summary>
         /// 打开视觉参数
@@ -460,19 +493,31 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                if ((Scene?.VisionFrame.IsEnableCamera == true) && (!string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+                var view = new SceneParamDebugView()
                 {
-                    Scene.SetCamera(SelectedCamera.Info.Manufacturer);
-                }
-
-                var view = new SceneParamDebugView();
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
+                };
                 var viewModel = (view.DataContext as SceneParamDebugViewModel);
                 viewModel.Scene = Scene;
                 viewModel.SceneConfigurationCompleted -= ViewModel_SceneConfigurationCompleted;
                 viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
 
+                //将控件嵌入窗口之中
+                SceneParamDebugWindow = new Window();
+                SceneParamDebugWindow.MinWidth = view.MinWidth;
+                SceneParamDebugWindow.MinHeight = view.MinHeight;
+                SceneParamDebugWindow.Width = view.MinWidth + 100;
+                SceneParamDebugWindow.Height = view.MinHeight + 100;
+                SceneParamDebugWindow.Content = view;
+                SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                //SceneParamDebugWindow.Owner = Window.GetWindow(this);
+                SceneParamDebugWindow.Title = "场景参数配置窗口";
+                SceneParamDebugWindow.WindowState = WindowState.Maximized;
+
+                SceneParamDebugWindow.ShowDialog();
+
                 SceneConfigView = view;
-                IsEnableSceneConfig = false;
             }
             catch (Exception ex)
             {
@@ -482,8 +527,61 @@ namespace VisionPlatform.Wpf
 
         private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
         {
-            SceneConfigView = null;
-            IsEnableSceneConfig = true;
+            SceneParamDebugWindow.Close();
+        }
+
+        /// <summary>
+        /// 通过本地图片执行
+        /// </summary>
+        /// <param name="file"></param>
+        public void ExecuteByFile(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+            {
+                return;
+            }
+
+            try
+            {
+                string visionResult = "";
+                RunStatus runStatus = Scene?.ExecuteByFile(file, out visionResult);
+                if (runStatus.Result == EResult.Accept)
+                {
+                    VisionResult = visionResult;
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 执行场景
+        /// </summary>
+        public void Execute()
+        {
+            try
+            {
+                string visionResult = "";
+                RunStatus runStatus = Scene?.Execute(2000, out visionResult);
+                if (runStatus.Result == EResult.Accept)
+                {
+                    VisionResult = visionResult;
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
         }
 
         /// <summary>

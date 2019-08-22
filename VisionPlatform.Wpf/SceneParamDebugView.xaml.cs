@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VisionPlatform.Core;
 
 namespace VisionPlatform.Wpf
 {
@@ -21,13 +22,26 @@ namespace VisionPlatform.Wpf
     public partial class SceneParamDebugView : UserControl
     {
         /// <summary>
-        /// 场景参数调试控件
+        /// 创建SceneParamDebugView新实例
         /// </summary>
         public SceneParamDebugView()
         {
             InitializeComponent();
 
             var viewModel = new SceneParamDebugViewModel();
+            DataContext = viewModel;
+            viewModel.MessageRaised += ViewModel_MessageRaised;
+        }
+
+        /// <summary>
+        /// 创建SceneParamDebugView新实例
+        /// </summary>
+        /// <param name="scene"></param>
+        public SceneParamDebugView(Scene scene)
+        {
+            InitializeComponent();
+
+            var viewModel = new SceneParamDebugViewModel(scene);
             DataContext = viewModel;
             viewModel.MessageRaised += ViewModel_MessageRaised;
         }
