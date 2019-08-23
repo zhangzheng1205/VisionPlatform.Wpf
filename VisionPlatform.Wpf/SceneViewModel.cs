@@ -527,6 +527,9 @@ namespace VisionPlatform.Wpf
 
             //刷新相机配置文件
             UpdateCameraFile();
+
+            //重新从配置文件中加载配置参数
+            Scene.SetCameraConfigFile(SelectionCameraConfigFile);
         }
 
         /// <summary>
