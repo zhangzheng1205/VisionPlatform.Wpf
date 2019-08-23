@@ -338,5 +338,97 @@ namespace VisionPlatform.Core
         }
 
         #endregion
+
+        #region 配置管理
+
+        /// <summary>
+        /// 获取相机配置文件
+        /// </summary>
+        /// <param name="cameraSerial">相机配置文件</param>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        public static FileInfo[] GetCameraConfigFile(string cameraSerial)
+        {
+            FileInfo[] fileInfos = new FileInfo[0];
+            
+            try
+            {
+                if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
+                {
+                    var directory = new DirectoryInfo($"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile");
+
+                    fileInfos = directory?.GetFiles("*.json", SearchOption.TopDirectoryOnly) ?? new FileInfo[0];
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return fileInfos;
+        }
+
+        /// <summary>
+        /// 配置相机
+        /// </summary>
+        /// <param name="cameraSerial">相机序列号</param>
+        /// <param name="cameraConfigParam">相机配置参数</param>
+        public static void ConfigurateCamera(string cameraSerial, CameraConfigParam cameraConfigParam)
+        {
+            if (Cameras.ContainsKey(cameraSerial ?? "") && (Cameras[cameraSerial]?.IsOpen == true))
+            {
+                //配置像素格式
+                if (Cameras[cameraSerial].PixelFormat != cameraConfigParam.PixelFormat)
+                {
+                    if (Cameras[cameraSerial].IsGrabbing)
+                    {
+                        Cameras[cameraSerial].StopGrab();
+                        Cameras[cameraSerial].PixelFormat = cameraConfigParam.PixelFormat;
+                        Cameras[cameraSerial].Grab();
+                    }
+                    else
+                    {
+                        Cameras[cameraSerial].PixelFormat = cameraConfigParam.PixelFormat;
+                    }
+                }
+
+                if (Cameras[cameraSerial].TriggerMode != cameraConfigParam.TriggerMode)
+                {
+                    Cameras[cameraSerial].TriggerMode = cameraConfigParam.TriggerMode;
+                }
+
+                if (cameraConfigParam.TriggerMode == ETriggerModeStatus.On)
+                {
+                    //配置触发源
+                    if (Cameras[cameraSerial].TriggerSource != cameraConfigParam.TriggerSource)
+                    {
+                        Cameras[cameraSerial].TriggerSource = cameraConfigParam.TriggerSource;
+                    }
+
+                    if (cameraConfigParam.TriggerSource != ETriggerSource.Software)
+                    {
+                        //配置有效触发信号
+                        if (Cameras[cameraSerial].TriggerActivation != cameraConfigParam.TriggerActivation)
+                        {
+                            Cameras[cameraSerial].TriggerActivation = cameraConfigParam.TriggerActivation;
+                        }
+                    }
+                }
+
+                //配置曝光值
+                if (Cameras[cameraSerial].ExposureTime != cameraConfigParam.ExposureTime)
+                {
+                    Cameras[cameraSerial].ExposureTime = cameraConfigParam.ExposureTime;
+                }
+
+                //配置增益值
+                if (Cameras[cameraSerial].Gain != cameraConfigParam.Gain)
+                {
+                    Cameras[cameraSerial].Gain = cameraConfigParam.Gain;
+                }
+            }
+
+        }
+
+        #endregion
     }
 }

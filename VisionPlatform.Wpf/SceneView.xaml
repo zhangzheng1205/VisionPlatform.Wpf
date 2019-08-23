@@ -49,9 +49,9 @@
                     <StackPanel IsEnabled="{Binding IsNotVirtualCamera, Mode=OneWay}">
                         <StackPanel MinHeight="10"/>
                         <DockPanel>
-                            <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">相机配置</TextBlock>
+                            <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">配置文件</TextBlock>
                             <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">...</Button>
-                            <ComboBox ItemsSource="{Binding CameraConfigFiles}"/>
+                            <ComboBox ItemsSource="{Binding CameraConfigFiles}" SelectedItem="{Binding SelectionCameraConfigFile}"/>
                         </DockPanel>
                         <StackPanel MinHeight="10"/>
                         <DockPanel>

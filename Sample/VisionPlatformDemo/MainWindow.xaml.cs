@@ -37,7 +37,7 @@ namespace VisionPlatformDemo
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.uEye;
 
             //获取场景管理器实例(单例)
             SceneManager = SceneManager.GetInstance();
@@ -113,6 +113,7 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
                 CameraFactory.AddCamera(@"E:\测试图像\刹车片");
                 CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
+                CameraFactory.AddCamera(@"E:\测试图像\眼镜");
             }
 
             var view = new SceneView(new Scene("EmptyScene", VisionFrameFactory.DefaultVisionFrameType), false)

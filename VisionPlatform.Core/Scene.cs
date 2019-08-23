@@ -268,6 +268,11 @@ namespace VisionPlatform.Core
         /// </summary>
         public string CameraConfigFile { get; set; }
 
+        /// <summary>
+        /// 相机配置参数
+        /// </summary>
+        private CameraConfigParam cameraConfigParam;
+
         #endregion
 
         #region 结果拼接
@@ -581,6 +586,7 @@ namespace VisionPlatform.Core
             RecoverOutputFile(true);
         }
 
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -588,6 +594,7 @@ namespace VisionPlatform.Core
         /// 这个方法的主要功能是在配置参数完善的前提下,进行接口的还原;
         /// 例如反序列化后,进行场景接口的还原;
         /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
         public void Init()
         {
             try
@@ -632,6 +639,22 @@ namespace VisionPlatform.Core
                         {
                             //若打开相机失败,不抛异常
                         }
+
+                        //获取相机配置参数
+                        string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
+                        cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(configFile);
+
+                        //还原相机配置
+                        try
+                        {
+                            CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
+                        //获取标定文件
                     }
 
                 }

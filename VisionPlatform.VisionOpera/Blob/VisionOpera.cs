@@ -189,6 +189,32 @@ namespace Blob
 
             stopwatch.Restart();
 
+            HObject ho_GrayImage = null, ho_Regions = null;
+            HObject ho_RegionClosing = null, ho_RegionFillUp = null, ho_ConnectedRegions = null;
+            HObject ho_SelectedRegions = null, ho_RegionOpening = null;
+            HObject ho_Rectangle = null, ho_RegionErosion = null, ho_ConnectedRegions1 = null;
+            HObject ho_SelectedRegions1 = null, ho_Rectangle1 = null, ho_Cross = null;
+
+            // Local control variables 
+            HTuple hv_Row1 = new HTuple();
+            HTuple hv_Column1 = new HTuple(), hv_Phi = new HTuple();
+            HTuple hv_Length1 = new HTuple(), hv_Length2 = new HTuple();
+            HTuple hv_Area = new HTuple(), hv_Row = new HTuple(), hv_Column = new HTuple();
+            // Initialize local and output iconic variables 
+            HOperatorSet.GenEmptyObj(out ho_GrayImage);
+            HOperatorSet.GenEmptyObj(out ho_Regions);
+            HOperatorSet.GenEmptyObj(out ho_RegionClosing);
+            HOperatorSet.GenEmptyObj(out ho_RegionFillUp);
+            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_RegionOpening);
+            HOperatorSet.GenEmptyObj(out ho_Rectangle);
+            HOperatorSet.GenEmptyObj(out ho_RegionErosion);
+            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions1);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions1);
+            HOperatorSet.GenEmptyObj(out ho_Rectangle1);
+            HOperatorSet.GenEmptyObj(out ho_Cross);
+
             try
             {
                 HTuple width, height;
@@ -237,7 +263,25 @@ namespace Blob
                 }
 
                 //执行主任务
+                //转灰度图
+                ho_GrayImage.Dispose();
+                HOperatorSet.Rgb1ToGray(hImage, out ho_GrayImage);
 
+                //动态阈值的方式提取眼镜区域
+                ho_Regions.Dispose();
+                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, new HTuple(Inputs["MinGray"].Value), new HTuple(Inputs["MaxGray"].Value));
+
+                //提取眼镜区域
+                ho_RegionClosing.Dispose();
+                HOperatorSet.ClosingRectangle1(ho_Regions, out ho_RegionClosing, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
+                ho_RegionFillUp.Dispose();
+                HOperatorSet.FillUp(ho_RegionClosing, out ho_RegionFillUp);
+                ho_ConnectedRegions.Dispose();
+                HOperatorSet.Connection(ho_RegionFillUp, out ho_ConnectedRegions);
+
+                HOperatorSet.AreaCenter(ho_ConnectedRegions, out hv_Area, out hv_Row, out hv_Column);
+                ho_Cross.Dispose();
+                HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row, hv_Column, 35, 0.785398);
 
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);

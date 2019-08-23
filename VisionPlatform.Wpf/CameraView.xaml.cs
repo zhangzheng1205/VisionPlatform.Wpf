@@ -51,22 +51,37 @@ namespace VisionPlatform.Wpf
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var ofd = new Microsoft.Win32.SaveFileDialog
-            {
-                DefaultExt = ".json",
-                Filter = "json file|*.json"
-            };
+            InputWindow inputWindow = new InputWindow();
+            inputWindow.Owner = Window.GetWindow(this);
+            inputWindow.InputAccepted += InputWindow_InputAccepted;
+            inputWindow.InputCanceled += InputWindow_InputCanceled;
+            inputWindow.ShowDialog();
 
-            if (ofd.ShowDialog() == true)
-            {
-                SaveTextBlock.Text = ofd.FileName;
-                return;
-            }
-            else
-            {
-                SaveTextBlock.Text = "";
-            }
+            //var ofd = new Microsoft.Win32.SaveFileDialog
+            //{
+            //    DefaultExt = ".json",
+            //    Filter = "json file|*.json"
+            //};
+            //
+            //if (ofd.ShowDialog() == true)
+            //{
+            //    SaveTextBlock.Text = ofd.FileName;
+            //    return;
+            //}
+            //else
+            //{
+            //    SaveTextBlock.Text = "";
+            //}
         }
 
+        private void InputWindow_InputCanceled(object sender, EventArgs e)
+        {
+            SaveTextBlock.Text = "";
+        }
+
+        private void InputWindow_InputAccepted(object sender, InputAcceptedEventArgs e)
+        {
+            SaveTextBlock.Text = e.Input;
+        }
     }
 }

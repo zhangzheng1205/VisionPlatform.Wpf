@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
+using System.Linq;
 using System.Windows.Controls;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
@@ -101,7 +102,6 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => IsSceneNameReadOnly);
             }
         }
-
 
         /// <summary>
         /// 场景有效标志
@@ -236,6 +236,7 @@ namespace VisionPlatform.Wpf
                 if (value != null)
                 {
                     Scene?.SetCamera(value.Info.SerialNumber);
+                    UpdateCameraFile();
                 }
             }
         }
@@ -248,6 +249,43 @@ namespace VisionPlatform.Wpf
             get
             {
                 return CameraFactory.DefaultCameraSdkType != BaseType.ECameraSdkType.VirtualCamera;
+            }
+        }
+
+        private ObservableCollection<string> cameraConfigFiles;
+
+        /// <summary>
+        /// 相机配置文件列表
+        /// </summary>
+        public ObservableCollection<string> CameraConfigFiles
+        {
+            get
+            {
+                return cameraConfigFiles;
+            }
+            set
+            {
+                cameraConfigFiles = value;
+                NotifyOfPropertyChange(() => CameraConfigFiles);
+            }
+        }
+
+        /// <summary>
+        /// 选择的配置文件
+        /// </summary>
+        public string SelectionCameraConfigFile
+        {
+            get
+            {
+                return Scene?.CameraConfigFile;
+            }
+            set
+            {
+                if (Scene != null)
+                {
+                    Scene.CameraConfigFile = value;
+                }
+                NotifyOfPropertyChange(() => CameraConfigFiles);
             }
         }
 
@@ -423,9 +461,25 @@ namespace VisionPlatform.Wpf
             Cameras.Clear();
             if ((CameraFactory.Cameras?.Values != null) && (Scene?.VisionFrame?.IsEnableCamera == true))
             {
+                CameraFactory.AddAllCamera();
                 Cameras = new ObservableCollection<ICamera>(CameraFactory.Cameras.Values);
             }
         }
+
+        /// <summary>
+        /// 更新相机文件
+        /// </summary>
+        private void UpdateCameraFile()
+        {
+            if (SelectedCamera != null)
+            {
+                FileInfo[] fileInfos = CameraFactory.GetCameraConfigFile(SelectedCamera?.Info.SerialNumber);
+                CameraConfigFiles = new ObservableCollection<string>(fileInfos.ToList().ConvertAll(x=>x.Name));
+            }
+            
+        }
+
+        private Window cameraViewWindow;
 
         /// <summary>
         /// 打开相机显示控件
@@ -434,18 +488,32 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
+                if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.SerialNumber)))
                 {
                     throw new DriveNotFoundException("没有选定相机");
                 }
 
-                Scene.SetCamera(SelectedCamera.Info.Manufacturer);
+                Scene.SetCamera(SelectedCamera.Info.SerialNumber);
 
                 var view = new CameraView();
                 var viewModel = (view.DataContext as CameraViewModel);
                 viewModel.CameraConfigurationCompleted -= ViewModel_CameraConfigurationCompleted;
                 viewModel.CameraConfigurationCompleted += ViewModel_CameraConfigurationCompleted;
                 viewModel.SetCamera(Scene.Camera);
+
+                //将控件嵌入窗口之中
+                cameraViewWindow = new Window();
+                cameraViewWindow.MinWidth = view.MinWidth;
+                cameraViewWindow.MinHeight = view.MinHeight;
+                cameraViewWindow.Width = view.MinWidth + 100;
+                cameraViewWindow.Height = view.MinHeight + 100;
+                cameraViewWindow.Content = view;
+                cameraViewWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                //SceneParamDebugWindow.Owner = Window.GetWindow(this);
+                cameraViewWindow.Title = "场景参数配置窗口";
+
+                cameraViewWindow.ShowDialog();
+
             }
             catch (Exception ex)
             {
@@ -455,7 +523,10 @@ namespace VisionPlatform.Wpf
 
         private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
         {
+            cameraViewWindow.Close();
 
+            //刷新相机配置文件
+            UpdateCameraFile();
         }
 
         /// <summary>
@@ -463,17 +534,17 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void OpenCalibrationView()
         {
-            if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.Manufacturer)))
-            {
-                throw new DriveNotFoundException("没有选定相机");
-            }
-
             try
             {
-                var view = new CalibrationView();
-                var viewModel = (view.DataContext as CalibrationViewModel);
-                viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted; ;
-                viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted; ;
+                if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.SerialNumber)))
+                {
+                    throw new DriveNotFoundException("没有选定相机");
+                }
+
+                //var view = new CalibrationView();
+                //var viewModel = (view.DataContext as CalibrationViewModel);
+                //viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted; ;
+                //viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted; ;
 
             }
             catch (Exception ex)

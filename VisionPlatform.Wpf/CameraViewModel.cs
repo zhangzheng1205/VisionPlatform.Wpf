@@ -5,6 +5,7 @@ using Framework.Infrastructure.Serialization;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
 using System.Windows.Media.Imaging;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
@@ -251,6 +252,11 @@ namespace VisionPlatform.Wpf
         /// <param name="file">文件路径</param>
         public void LoadFromFile(string file)
         {
+            if (string.IsNullOrEmpty(file))
+            {
+                return;
+            }
+
             try
             {
                 CameraConfigParam cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(file);
@@ -318,6 +324,11 @@ namespace VisionPlatform.Wpf
         /// <param name="file">文件路径</param>
         public void SaveToFile(string file)
         {
+            if (string.IsNullOrEmpty(file))
+            {
+                return;
+            }
+
             if (CameraConfigViewModel?.Camera?.IsOpen == true)
             {
                 var cameraConfigParam = new CameraConfigParam();
@@ -329,7 +340,8 @@ namespace VisionPlatform.Wpf
                 cameraConfigParam.ExposureTime = CameraConfigViewModel.Camera.ExposureTime;
                 cameraConfigParam.Gain = CameraConfigViewModel.Camera.Gain;
 
-                JsonSerialization.SerializeObjectToFile(cameraConfigParam, file);
+                string path = $"VisionPlatform/Camera/CameraConfig/{CameraConfigViewModel.Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(file)}.json";
+                JsonSerialization.SerializeObjectToFile(cameraConfigParam, path);
             }
         }
 
