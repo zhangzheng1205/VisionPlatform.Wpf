@@ -429,6 +429,27 @@ namespace VisionPlatform.Core
 
         }
 
+        /// <summary>
+        /// 获取相机配置
+        /// </summary>
+        /// <param name="cameraSerial">相机序列号</param>
+        /// <returns></returns>
+        public static CameraConfigParam GetCameraConfigration(string cameraSerial)
+        {
+            var cameraConfigParam = new CameraConfigParam();
+
+            if (Cameras.ContainsKey(cameraSerial ?? "") && (Cameras[cameraSerial]?.IsOpen == true))
+            {
+                cameraConfigParam.PixelFormat = Cameras[cameraSerial].PixelFormat;
+                cameraConfigParam.TriggerMode = Cameras[cameraSerial].TriggerMode;
+                cameraConfigParam.TriggerSource = Cameras[cameraSerial].TriggerSource;
+                cameraConfigParam.TriggerActivation = Cameras[cameraSerial].TriggerActivation;
+                cameraConfigParam.ExposureTime = Cameras[cameraSerial].ExposureTime;
+                cameraConfigParam.Gain = Cameras[cameraSerial].Gain;
+            }
+
+            return cameraConfigParam;
+        }
         #endregion
     }
 }

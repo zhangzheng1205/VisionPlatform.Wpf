@@ -1,19 +1,9 @@
-﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
+﻿using Cognex.VisionPro;
+using Cognex.VisionPro.ToolBlock;
+using Framework.Camera;
 using System;
 using System.IO;
-using System.Reflection;
-using System.Windows.Controls;
 using VisionPlatform.BaseType;
-using ItemCollection = VisionPlatform.BaseType.ItemCollection;
-using Framework.Camera;
-using Cognex.VisionPro.ToolBlock;
-using Cognex.VisionPro;
 
 namespace VisionPlatform.VisionProVisionFrame
 {

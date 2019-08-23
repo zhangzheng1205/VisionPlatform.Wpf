@@ -283,7 +283,7 @@ namespace VisionPlatform.Wpf
             {
                 if (Scene != null)
                 {
-                    Scene.CameraConfigFile = value;
+                    Scene.SetCameraConfigFile(value);
                 }
                 NotifyOfPropertyChange(() => CameraConfigFiles);
             }

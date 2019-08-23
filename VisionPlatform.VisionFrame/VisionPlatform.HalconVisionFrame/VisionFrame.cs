@@ -3,9 +3,7 @@ using HalconDotNet;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Windows.Controls;
 using VisionPlatform.BaseType;
-using ItemCollection = VisionPlatform.BaseType.ItemCollection;
 
 namespace VisionPlatform.HalconVisionFrame
 {

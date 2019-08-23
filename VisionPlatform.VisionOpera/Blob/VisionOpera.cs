@@ -25,10 +25,22 @@ namespace Blob
             ConfigWindow = configSmartWindow;
 
             //配置输入参数
-            Inputs.Clear();
+            Inputs = new ItemCollection()
+            {
+                new ItemBase("MinGray", (int)0, "最小灰度(阈值分割)"),
+                new ItemBase("MaxGray", (int)120, "最大灰度(阈值分割)"),
+                new ItemBase("MorphologicalKernalWidth", (int)20, "形态学运算核宽度"),
+                new ItemBase("MorphologicalKernalHeight", (int)50, "形态学运算核高度"),
+                new ItemBase("ErosionRectangleWidth", (int)10, "腐蚀矩形宽度"),
+                new ItemBase("ErosionRectangleHeight", (int)90, "腐蚀矩形高度"),
+            };
 
             //配置输出参数
-            Outputs.Clear();
+            Outputs = new ItemCollection()
+            {
+                new ItemBase("X", typeof(double[]), "X坐标"),
+                new ItemBase("Y", typeof(double[]), "Y坐标"),
+            };
         }
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
@@ -282,6 +294,24 @@ namespace Blob
                 HOperatorSet.AreaCenter(ho_ConnectedRegions, out hv_Area, out hv_Row, out hv_Column);
                 ho_Cross.Dispose();
                 HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row, hv_Column, 35, 0.785398);
+
+                //显示结果
+                if (runningWindow != null)
+                {
+                    HOperatorSet.DispObj(ho_GrayImage, runningWindow);
+                    HOperatorSet.DispObj(ho_ConnectedRegions, runningWindow);
+                    HOperatorSet.DispObj(ho_Cross, runningWindow);
+                }
+
+                if (configWindow != null)
+                {
+                    HOperatorSet.DispObj(ho_GrayImage, configWindow);
+                    HOperatorSet.DispObj(ho_ConnectedRegions, configWindow);
+                    HOperatorSet.DispObj(ho_Cross, configWindow);
+                }
+
+                Outputs["X"].Value = hv_Column.DArr;
+                Outputs["Y"].Value = hv_Column.DArr;
 
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);

@@ -7,7 +7,6 @@ namespace VisionPlatform.BaseType
     /// </summary>
     public class ItemBase
     {
-
         /// <summary>
         /// 创建类型实例
         /// </summary>
@@ -157,10 +156,41 @@ namespace VisionPlatform.BaseType
         /// </summary>
         public string Name { get; set; }
 
+        private object m_value;
+
         /// <summary>
         /// 数值
         /// </summary>
-        public object Value { get; set; }
+        public object Value
+        {
+            get
+            {
+                return m_value;
+            }
+            set
+            {
+                if (ValueType != null)
+                {
+                    try
+                    {
+                        m_value = Convert.ChangeType(value, ValueType);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        m_value = CallCreateInstance(ValueType);
+                    }
+                    catch (OverflowException)
+                    {
+                        m_value = CallCreateInstance(ValueType);
+                    }
+                }
+                else
+                {
+                    m_value = value;
+                }
+
+            }
+        }
 
         /// <summary>
         /// 数值类型

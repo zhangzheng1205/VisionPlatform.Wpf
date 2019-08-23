@@ -443,11 +443,11 @@ namespace VisionPlatform.Core
                     {
                         if (string.IsNullOrEmpty(CalibFile))
                         {
-                            CalibFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/Calibration/default.json";
+                            CalibFile = $"default.json";
                         }
                         if (string.IsNullOrEmpty(CameraConfigFile))
                         {
-                            CameraConfigFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/Configuration/default.json";
+                            CameraConfigFile = $"default.json";
                         }
                     }
                 }
@@ -455,6 +455,40 @@ namespace VisionPlatform.Core
             catch (Exception)
             {
                 throw;
+            }
+
+        }
+
+        /// <summary>
+        /// 设置相机配置文件
+        /// </summary>
+        /// <param name="file">配置文件(不需包含目录)</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        public void SetCameraConfigFile(string file)
+        {
+            CameraConfigFile = file;
+
+            //获取相机配置参数
+            string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
+
+            if (File.Exists(configFile))
+            {
+                cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(configFile);
+
+                //还原相机配置
+                try
+                {
+                    CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            else
+            {
+                cameraConfigParam = CameraFactory.GetCameraConfigration(CameraSerial);
+                JsonSerialization.SerializeObjectToFile(cameraConfigParam, configFile);
             }
 
         }
@@ -586,7 +620,6 @@ namespace VisionPlatform.Core
             RecoverOutputFile(true);
         }
 
-
         /// <summary>
         /// 初始化
         /// </summary>
@@ -640,20 +673,9 @@ namespace VisionPlatform.Core
                             //若打开相机失败,不抛异常
                         }
 
-                        //获取相机配置参数
-                        string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
-                        cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(configFile);
-
-                        //还原相机配置
-                        try
-                        {
-                            CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
+                        //配置相机参数
+                        SetCameraConfigFile(CameraConfigFile);
+                        
                         //获取标定文件
                     }
 
@@ -707,6 +729,9 @@ namespace VisionPlatform.Core
                     //注册相机采集完成事件
                     Camera.NewImageEvent -= Camera_NewImageEvent;
                     Camera.NewImageEvent += Camera_NewImageEvent;
+
+                    //配置相机参数
+                    CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
 
                     //触发拍照
                     Camera.TriggerSoftware();
