@@ -303,7 +303,7 @@ namespace CalibrationPlateIdentify
 
                     Outputs["BaseX"].Value = hv_Column.TupleSelect(hv_Indices.TupleSelect(0)).D;
                     Outputs["BaseY"].Value = hv_Row.TupleSelect(hv_Indices.TupleSelect(0)).D;
-                    Outputs["Angle"].Value = hv_Angle;
+                    Outputs["Angle"].Value = hv_Angle.D;
 
                     //显示结果
                     ho_Cross1.Dispose();

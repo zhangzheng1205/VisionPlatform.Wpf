@@ -78,8 +78,8 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => IsVisionFrameValid);
                 NotifyOfPropertyChange(() => IsSceneValid);
                 NotifyOfPropertyChange(() => CanCreateScene);
-                NotifyOfPropertyChange(() => SeparatorChar);
-                NotifyOfPropertyChange(() => TerminatorChar);
+                NotifyOfPropertyChange(() => MainSeparatorChar);
+                NotifyOfPropertyChange(() => SubSeparatorChar);
                 NotifyOfPropertyChange(() => Cameras);
                 NotifyOfPropertyChange(() => SceneRunningWindow);
             }
@@ -296,11 +296,11 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 分隔符
         /// </summary>
-        public string SeparatorChar
+        public string MainSeparatorChar
         {
             get
             {
-                return Scene?.SeparatorChar.ToString();
+                return Scene?.MainSeparatorChar.ToString();
             }
             set
             {
@@ -308,20 +308,20 @@ namespace VisionPlatform.Wpf
 
                 if ((chars?.Length > 0) && (Scene != null))
                 {
-                    Scene.SeparatorChar = chars[0];
+                    Scene.MainSeparatorChar = chars[0];
                 }
-                NotifyOfPropertyChange(() => SeparatorChar);
+                NotifyOfPropertyChange(() => MainSeparatorChar);
             }
         }
 
         /// <summary>
         /// 结束符
         /// </summary>
-        public string TerminatorChar
+        public string SubSeparatorChar
         {
             get
             {
-                return Scene?.TerminatorChar.ToString();
+                return Scene?.SubSeparatorChar.ToString();
             }
             set
             {
@@ -329,9 +329,9 @@ namespace VisionPlatform.Wpf
 
                 if ((chars?.Length > 0) && (Scene != null))
                 {
-                    Scene.TerminatorChar = chars[0];
+                    Scene.SubSeparatorChar = chars[0];
                 }
-                NotifyOfPropertyChange(() => TerminatorChar);
+                NotifyOfPropertyChange(() => SubSeparatorChar);
             }
         }
 

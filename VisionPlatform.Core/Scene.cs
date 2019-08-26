@@ -278,14 +278,14 @@ namespace VisionPlatform.Core
         #region 结果拼接
 
         /// <summary>
-        /// 分隔符
+        /// 一级分隔符
         /// </summary>
-        public char SeparatorChar { get; set; } = ',';
+        public char MainSeparatorChar { get; set; } = ':';
 
         /// <summary>
         /// 结束符
         /// </summary>
-        public char TerminatorChar { get; set; } = ';';
+        public char SubSeparatorChar { get; set; } = ',';
 
         #endregion
 
@@ -322,6 +322,7 @@ namespace VisionPlatform.Core
 
         }
 
+#if false
         /// <summary>
         /// 转换ItemCollection为字符串
         /// </summary>
@@ -417,6 +418,99 @@ namespace VisionPlatform.Core
             //移除结尾的分隔符并替换成结束符
             visionResult = visionResult.TrimEnd(separatorChar);
             visionResult += terminatorChar;
+
+            return visionResult;
+        }
+
+#endif
+
+        /// <summary>
+        /// 数值转字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string ValueToString(object value)
+        {
+            if (value.GetType().Equals(typeof(float)) || value.GetType().Equals(typeof(double)))
+            {
+                return $"{value:0.###}";
+            }
+            else
+            {
+                return value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 转换ItemCollection为字符串
+        /// </summary>
+        /// <param name="itemBases">ItemCollection 数据</param>
+        /// <param name="mainSeparatorChar">一级分割符</param>
+        /// <param name="subSeparatorChar">二级分割符</param>
+        /// <returns></returns>
+        private static string ConvertItemCollectionToString(ItemCollection itemBases, char mainSeparatorChar, char subSeparatorChar)
+        {
+            var visionResult = "";
+
+            foreach (var item in itemBases ?? new ItemCollection())
+            {
+                if (item?.IsAvailable == true)
+                {
+                    //若value和valueType的类型不一致,则报错
+                    if (!item.ValueType.IsAssignableFrom(item.Value.GetType()))
+                    {
+                        throw new ArgumentException("valueType must be assignable from value");
+                    }
+
+                    if (item.ValueType.IsArray)
+                    {
+                        var array = item.Value as Array;
+
+                        //获取维度
+                        int rank = array.Rank;
+                        int[] rackCount = new int[array.Rank];
+                        for (int i = 0; i < array.Rank; i++)
+                        {
+                            rackCount[i] = array.GetLength(i);
+                        }
+
+                        string arrayString = "";
+
+                        if (rank == 1)
+                        {
+                            for (int i = 0; i < rackCount[0]; i++)
+                            {
+                                arrayString += ValueToString(array.GetValue(i)) + subSeparatorChar;
+                            }
+                            arrayString = arrayString.TrimEnd(subSeparatorChar);
+                        }
+                        //else if (rank == 2)
+                        //{
+                        //    arrayString += '[';
+                        //    for (int i = 0; i < rackCount[0]; i++)
+                        //    {
+                        //        arrayString += '[';
+                        //        for (int j = 0; j < rackCount[1]; j++)
+                        //        {
+                        //            arrayString += array.GetValue(i, j).ToString() + mainSeparatorChar;
+                        //        }
+                        //        arrayString = arrayString.TrimEnd(mainSeparatorChar);
+                        //        arrayString += ']';
+                        //        arrayString += mainSeparatorChar;
+                        //    }
+                        //    arrayString = arrayString.TrimEnd(mainSeparatorChar);
+                        //    arrayString += ']';
+                        //}
+                        visionResult += arrayString + mainSeparatorChar;
+
+                    }
+                    else
+                    {
+                        visionResult += ValueToString(item.Value) + mainSeparatorChar;
+                    }
+
+                }
+            }
 
             return visionResult;
         }
@@ -674,7 +768,10 @@ namespace VisionPlatform.Core
                         }
 
                         //配置相机参数
-                        SetCameraConfigFile(CameraConfigFile);
+                        if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
+                        {
+                            SetCameraConfigFile(CameraConfigFile);
+                        }
                         
                         //获取标定文件
                     }
@@ -763,7 +860,7 @@ namespace VisionPlatform.Core
                     VisionFrame.ExecuteByImageInfo(imageInfo, out outputs);
 
                     //结果拼接
-                    visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                    visionResult = ConvertItemCollectionToString(outputs, MainSeparatorChar, SubSeparatorChar);
                 }
                 else
                 {
@@ -771,7 +868,7 @@ namespace VisionPlatform.Core
                     VisionFrame.Execute(timeout, out outputs);
 
                     //结果拼接
-                    visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                    visionResult = ConvertItemCollectionToString(outputs, MainSeparatorChar, SubSeparatorChar);
                 }
             }
             catch (Exception ex)
@@ -839,7 +936,7 @@ namespace VisionPlatform.Core
                 VisionFrame.ExecuteByFile(file, out outputs);
 
                 //结果拼接
-                visionResult = ConvertItemCollectionToString(outputs, SeparatorChar, TerminatorChar);
+                visionResult = ConvertItemCollectionToString(outputs, MainSeparatorChar, SubSeparatorChar);
             }
             catch (Exception ex)
             {
