@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350" MinWidth="250" MaxWidth="700"/>
+            <ColumnDefinition Width="400" MinWidth="250" MaxWidth="800"/>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
@@ -37,10 +37,10 @@
                       CanUserAddRows="False"
                       AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>
+                        <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
+                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding Value}" Header="数值" IsReadOnly="False" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
@@ -52,11 +52,11 @@
                       CanUserAddRows="False"
                       AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Binding="{Binding IsAvailable}"  Header="有效性"/>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>
+                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
+                        <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
                         <DataGridTextColumn Binding="{Binding Value}" Header="数值" IsReadOnly="True" Width="Auto"/>
                         <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
+                        <DataGridCheckBoxColumn Binding="{Binding IsAvailable}"  Header="有效性"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

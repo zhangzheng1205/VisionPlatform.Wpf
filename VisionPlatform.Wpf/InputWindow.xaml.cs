@@ -41,6 +41,12 @@ namespace VisionPlatform.Wpf
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(InputTextBox.Text))
+            {
+                MessageBox.Show("输入无效", "输入无效");
+                return;
+            }
+            
             InputAccepted?.Invoke(this, new InputAcceptedEventArgs(InputTextBox.Text));
             Close();
         }

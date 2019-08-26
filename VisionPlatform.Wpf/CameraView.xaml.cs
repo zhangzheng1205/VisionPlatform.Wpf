@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,15 +28,42 @@ namespace VisionPlatform.Wpf
         {
             InitializeComponent();
 
-            DataContext = new CameraViewModel();
+            var viewModel = new CameraViewModel();
+            DataContext = viewModel;
+            viewModel.MessageRaised += ViewModel_MessageRaised;
+        }
+
+        private void ViewModel_MessageRaised(object sender, MessageRaisedEventArgs e)
+        {
+            MessageBox.Show(e.Message);
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            var ofd = new Microsoft.Win32.OpenFileDialog
+            //获取默认路径
+            var viewModel = CameraConfigView.DataContext as CameraConfigViewModel;
+            string cameraSerial = viewModel?.Camera?.Info?.SerialNumber;
+
+            string defaultPath = "";
+            DirectoryInfo directoryInfo = new DirectoryInfo("./");
+            if (!string.IsNullOrEmpty(cameraSerial))
+            {
+                defaultPath = $"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile";
+
+                directoryInfo = new DirectoryInfo(defaultPath);
+
+                //假如目录不存在,则创建对应的目录
+                if (!directoryInfo.Exists)
+                {
+                    directoryInfo.Create();
+                }
+            }
+            
+           var ofd = new Microsoft.Win32.OpenFileDialog
             {
                 DefaultExt = ".json",
-                Filter = "json file|*.json"
+                Filter = "json file|*.json",
+                InitialDirectory = directoryInfo.FullName,
             };
 
             if (ofd.ShowDialog() == true)
@@ -51,7 +79,9 @@ namespace VisionPlatform.Wpf
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            InputWindow inputWindow = new InputWindow();
+            var inputWindow = new InputWindow();
+            inputWindow.Title = "配置文件名输入窗口";
+            inputWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             inputWindow.Owner = Window.GetWindow(this);
             inputWindow.InputAccepted += InputWindow_InputAccepted;
             inputWindow.InputCanceled += InputWindow_InputCanceled;
@@ -82,6 +112,18 @@ namespace VisionPlatform.Wpf
         private void InputWindow_InputAccepted(object sender, InputAcceptedEventArgs e)
         {
             SaveTextBlock.Text = e.Input;
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("是否要确认退出?", "退出相机配置窗口", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                AcceptTextBlock.Text = "True";
+            }
+            else
+            {
+                AcceptTextBlock.Text = "False";
+            }
         }
     }
 }

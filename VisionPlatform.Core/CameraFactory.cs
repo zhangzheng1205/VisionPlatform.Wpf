@@ -350,7 +350,7 @@ namespace VisionPlatform.Core
         public static FileInfo[] GetCameraConfigFile(string cameraSerial)
         {
             FileInfo[] fileInfos = new FileInfo[0];
-            
+
             try
             {
                 if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
@@ -377,7 +377,9 @@ namespace VisionPlatform.Core
             if (Cameras.ContainsKey(cameraSerial ?? "") && (Cameras[cameraSerial]?.IsOpen == true))
             {
                 //配置像素格式
-                if (Cameras[cameraSerial].PixelFormat != cameraConfigParam.PixelFormat)
+                if ((Cameras[cameraSerial].PixelFormatTypeEnum?.Contains(cameraConfigParam.PixelFormat) == true) &&
+                        (Cameras[cameraSerial].PixelFormat != cameraConfigParam.PixelFormat) &&
+                        (cameraConfigParam.PixelFormat != EPixelFormatType.Unknown))
                 {
                     if (Cameras[cameraSerial].IsGrabbing)
                     {
@@ -391,7 +393,10 @@ namespace VisionPlatform.Core
                     }
                 }
 
-                if (Cameras[cameraSerial].TriggerMode != cameraConfigParam.TriggerMode)
+                //配置触发模式
+                if ((Cameras[cameraSerial].TriggerModeEnum?.Contains(cameraConfigParam.TriggerMode) == true) &&
+                        (Cameras[cameraSerial].TriggerMode != cameraConfigParam.TriggerMode) &&
+                        (cameraConfigParam.TriggerMode != ETriggerModeStatus.Unknown))
                 {
                     Cameras[cameraSerial].TriggerMode = cameraConfigParam.TriggerMode;
                 }
@@ -399,7 +404,9 @@ namespace VisionPlatform.Core
                 if (cameraConfigParam.TriggerMode == ETriggerModeStatus.On)
                 {
                     //配置触发源
-                    if (Cameras[cameraSerial].TriggerSource != cameraConfigParam.TriggerSource)
+                    if ((Cameras[cameraSerial].TriggerSourceEnum?.Contains(cameraConfigParam.TriggerSource) == true) &&
+                        (Cameras[cameraSerial].TriggerSource != cameraConfigParam.TriggerSource) &&
+                        (cameraConfigParam.TriggerSource != ETriggerSource.Unknown))
                     {
                         Cameras[cameraSerial].TriggerSource = cameraConfigParam.TriggerSource;
                     }
@@ -407,7 +414,9 @@ namespace VisionPlatform.Core
                     if (cameraConfigParam.TriggerSource != ETriggerSource.Software)
                     {
                         //配置有效触发信号
-                        if (Cameras[cameraSerial].TriggerActivation != cameraConfigParam.TriggerActivation)
+                        if ((Cameras[cameraSerial].TriggerActivationEnum?.Contains(cameraConfigParam.TriggerActivation) == true) &&
+                            (Cameras[cameraSerial].TriggerActivation != cameraConfigParam.TriggerActivation) &&
+                            (cameraConfigParam.TriggerActivation != ETriggerActivation.Unknown))
                         {
                             Cameras[cameraSerial].TriggerActivation = cameraConfigParam.TriggerActivation;
                         }

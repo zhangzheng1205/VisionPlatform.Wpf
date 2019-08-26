@@ -7,7 +7,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              cal:Message.Attach="[Event Unloaded] = [Action Unloaded]" 
-             d:DesignHeight="360" d:DesignWidth="220"  Height="Auto" Width="Auto" MinHeight="360" MinWidth="200">
+             d:DesignHeight="290" d:DesignWidth="220"  Height="Auto" Width="Auto" MinHeight="290" MinWidth="200">
     <StackPanel>
             <DockPanel Margin="5,5">
                 <Label Content="相机名" MinWidth="70"/>
@@ -18,35 +18,35 @@
                 <ComboBox ItemsSource="{Binding PixelFormatList}" SelectedItem="{Binding  PixelFormat}"/>
             </DockPanel>
             <DockPanel Margin="5,5">
-                <Label Content="宽度" MinWidth="70"/>
+                <Label Content="宽度(像素)" MinWidth="70"/>
                 <TextBox Text="{Binding Width}"/>
             </DockPanel>
             <DockPanel Margin="5,5">
-                <Label Content="高度" MinWidth="70"/>
+                <Label Content="高度(像素)" MinWidth="70"/>
                 <TextBox Text="{Binding Height}"/>
             </DockPanel>
-            <DockPanel Margin="5,5">
+            <!--<DockPanel Margin="5,5">
                 <Label Content="触发模式" MinWidth="70"/>
                 <ComboBox ItemsSource="{Binding TriggerModeList}" SelectedItem="{Binding TriggerMode}"/>
-            </DockPanel>
+            </DockPanel>-->
             <DockPanel Margin="5,5">
                 <Label Content="触发源" MinWidth="70"/>
                 <ComboBox ItemsSource="{Binding TriggerSourceList}" SelectedItem="{Binding TriggerSource}"/>
             </DockPanel>
             <DockPanel Margin="5,5">
-                <Label Content="硬件触发" MinWidth="70"/>
+                <Label Content="硬件信号" MinWidth="70"/>
                 <ComboBox ItemsSource="{Binding TriggerActivationList}" SelectedItem="{Binding TriggerActivation}"/>
             </DockPanel>
-            <DockPanel Margin="5,5">
+            <!--<DockPanel Margin="5,5">
                 <Label Content="软触发" MinWidth="70"/>
                 <Button Content="执行" cal:Message.Attach="TriggerSoftware"/>
-            </DockPanel>
+            </DockPanel>-->
             <DockPanel Margin="5,5">
                 <Label Content="曝光" MinWidth="70"/>
-                <TextBox Text="{Binding ExposureTime}"/>
+                <TextBox Text="{Binding ExposureTime, StringFormat={}{0:F3}}"/>
             </DockPanel>
             <DockPanel Margin="5,5">
-                <Label Content="增益" MinWidth="70"/>
+                <Label Content="增益(dB)" MinWidth="70"/>
                 <TextBox Text="{Binding Gain, StringFormat={}{0:F3}}"/>
             </DockPanel>
         </StackPanel>

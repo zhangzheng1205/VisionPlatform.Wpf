@@ -5,18 +5,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:VisionPlatform.Wpf"
         Title="输入窗口"
-        mc:Ignorable="d" Height="150" Width="300">
+        mc:Ignorable="d" Height="106" Width="148.333" MinHeight="150" MinWidth="300" MaxHeight="150">
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="10,20">
+            <DockPanel Margin="0,10,0,0">
                 <TextBlock Margin="0,0,10,0">文件名称</TextBlock>
                 <TextBox x:Name="InputTextBox" MinWidth="200"></TextBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Right">
+            </DockPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right">
                 <Button MinWidth="60" Margin="10,0,0,0" Click="AcceptButton_Click">确认</Button>
                 <Button MinWidth="60" Margin="10,0,0,0" Click="CancelButton_Click">取消</Button>
             </StackPanel>
         </StackPanel>
-        
+
     </Grid>
 </Window>

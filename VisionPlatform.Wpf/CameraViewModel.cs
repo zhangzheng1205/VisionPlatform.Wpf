@@ -110,6 +110,42 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        /// <summary>
+        /// 相机实例
+        /// </summary>
+        public ICamera Camera
+        {
+            get
+            {
+                return CameraConfigViewModel.Camera;
+            }
+            set
+            {
+                CameraConfigViewModel.Camera = value;
+                NotifyOfPropertyChange(() => IsCameraValid);
+                NotifyOfPropertyChange(() => Camera);
+                NotifyOfPropertyChange(() => IsContinuesGrap);
+            }
+        }
+
+        /// <summary>
+        /// 当前连续拍照标志位
+        /// </summary>
+        public bool IsContinuesGrap
+        {
+            get
+            {
+                if ((Camera?.IsOpen == true) && (Camera.IsGrabbing == true) && (Camera?.TriggerMode == ETriggerModeStatus.Off))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         #endregion
 
         #region 事件
@@ -118,6 +154,16 @@ namespace VisionPlatform.Wpf
         /// 相机配置完成事件
         /// </summary>
         public event EventHandler<CameraConfigurationCompletedEventArgs> CameraConfigurationCompleted;
+
+        internal void OnMessageRaised(MessageLevel messageLevel, string message, Exception exception = null)
+        {
+            MessageRaised?.Invoke(this, new MessageRaisedEventArgs(messageLevel, message, exception));
+        }
+
+        /// <summary>
+        /// 消息触发事件
+        /// </summary>
+        internal event EventHandler<MessageRaisedEventArgs> MessageRaised;
 
         #endregion
 
@@ -242,8 +288,73 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void SetCamera(ICamera camera)
         {
-            CameraConfigViewModel.Camera = camera;
-            NotifyOfPropertyChange(() => IsCameraValid);
+            Camera = camera;
+        }
+
+        /// <summary>
+        /// 单帧采集
+        /// </summary>
+        public void GrapOnce()
+        {
+            try
+            {
+                if (Camera?.IsOpen == true)
+                {
+                    Camera.TriggerMode = ETriggerModeStatus.On;
+                    Camera?.TriggerSoftware();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 连续采集
+        /// </summary>
+        public void ContinuesGrap()
+        {
+            try
+            {
+                if (Camera?.IsOpen == true)
+                {
+                    Camera.StopGrab();
+                    Camera.TriggerMode = ETriggerModeStatus.Off;
+                    Camera.Grab();
+                }
+                NotifyOfPropertyChange(() => IsContinuesGrap);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 停止连续采集
+        /// </summary>
+        public void StopContinuesGrap()
+        {
+            try
+            {
+                if ((Camera?.IsOpen == true) && (Camera?.TriggerMode == ETriggerModeStatus.Off))
+                {
+                    Camera.StopGrab();
+                    Camera.TriggerMode = ETriggerModeStatus.On;
+
+                    if (Camera.TriggerSource == ETriggerSource.Unknown)
+                    {
+                        Camera.TriggerSource = ETriggerSource.Software;
+                    }
+                    Camera.Grab();
+                }
+                NotifyOfPropertyChange(() => IsContinuesGrap);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -261,59 +372,23 @@ namespace VisionPlatform.Wpf
             {
                 CameraConfigParam cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(file);
 
-                if (CameraConfigViewModel?.Camera?.IsOpen == true)
+                if (Camera?.IsOpen == true)
                 {
-                    //停止采集
-                    CameraConfigViewModel.Camera.StopGrab();
-
-                    //配置像素类型
-                    if ((CameraConfigViewModel.Camera.PixelFormatTypeEnum?.Contains(cameraConfigParam.PixelFormat) == true) &&
-                        (CameraConfigViewModel.Camera.PixelFormat != cameraConfigParam.PixelFormat) &&
-                        (cameraConfigParam.PixelFormat != EPixelFormatType.Unknown))
-                    {
-                        CameraConfigViewModel.Camera.PixelFormat = cameraConfigParam.PixelFormat;
-                    }
-
-                    //配置触发模式
-                    if ((CameraConfigViewModel.Camera.TriggerModeEnum?.Contains(cameraConfigParam.TriggerMode) == true) &&
-                        (CameraConfigViewModel.Camera.TriggerMode != cameraConfigParam.TriggerMode) &&
-                        (cameraConfigParam.TriggerMode != ETriggerModeStatus.Unknown))
-                    {
-                        CameraConfigViewModel.Camera.TriggerMode = cameraConfigParam.TriggerMode;
-                    }
-
-                    //配置触发源
-                    if ((CameraConfigViewModel.Camera.TriggerSourceEnum?.Contains(cameraConfigParam.TriggerSource) == true) &&
-                        (CameraConfigViewModel.Camera.TriggerSource != cameraConfigParam.TriggerSource) &&
-                        (cameraConfigParam.TriggerSource != ETriggerSource.Unknown))
-                    {
-                        CameraConfigViewModel.Camera.TriggerSource = cameraConfigParam.TriggerSource;
-                    }
-
-                    //有效触发信号(硬件)
-                    if ((CameraConfigViewModel.Camera.TriggerActivationEnum?.Contains(cameraConfigParam.TriggerActivation) == true) &&
-                        (CameraConfigViewModel.Camera.TriggerActivation != cameraConfigParam.TriggerActivation) &&
-                        (cameraConfigParam.TriggerActivation != ETriggerActivation.Unknown))
-                    {
-                        CameraConfigViewModel.Camera.TriggerActivation = cameraConfigParam.TriggerActivation;
-                    }
-
-                    CameraConfigViewModel.Camera.ExposureTime = cameraConfigParam.ExposureTime;
-                    CameraConfigViewModel.Camera.Gain = cameraConfigParam.Gain;
+                    CameraFactory.ConfigurateCamera(Camera.Info.SerialNumber, cameraConfigParam);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
             finally
             {
                 if (CameraConfigViewModel?.Camera?.IsOpen == true)
                 {
-                    CameraConfigViewModel.Camera.Grab();
+                    Camera.Grab();
 
                     //刷新控件显示
-                    CameraConfigViewModel.Camera = CameraConfigViewModel.Camera;
+                    Camera = Camera;
                 }
             }
         }
@@ -329,31 +404,46 @@ namespace VisionPlatform.Wpf
                 return;
             }
 
-            if (CameraConfigViewModel?.Camera?.IsOpen == true)
+            try
             {
-                var cameraConfigParam = new CameraConfigParam();
+                if (Camera?.IsOpen == true)
+                {
+                    var cameraConfigParam = new CameraConfigParam();
 
-                cameraConfigParam.PixelFormat = CameraConfigViewModel.Camera.PixelFormat;
-                cameraConfigParam.TriggerMode = CameraConfigViewModel.Camera.TriggerMode;
-                cameraConfigParam.TriggerSource = CameraConfigViewModel.Camera.TriggerSource;
-                cameraConfigParam.TriggerActivation = CameraConfigViewModel.Camera.TriggerActivation;
-                cameraConfigParam.ExposureTime = CameraConfigViewModel.Camera.ExposureTime;
-                cameraConfigParam.Gain = CameraConfigViewModel.Camera.Gain;
+                    cameraConfigParam.PixelFormat = Camera.PixelFormat;
+                    cameraConfigParam.TriggerMode = Camera.TriggerMode;
+                    cameraConfigParam.TriggerSource = Camera.TriggerSource;
+                    cameraConfigParam.TriggerActivation = Camera.TriggerActivation;
+                    cameraConfigParam.ExposureTime = Camera.ExposureTime;
+                    cameraConfigParam.Gain = Camera.Gain;
 
-                string path = $"VisionPlatform/Camera/CameraConfig/{CameraConfigViewModel.Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(file)}.json";
-                JsonSerialization.SerializeObjectToFile(cameraConfigParam, path);
+                    string path = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(file)}.json";
+                    JsonSerialization.SerializeObjectToFile(cameraConfigParam, path);
+                }
             }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+            
         }
 
         /// <summary>
         /// 确认
         /// </summary>
-        public void Accept()
+        public void Accept(bool isAccpet)
         {
-            OnCameraConfigurationCompleted(CameraConfigViewModel.Camera);
+            if (isAccpet)
+            {
+                if ((Camera?.IsOpen == true) && (Camera?.TriggerMode == ETriggerModeStatus.Off))
+                {
+                    StopContinuesGrap();
+                }
+
+                OnCameraConfigurationCompleted(Camera);
+            }
         }
 
         #endregion
-
     }
 }
