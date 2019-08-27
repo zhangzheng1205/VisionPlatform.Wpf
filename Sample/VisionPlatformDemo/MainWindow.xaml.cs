@@ -335,5 +335,31 @@ namespace VisionPlatformDemo
                 isEsc = true;
             }
         }
+
+        private void OpenCalibButton_Click(object sender, RoutedEventArgs e)
+        {
+            //ScenesListView.SelectedItem
+            var view = new AdvanceCalibrationView()
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            var viewModel = (view.DataContext as AdvanceCalibrationViewModel);
+
+            //将控件嵌入窗口之中
+            var window = new Window();
+            window.MinWidth = view.MinWidth + 50;
+            window.MinHeight = view.MinHeight + 50;
+            window.MaxWidth = view.MaxWidth;
+            window.MaxHeight = view.MaxHeight;
+            window.Width = view.MinWidth + 50;
+            window.Height = view.MinHeight + 50;
+            window.Content = view;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Owner = Window.GetWindow(this);
+            window.Title = "标定窗口";
+            window.ShowDialog();
+        }
     }
 }

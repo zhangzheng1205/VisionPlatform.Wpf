@@ -60,7 +60,6 @@
                                  PreviewMouseDown="PyTextBox_PreviewMouseDown"
                                  GotFocus="PyTextBox_GotFocus"/>
                             </DockPanel>
-
                             <DockPanel Grid.Column="1" Grid.Row="1">
                                 <TextBlock VerticalAlignment="Center" Margin="5,0">机器X</TextBlock>
                                 <TextBox x:Name="QxTextBox" Text="{Binding Qx}" IsEnabled="{Binding IsEnable}" Margin="2"

@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blob", "VisionPlatform.Visi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glasses", "VisionPlatform.VisionOpera\Glasses\Glasses.csproj", "{6922DF55-AB15-4623-BD6F-19DE4C92F92A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionPlatform.Robot", "VisionPlatform.Robot\VisionPlatform.Robot.csproj", "{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,18 @@ Global
 		{6922DF55-AB15-4623-BD6F-19DE4C92F92A}.Release|x64.Build.0 = Release|Any CPU
 		{6922DF55-AB15-4623-BD6F-19DE4C92F92A}.Release|x86.ActiveCfg = Release|Any CPU
 		{6922DF55-AB15-4623-BD6F-19DE4C92F92A}.Release|x86.Build.0 = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|x64.Build.0 = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Debug|x86.Build.0 = Debug|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x64.ActiveCfg = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x64.Build.0 = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

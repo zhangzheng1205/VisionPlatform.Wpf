@@ -112,6 +112,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvanceCalibrationView.xaml.cs">
+      <DependentUpon>AdvanceCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AdvanceCalibrationViewModel.cs" />
+    <Compile Include="BaseCalibreationView.xaml.cs">
+      <DependentUpon>BaseCalibreationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BaseCalibreationViewModel.cs" />
     <Compile Include="CalibrationView.xaml.cs">
       <DependentUpon>CalibrationView.xaml</DependentUpon>
     </Compile>
@@ -155,8 +163,20 @@
       <Project>{C67FD7FF-D5FC-4DB9-8EFD-4EA53D40F633}</Project>
       <Name>VisionPlatform.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VisionPlatform.Robot\VisionPlatform.Robot.csproj">
+      <Project>{5e9cc37a-cbbc-405e-9818-1ddf0e5039fe}</Project>
+      <Name>VisionPlatform.Robot</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AdvanceCalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BaseCalibreationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CalibrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
