@@ -135,6 +135,8 @@
     <Compile Include="Converters\BoolInvertConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="EventArgs\CalibrationConfigurationCompletedEventArgs.cs" />
+    <Compile Include="EventArgs\CalibrationPointListChangedEventArgs.cs" />
+    <Compile Include="EventArgs\CalibrationPointSelectionChangedEventArgs.cs" />
     <Compile Include="EventArgs\CameraConfigurationCompletedEventArgs.cs" />
     <Compile Include="EventArgs\SceneConfigurationCompletedEventArgs.cs" />
     <Compile Include="EventArgs\MessageRaisedEventArgs.cs" />

@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glasses", "VisionPlatform.V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisionPlatform.Robot", "VisionPlatform.Robot\VisionPlatform.Robot.csproj", "{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPointCalibrationDemo", "VisionPlatform.VisionOpera\NPointCalibrationDemo\NPointCalibrationDemo.csproj", "{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -229,6 +231,18 @@ Global
 		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x64.Build.0 = Release|Any CPU
 		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}.Release|x86.Build.0 = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|x64.Build.0 = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|x64.ActiveCfg = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|x64.Build.0 = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,6 +259,7 @@ Global
 		{26E72CE3-A188-4FD1-BA4D-F6805E643445} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 		{3CEB6101-224C-46D3-99A4-28C6DCE98092} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 		{6922DF55-AB15-4623-BD6F-19DE4C92F92A} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
+		{C2384B33-6298-4A08-8FE7-AF3CC1B28FF7} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EC6FD06-F01F-434E-B785-2BA965A5BD61}

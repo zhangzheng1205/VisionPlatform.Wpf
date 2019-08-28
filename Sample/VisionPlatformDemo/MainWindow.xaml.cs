@@ -37,7 +37,7 @@ namespace VisionPlatformDemo
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.uEye;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
 
             //获取场景管理器实例(单例)
             SceneManager = SceneManager.GetInstance();

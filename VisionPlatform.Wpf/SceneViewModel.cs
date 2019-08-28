@@ -546,8 +546,8 @@ namespace VisionPlatform.Wpf
 
                 //var view = new CalibrationView();
                 //var viewModel = (view.DataContext as CalibrationViewModel);
-                //viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted; ;
-                //viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted; ;
+                //viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted;
+                //viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted;
 
             }
             catch (Exception ex)

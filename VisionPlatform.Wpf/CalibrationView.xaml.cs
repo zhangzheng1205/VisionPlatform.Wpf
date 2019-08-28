@@ -21,7 +21,7 @@ namespace VisionPlatform.Wpf
 
             var viewModel = new CalibrationViewModel();
             DataContext = viewModel;
-            viewModel.MessageRaised += ViewModel_MessageRaised; ;
+            viewModel.MessageRaised += ViewModel_MessageRaised;
         }
 
         private void ViewModel_MessageRaised(object sender, MessageRaisedEventArgs e)

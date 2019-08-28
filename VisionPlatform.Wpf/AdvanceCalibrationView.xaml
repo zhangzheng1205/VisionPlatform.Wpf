@@ -5,8 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VisionPlatform.Wpf"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:converters="clr-namespace:VisionPlatform.Wpf.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800" MinHeight="600" MinWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BoolInvertConverter x:Key="BoolInvertConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350" MinWidth="350" MaxWidth="600"/>
@@ -15,12 +21,45 @@
         </Grid.ColumnDefinitions>
         <DockPanel>
             <GroupBox Header="自动标定配置" DockPanel.Dock="Top" Margin="5">
-                <DockPanel Margin="10,0">
-                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" >标定场景</TextBlock>
-                    <ComboBox ItemsSource="{Binding Scenes}" SelectedValue="{Binding Scene}"/>
-                </DockPanel>
+                <StackPanel>
+                    <StackPanel>
+                        <DockPanel Margin="10,10,10,0">
+                            <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">标定场景</TextBlock>
+                            <Button MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0" Visibility="Hidden">确认</Button>
+                            <ComboBox ItemsSource="{Binding Scenes}" SelectedValue="{Binding Scene}"/>
+                        </DockPanel>
+                        <DockPanel IsEnabled="{Binding IsSceneValid}" Margin="10,10,10,0">
+                            <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">图像坐标</TextBlock>
+                            <Button cal:Message.Attach="GetImageLocation(ImageIndexComboBox.SelectedItem)" MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0">获取</Button>
+                            <ComboBox ItemsSource="{Binding PointIndexs}" SelectedIndex="{Binding ImagePointIndex}" x:Name="ImageIndexComboBox" MinWidth="60"/>
+                            <TextBox  Margin="10,0,0,0"/>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel MinHeight="2" Margin="5,10" Background="LightGray"/>
+                    <StackPanel>
+                        <DockPanel IsEnabled="{Binding IsRobotConnect, Converter={StaticResource BoolInvertConverter}}" Margin="10,0,10,0">
+                            <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">机器人通信</TextBlock>
+                            <Button MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0" Visibility="Hidden">加载</Button>
+                            <ComboBox ItemsSource="{Binding Robots}" SelectedValue="{Binding Robot}"/>
+                        </DockPanel>
+                        <DockPanel Margin="10,10,10,0">
+                            <Button MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0">连接</Button>
+                            <DockPanel IsEnabled="{Binding IsRobotConnect, Converter={StaticResource BoolInvertConverter}}">
+                                <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">IP/端口</TextBlock>
+                                <TextBox DockPanel.Dock="Right" MinWidth="50" Margin="10,0,0,0"/>
+                                <TextBox MinWidth="100"/>
+                            </DockPanel>
+                        </DockPanel>
+                        <DockPanel IsEnabled="{Binding IsRobotConnect}" Margin="10,10,10,5">
+                            <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">机器坐标</TextBlock>
+                            <Button MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0">获取</Button>
+                            <ComboBox ItemsSource="{Binding PointIndexs}" SelectedIndex="{Binding RobotPointIndex}" MinWidth="60"/>
+                            <TextBox  Margin="10,0,0,0"/>
+                        </DockPanel>
+                    </StackPanel>
+                </StackPanel>
             </GroupBox>
-            <local:BaseCalibreationView />
+            <local:BaseCalibreationView DataContext="{Binding BaseCalibreationViewModel}"/>
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray"/>
         <GroupBox Grid.Column="2" Header="标定算法预览" Margin="5">

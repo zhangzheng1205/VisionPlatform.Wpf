@@ -66,7 +66,7 @@ namespace VisionPlatform.Wpf
                     return true;
                 }
 
-                return false; ;
+                return false;
             }
         }
 

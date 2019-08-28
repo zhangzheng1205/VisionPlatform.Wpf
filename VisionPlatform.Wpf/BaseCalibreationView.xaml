@@ -110,7 +110,7 @@
                     <ListView x:Name="CalibPointListView"
                               ItemsSource="{Binding CalibPointList}" 
                               SelectedIndex="{Binding SelectedIndex}"
-                              cal:Message.Attach="[Event SelectionChanged] = [Action CalibPointListSelectionChanged(CalibPointListView.SelectedIndex)]"
+                              cal:Message.Attach="[Event SelectionChanged] = [Action SetCurrentDisplayPointInInputBox(CalibPointListView.SelectedIndex)]"
                               Margin="5,10,5,0">
                         <ListView.View>
                             <GridView>
