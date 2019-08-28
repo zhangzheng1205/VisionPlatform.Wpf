@@ -110,6 +110,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="XVisionCShare">
+      <HintPath>..\ThirdPartyPlatform\XVisionCShare\XVisionCShare.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdvanceCalibrationView.xaml.cs">
@@ -165,9 +168,9 @@
       <Project>{C67FD7FF-D5FC-4DB9-8EFD-4EA53D40F633}</Project>
       <Name>VisionPlatform.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VisionPlatform.Robot\VisionPlatform.Robot.csproj">
-      <Project>{5e9cc37a-cbbc-405e-9818-1ddf0e5039fe}</Project>
-      <Name>VisionPlatform.Robot</Name>
+    <ProjectReference Include="..\VisionPlatform.Robot\VisionPlatform.IRobot\VisionPlatform.IRobot.csproj">
+      <Project>{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}</Project>
+      <Name>VisionPlatform.IRobot</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

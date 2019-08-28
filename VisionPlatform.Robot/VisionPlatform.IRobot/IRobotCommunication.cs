@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VisionPlatform.Robot
+﻿namespace VisionPlatform.IRobot
 {
     /// <summary>
     /// 机器人通信接口
     /// </summary>
     public interface IRobotCommunication
     {
+        /// <summary>
+        /// 连接标志
+        /// </summary>
+        bool IsConnect { get; }
+
         /// <summary>
         /// 连接到机器人
         /// </summary>

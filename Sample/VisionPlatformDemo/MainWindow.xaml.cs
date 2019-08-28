@@ -39,6 +39,15 @@ namespace VisionPlatformDemo
             CameraFactory.UpdateAssembly();
             CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
 
+            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
+            {
+                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+                CameraFactory.AddCamera(@"E:\测试图像\刹车片");
+                CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
+                CameraFactory.AddCamera(@"E:\测试图像\眼镜");
+                CameraFactory.AddCamera(@"E:\测试图像\定位圆");
+            }
+
             //获取场景管理器实例(单例)
             SceneManager = SceneManager.GetInstance();
 
@@ -105,16 +114,6 @@ namespace VisionPlatformDemo
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ConfigFrameButton_Click(null, null);
-
-            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
-            {
-                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
-                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\alpha1.png");
-                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images\autobahn.png");
-                CameraFactory.AddCamera(@"E:\测试图像\刹车片");
-                CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
-                CameraFactory.AddCamera(@"E:\测试图像\眼镜");
-            }
 
             var view = new SceneView(new Scene("EmptyScene", VisionFrameFactory.DefaultVisionFrameType), false)
             {

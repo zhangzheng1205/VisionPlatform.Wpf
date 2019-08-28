@@ -31,28 +31,28 @@
                             </Grid.RowDefinitions>
                             <DockPanel Grid.Column="1" Grid.Row="0">
                                 <TextBlock VerticalAlignment="Center" Margin="5,0">图像X</TextBlock>
-                                <TextBox x:Name="PxTextBox" Text="{Binding Px}" Margin="2"
+                                <TextBox x:Name="PxTextBox" Text="{Binding Px, StringFormat={}{0:0.###}}" Margin="2"
                                  LostFocus="PxTextBox_LostFocus"
                                  PreviewMouseDown="PxTextBox_PreviewMouseDown"
                                  GotFocus="PxTextBox_GotFocus"/>
                             </DockPanel>
                             <DockPanel Grid.Column="2" Grid.Row="0">
                                 <TextBlock VerticalAlignment="Center" Margin="5,0">图像Y</TextBlock>
-                                <TextBox x:Name="PyTextBox" Text="{Binding Py}" Margin="2"
+                                <TextBox x:Name="PyTextBox" Text="{Binding Py, StringFormat={}{0:0.###}}" Margin="2"
                                  LostFocus="PyTextBox_LostFocus"
                                  PreviewMouseDown="PyTextBox_PreviewMouseDown"
                                  GotFocus="PyTextBox_GotFocus"/>
                             </DockPanel>
                             <DockPanel Grid.Column="1" Grid.Row="1">
                                 <TextBlock VerticalAlignment="Center" Margin="5,0">机器X</TextBlock>
-                                <TextBox x:Name="QxTextBox" Text="{Binding Qx}" Margin="2"
+                                <TextBox x:Name="QxTextBox" Text="{Binding Qx, StringFormat={}{0:0.###}}" Margin="2"
                                  LostFocus="QxTextBox_LostFocus"
                                  PreviewMouseDown ="QxTextBox_PreviewMouseDown"
                                  GotFocus ="QxTextBox_GotFocus"/>
                             </DockPanel>
                             <DockPanel Grid.Column="2" Grid.Row="1">
                                 <TextBlock VerticalAlignment="Center" Margin="5,0">机器Y</TextBlock>
-                                <TextBox x:Name="QyTextBox" Text="{Binding Qy}" Margin="2"
+                                <TextBox x:Name="QyTextBox" Text="{Binding Qy, StringFormat={}{0:0.###}}" Margin="2"
                                  LostFocus="QyTextBox_LostFocus"
                                  PreviewMouseDown ="QyTextBox_PreviewMouseDown"
                                  GotFocus ="QyTextBox_GotFocus"/>
@@ -70,19 +70,19 @@
                             </Grid>
                         </Grid>
 
-                        <Grid Margin="0,5,0,0">
+                        <Grid Margin="5,5,5,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <!--<StackPanel MinHeight="35"/>-->
-                            <Button x:Name="AddButton" cal:Message.Attach="Add(PxTextBox.Text, PyTextBox.Text, QxTextBox.Text, QyTextBox.Text)" Content="增加" ToolTip="将输入的坐标添加到列表最末端" Grid.Column="1" Margin="2,5"/>
-                            <Button x:Name="CoverButton" cal:Message.Attach="Cover(CalibPointListView.SelectedIndex,PxTextBox.Text, PyTextBox.Text, QxTextBox.Text, QyTextBox.Text)" Content="覆盖" ToolTip="覆盖当前选择列的数据" Grid.Column="2" Margin="2,5"/>
-                            <Button x:Name="DeleteButton" cal:Message.Attach="Action Delete(CalibPointListView.SelectedIndex)" Content="删除" ToolTip="删除当前选择列的数据" Grid.Column="3" Margin="2,5"/>
+                            <Button x:Name="AddButton" cal:Message.Attach="Add(PxTextBox.Text, PyTextBox.Text, QxTextBox.Text, QyTextBox.Text)" Content="增加" ToolTip="将输入的坐标添加到列表最末端" Grid.Column="0" Margin="2,5"/>
+                            <Button x:Name="CoverButton" cal:Message.Attach="Cover(CalibPointListView.SelectedIndex,PxTextBox.Text, PyTextBox.Text, QxTextBox.Text, QyTextBox.Text)" Content="覆盖" ToolTip="覆盖当前选择列的数据" Grid.Column="1" Margin="2,5"/>
+                            <Button x:Name="DeleteButton" cal:Message.Attach="Action Delete(CalibPointListView.SelectedIndex)" Content="删除" ToolTip="删除当前选择列的数据" Grid.Column="2" Margin="2,5"/>
+                            <Button cal:Message.Attach="Clear" Content="清空" ToolTip="清空列表所有的数据" Grid.Column="3" Margin="2,5"/>
                             <Button x:Name="CalibButton" cal:Message.Attach="GetCalibMatrix" Content="标定" ToolTip="对列表数据进行标定计算" Grid.Column="4" Margin="2,5"/>
                         </Grid>
 
@@ -114,10 +114,10 @@
                               Margin="5,10,5,0">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn x:Name="PxGridViewColumn" DisplayMemberBinding="{Binding Px}" Header="输入X" Width="{Binding ElementName=CalibPointColumn1, Path=ActualWidth}" />
-                                <GridViewColumn x:Name="PyGridViewColumn" DisplayMemberBinding="{Binding Py}" Header="输入Y" Width="{Binding ElementName=CalibPointColumn2, Path=ActualWidth}" />
-                                <GridViewColumn x:Name="QxGridViewColumn" DisplayMemberBinding="{Binding Qx}" Header="输出X" Width="{Binding ElementName=CalibPointColumn3, Path=ActualWidth}" />
-                                <GridViewColumn x:Name="QyGridViewColumn" DisplayMemberBinding="{Binding Qy}" Header="输出Y" Width="{Binding ElementName=CalibPointColumn4, Path=ActualWidth}" />
+                                <GridViewColumn x:Name="PxGridViewColumn" DisplayMemberBinding="{Binding Px, StringFormat={}{0:0.###}}" Header="输入X" Width="{Binding ElementName=CalibPointColumn1, Path=ActualWidth}" />
+                                <GridViewColumn x:Name="PyGridViewColumn" DisplayMemberBinding="{Binding Py, StringFormat={}{0:0.###}}" Header="输入Y" Width="{Binding ElementName=CalibPointColumn2, Path=ActualWidth}" />
+                                <GridViewColumn x:Name="QxGridViewColumn" DisplayMemberBinding="{Binding Qx, StringFormat={}{0:0.###}}" Header="输出X" Width="{Binding ElementName=CalibPointColumn3, Path=ActualWidth}" />
+                                <GridViewColumn x:Name="QyGridViewColumn" DisplayMemberBinding="{Binding Qy, StringFormat={}{0:0.###}}" Header="输出Y" Width="{Binding ElementName=CalibPointColumn4, Path=ActualWidth}" />
                             </GridView>
                         </ListView.View>
                     </ListView>

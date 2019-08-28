@@ -98,6 +98,7 @@
     <Compile Include="ItemCollection.cs" />
     <Compile Include="IVisionFrame.cs" />
     <Compile Include="IVisionOpera.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunStatus.cs" />
   </ItemGroup>

@@ -427,13 +427,20 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 数值转字符串
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static string ValueToString(object value)
+        /// <param name="value">数值</param>
+        /// <param name="subSeparatorChar">二级分隔符</param>
+        /// <returns>转换的字符串</returns>
+        private static string ValueToString(object value, char subSeparatorChar)
         {
             if (value.GetType().Equals(typeof(float)) || value.GetType().Equals(typeof(double)))
             {
                 return $"{value:0.###}";
+            }
+            else if (value is Location)
+            {
+                var location = (Location)value;
+
+                return $"{location.X:0.###}{subSeparatorChar}{location.Y:0.###}{subSeparatorChar}{location.Angle:0.###}";
             }
             else
             {
@@ -457,7 +464,7 @@ namespace VisionPlatform.Core
                 if (item?.IsAvailable == true)
                 {
                     //若value和valueType的类型不一致,则报错
-                    if (!item.ValueType.IsAssignableFrom(item.Value.GetType()))
+                    if (!item.ValueType.IsAssignableFrom(item.Value?.GetType()))
                     {
                         throw new ArgumentException("valueType must be assignable from value");
                     }
@@ -480,9 +487,9 @@ namespace VisionPlatform.Core
                         {
                             for (int i = 0; i < rackCount[0]; i++)
                             {
-                                arrayString += ValueToString(array.GetValue(i)) + subSeparatorChar;
+                                arrayString += ValueToString(array.GetValue(i), subSeparatorChar) + mainSeparatorChar;
                             }
-                            arrayString = arrayString.TrimEnd(subSeparatorChar);
+                            arrayString = arrayString.TrimEnd(mainSeparatorChar);
                         }
                         //else if (rank == 2)
                         //{
@@ -506,7 +513,7 @@ namespace VisionPlatform.Core
                     }
                     else
                     {
-                        visionResult += ValueToString(item.Value) + mainSeparatorChar;
+                        visionResult += ValueToString(item.Value, subSeparatorChar) + mainSeparatorChar;
                     }
 
                 }

@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using VisionPlatform.BaseType;
 using VisionPlatform.Core;
-using VisionPlatform.Robot;
+using VisionPlatform.IRobot;
 
 namespace VisionPlatform.Wpf
 {
@@ -26,19 +29,21 @@ namespace VisionPlatform.Wpf
             sceneManager = SceneManager.GetInstance();
 
             UpdateScenes();
+            UpdateRobotAssembly();
 
+            BaseCalibreationViewModel = new BaseCalibreationViewModel();
             BaseCalibreationViewModel.MessageRaised += BaseCalibreationViewModel_MessageRaised;
             BaseCalibreationViewModel.CalibrationPointListChanged += BaseCalibreationViewModel_CalibrationPointListChanged;
             BaseCalibreationViewModel.CalibrationPointSelectionChanged += BaseCalibreationViewModel_CalibrationPointSelectionChanged;
 
             NotifyOfPropertyChange(() => BaseCalibreationViewModel);
 
-            pointIndexs.Clear();
+            PointIndexs.Clear();
             for (int i = 0; i < BaseCalibreationViewModel.CalibPointList.Count + 1; i++)
             {
-                pointIndexs.Add(i);
+                PointIndexs.Add(i);
             }
-            NotifyOfPropertyChange(() => PointIndexs);
+            RobotPointIndex = ImagePointIndex = PointIndexs[PointIndexs.Count - 1];
         }
 
         /// <summary>
@@ -67,13 +72,11 @@ namespace VisionPlatform.Wpf
         /// <param name="e"></param>
         private void BaseCalibreationViewModel_CalibrationPointListChanged(object sender, CalibrationPointListChangedEventArgs e)
         {
-            pointIndexs.Clear();
+            PointIndexs.Clear();
             for (int i = 0; i < e.CalibPointList.Count + 1; i++)
             {
-                pointIndexs.Add(i);
+                PointIndexs.Add(i);
             }
-            NotifyOfPropertyChange(() => PointIndexs);
-
             RobotPointIndex = ImagePointIndex = PointIndexs[PointIndexs.Count - 1];
         }
 
@@ -164,44 +167,90 @@ namespace VisionPlatform.Wpf
             }
         }
 
-        #endregion
-
-        #region 机器人相关
-
-        private ObservableCollection<IRobotCommunication> robots;
+        private string visionResult;
 
         /// <summary>
-        /// 机器人通信实例列表
+        /// 视觉结果
         /// </summary>
-        public ObservableCollection<IRobotCommunication> Robots
+        public string VisionResult
         {
             get
             {
-                return robots;
+                return visionResult;
             }
             set
             {
-                robots = value;
-                NotifyOfPropertyChange(() => Robots);
+                visionResult = value;
+                NotifyOfPropertyChange(() => VisionResult);
             }
         }
 
 
-        private IRobotCommunication robot;
+        #endregion
+
+        #region 机器人相关
+
+        private ObservableCollection<Assembly> robotAssemblys = new ObservableCollection<Assembly>();
+
+        /// <summary>
+        /// 机器人通信实例列表
+        /// </summary>
+        public ObservableCollection<Assembly> RobotAssemblys
+        {
+            get
+            {
+                return robotAssemblys;
+            }
+            set
+            {
+                robotAssemblys = value;
+                NotifyOfPropertyChange(() => RobotAssemblys);
+            }
+        }
+
+        private Assembly robotAssembly;
 
         /// <summary>
         /// 机器人通信实例
         /// </summary>
-        public IRobotCommunication Robot
+        public Assembly RobotAssembly
         {
             get
             {
-                return robot;
+                return robotAssembly;
             }
             set
             {
-                robot = value;
-                NotifyOfPropertyChange(() => Robot);
+                robotAssembly = value;
+                NotifyOfPropertyChange(() => RobotAssembly);
+                NotifyOfPropertyChange(() => IsRobotAssemblyValid);
+            }
+        }
+
+        /// <summary>
+        /// 机器人DLL集合有效标志
+        /// </summary>
+        public bool IsRobotAssemblyValid
+        {
+            get
+            {
+                return RobotAssembly != null;
+            }
+        }
+
+        /// <summary>
+        /// 机器人通信接口
+        /// </summary>
+        private IRobotCommunication robotCommunication;
+
+        /// <summary>
+        /// 机器人连接状态标志
+        /// </summary>
+        public bool IsRobotConnect
+        {
+            get
+            {
+                return robotCommunication?.IsConnect ?? false;
             }
         }
 
@@ -212,7 +261,23 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 基本标定控件数据模型
         /// </summary>
-        public BaseCalibreationViewModel BaseCalibreationViewModel { get; } = new BaseCalibreationViewModel();
+        private BaseCalibreationViewModel baseCalibreationViewModel = new BaseCalibreationViewModel();
+
+        /// <summary>
+        /// 基本标定控件数据模型
+        /// </summary>
+        public BaseCalibreationViewModel BaseCalibreationViewModel
+        {
+            get
+            {
+                return baseCalibreationViewModel;
+            }
+            set
+            {
+                baseCalibreationViewModel = value;
+                NotifyOfPropertyChange(() => BaseCalibreationViewModel);
+            }
+        }
 
         private ObservableCollection<int> pointIndexs = new ObservableCollection<int>();
 
@@ -223,8 +288,12 @@ namespace VisionPlatform.Wpf
         {
             get
             {
-                
                 return pointIndexs;
+            }
+            set
+            {
+                pointIndexs = value;
+                NotifyOfPropertyChange(() => PointIndexs);
             }
         }
 
@@ -293,17 +362,198 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
+        /// 更新机器人集合
+        /// </summary>
+        public void UpdateRobotAssembly()
+        {
+            RobotAssemblys.Clear();
+
+            string robotDllRootPath = "VisionPlatform/RobotComunication";
+
+            //遍历目录
+            if (Directory.Exists(robotDllRootPath))
+            {
+                var directoryInfo = new DirectoryInfo(robotDllRootPath);
+
+                foreach (var item in directoryInfo.GetDirectories())
+                {
+                    //获取集合
+                    var dllPath = $"{robotDllRootPath}/{item.Name}/{item.Name}.dll";
+
+                    if (File.Exists(dllPath))
+                    {
+                        var assembly = Assembly.LoadFrom(dllPath);
+
+                        //将dll添加到集合字典中
+                        RobotAssemblys.Add(assembly);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置图像标定点
+        /// </summary>
+        /// <param name="index">点位索引</param>
+        /// <param name="px">图像坐标X</param>
+        /// <param name="py">图像坐标Y</param>
+        public void SetImageCalibrationPoint(int index, double px, double py)
+        {
+            if (index < BaseCalibreationViewModel.CalibPointList.Count)
+            {
+                //覆盖
+                BaseCalibreationViewModel.Cover(index, px, py, BaseCalibreationViewModel.CalibPointList[index].Qx, BaseCalibreationViewModel.CalibPointList[index].Qy);
+            }
+            else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+            {
+                //追加
+                BaseCalibreationViewModel.Add(px, py, 0, 0);
+            }
+            else
+            {
+                //无效输入
+            }
+        }
+
+        /// <summary>
+        /// 设置机器人标定点
+        /// </summary>
+        /// <param name="index">点位索引</param>
+        /// <param name="qx">机器人X</param>
+        /// <param name="qy">机器人Y</param>
+        public void SetRobotCalibrationPoint(int index, double qx, double qy)
+        {
+            if (index < BaseCalibreationViewModel.CalibPointList.Count)
+            {
+                //覆盖
+                BaseCalibreationViewModel.Cover(index, BaseCalibreationViewModel.CalibPointList[index].Px, BaseCalibreationViewModel.CalibPointList[index].Py, qx, qy);
+            }
+            else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+            {
+                //追加
+                BaseCalibreationViewModel.Add(0, 0, qx, qy);
+            }
+            else
+            {
+                //无效输入
+            }
+        }
+
+        /// <summary>
         /// 获取图像位置
         /// </summary>
         /// <param name="index">位置在列表中的索引</param>
         public void GetImageLocation(int index)
         {
+            if (index < 0)
+            {
+                return;
+            }
+
             if (IsSceneValid)
             {
                 string result;
-                Scene.Execute(1000, out result);
+                RunStatus runStatus = Scene.Execute(1000, out result);
+
+                if (runStatus.Result == EResult.Accept)
+                {
+                    VisionResult = result;
+
+                    foreach (var item in Scene.VisionFrame.Outputs)
+                    {
+                        if (item.Value is Location[])
+                        {
+                            var locations = item.Value as Location[];
+                            for (int i = 0; i < locations.Length; i++)
+                            {
+                                SetImageCalibrationPoint(index++, locations[i].X, locations[i].Y);
+                            }
+                        }
+                        else if (item.Value is Location)
+                        {
+                            var location = (Location)item.Value;
+                            SetImageCalibrationPoint(index++, location.X, location.Y);
+                        }
+                    }
+                }
+                else
+                {
+                    VisionResult = $"{runStatus.Result}: {runStatus.Message}";
+                }
             }
 
+        }
+
+        /// <summary>
+        /// 获取机器人位置
+        /// </summary>
+        /// <param name="index">位置在列表中的索引</param>
+        public void GetRobotLocation(int index)
+        {
+            if (index < 0)
+            {
+                return;
+            }
+
+            if (robotCommunication != null)
+            {
+                double x, y, z;
+                robotCommunication.GetRobotLocation(out x, out y, out z);
+                SetRobotCalibrationPoint(index, x, y);
+            }
+        }
+
+        /// <summary>
+        /// 连接机器人
+        /// </summary>
+        /// <param name="ip">机器人IP</param>
+        /// <param name="port">机器人端口号</param>
+        public void ConnectRobot(string ip, int port)
+        {
+            if (robotCommunication != null)
+            {
+
+            }
+
+            //从集合中获取实例
+            try
+            {
+                if (RobotAssembly != null)
+                {
+                    //创建视觉框架实例
+                    foreach (var item in RobotAssembly.ExportedTypes)
+                    {
+                        if (item.Name == "RobotComunication")
+                        {
+                            object obj = RobotAssembly.CreateInstance(item.FullName);
+
+                            if (obj is IRobotCommunication)
+                            {
+                                robotCommunication = obj as IRobotCommunication;
+                            }
+                        }
+                    }
+                }
+
+                if (robotCommunication != null)
+                {
+                    if (!robotCommunication.IsConnect)
+                    {
+                        robotCommunication.Connect(ip, port);
+                    }
+                    else
+                    {
+                        robotCommunication.Disconnect();
+                    }
+                }
+
+                NotifyOfPropertyChange(() => IsRobotConnect);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         #endregion
     }
