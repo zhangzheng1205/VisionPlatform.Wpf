@@ -35,5 +35,41 @@ namespace VisionPlatform.Wpf
         {
             MessageBox.Show(e.Message);
         }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var ofd = new Microsoft.Win32.OpenFileDialog();
+
+                ofd.DefaultExt = ".json";
+                ofd.Filter = "json file|*.json";
+
+                if (ofd.ShowDialog() == true)
+                {
+                    CalibrationFileTextBlock.Text = ofd.FileName;
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            //创建一个保存文件式的对话框  
+            var sfd = new Microsoft.Win32.SaveFileDialog();
+
+            //设置保存的文件的类型，注意过滤器的语法  
+            sfd.Filter = "json file|*.json";
+            sfd.FileName = "";
+
+            //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
+            if (sfd.ShowDialog() == true)
+            {
+                CalibrationFileTextBlock.Text = sfd.FileName;
+            }
+        }
     }
 }

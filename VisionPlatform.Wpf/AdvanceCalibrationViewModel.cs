@@ -11,6 +11,8 @@ using System.Windows.Controls;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
 using VisionPlatform.IRobot;
+using Framework.Infrastructure.Serialization;
+using Framework.Vision;
 
 namespace VisionPlatform.Wpf
 {
@@ -254,6 +256,25 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        private string robotConnectButtonContent = "连接";
+
+        /// <summary>
+        /// 机器人连接按钮内容
+        /// </summary>
+        public string RobotConnectButtonContent
+        {
+            get
+            {
+                return robotConnectButtonContent;
+            }
+            set
+            {
+                robotConnectButtonContent = value;
+                NotifyOfPropertyChange(() => RobotConnectButtonContent);
+            }
+        }
+
+
         #endregion
 
         #region 标定控件相关
@@ -349,6 +370,20 @@ namespace VisionPlatform.Wpf
         /// </summary>
         internal event EventHandler<MessageRaisedEventArgs> MessageRaised;
 
+        /// <summary>
+        /// 触发标定配置完成事件
+        /// </summary>
+        /// <param name="calibParam"></param>
+        protected void OnCalibrationConfigurationCompleted(CalibParam calibParam)
+        {
+            CalibrationConfigurationCompleted?.Invoke(this, new CalibrationConfigurationCompletedEventArgs(calibParam));
+        }
+
+        /// <summary>
+        /// 标定配置完成事件
+        /// </summary>
+        public event EventHandler<CalibrationConfigurationCompletedEventArgs> CalibrationConfigurationCompleted;
+
         #endregion
 
         #region 方法
@@ -358,7 +393,14 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void UpdateScenes()
         {
-            Scenes = new ObservableCollection<Scene>(sceneManager.Scenes.Values);
+            try
+            {
+                Scenes = new ObservableCollection<Scene>(sceneManager.Scenes.Values);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -366,28 +408,35 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void UpdateRobotAssembly()
         {
-            RobotAssemblys.Clear();
-
-            string robotDllRootPath = "VisionPlatform/RobotComunication";
-
-            //遍历目录
-            if (Directory.Exists(robotDllRootPath))
+            try
             {
-                var directoryInfo = new DirectoryInfo(robotDllRootPath);
+                RobotAssemblys.Clear();
 
-                foreach (var item in directoryInfo.GetDirectories())
+                string robotDllRootPath = "VisionPlatform/RobotComunication";
+
+                //遍历目录
+                if (Directory.Exists(robotDllRootPath))
                 {
-                    //获取集合
-                    var dllPath = $"{robotDllRootPath}/{item.Name}/{item.Name}.dll";
+                    var directoryInfo = new DirectoryInfo(robotDllRootPath);
 
-                    if (File.Exists(dllPath))
+                    foreach (var item in directoryInfo.GetDirectories())
                     {
-                        var assembly = Assembly.LoadFrom(dllPath);
+                        //获取集合
+                        var dllPath = $"{robotDllRootPath}/{item.Name}/{item.Name}.dll";
 
-                        //将dll添加到集合字典中
-                        RobotAssemblys.Add(assembly);
+                        if (File.Exists(dllPath))
+                        {
+                            var assembly = Assembly.LoadFrom(dllPath);
+
+                            //将dll添加到集合字典中
+                            RobotAssemblys.Add(assembly);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 
@@ -399,19 +448,26 @@ namespace VisionPlatform.Wpf
         /// <param name="py">图像坐标Y</param>
         public void SetImageCalibrationPoint(int index, double px, double py)
         {
-            if (index < BaseCalibreationViewModel.CalibPointList.Count)
+            try
             {
-                //覆盖
-                BaseCalibreationViewModel.Cover(index, px, py, BaseCalibreationViewModel.CalibPointList[index].Qx, BaseCalibreationViewModel.CalibPointList[index].Qy);
+                if (index < BaseCalibreationViewModel.CalibPointList.Count)
+                {
+                    //覆盖
+                    BaseCalibreationViewModel.Cover(index, px, py, BaseCalibreationViewModel.CalibPointList[index].Qx, BaseCalibreationViewModel.CalibPointList[index].Qy);
+                }
+                else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+                {
+                    //追加
+                    BaseCalibreationViewModel.Add(px, py, 0, 0);
+                }
+                else
+                {
+                    //无效输入
+                }
             }
-            else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+            catch (Exception ex)
             {
-                //追加
-                BaseCalibreationViewModel.Add(px, py, 0, 0);
-            }
-            else
-            {
-                //无效输入
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 
@@ -423,19 +479,26 @@ namespace VisionPlatform.Wpf
         /// <param name="qy">机器人Y</param>
         public void SetRobotCalibrationPoint(int index, double qx, double qy)
         {
-            if (index < BaseCalibreationViewModel.CalibPointList.Count)
+            try
             {
-                //覆盖
-                BaseCalibreationViewModel.Cover(index, BaseCalibreationViewModel.CalibPointList[index].Px, BaseCalibreationViewModel.CalibPointList[index].Py, qx, qy);
+                if (index < BaseCalibreationViewModel.CalibPointList.Count)
+                {
+                    //覆盖
+                    BaseCalibreationViewModel.Cover(index, BaseCalibreationViewModel.CalibPointList[index].Px, BaseCalibreationViewModel.CalibPointList[index].Py, qx, qy);
+                }
+                else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+                {
+                    //追加
+                    BaseCalibreationViewModel.Add(0, 0, qx, qy);
+                }
+                else
+                {
+                    //无效输入
+                }
             }
-            else if (index == BaseCalibreationViewModel.CalibPointList.Count)
+            catch (Exception ex)
             {
-                //追加
-                BaseCalibreationViewModel.Add(0, 0, qx, qy);
-            }
-            else
-            {
-                //无效输入
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 
@@ -445,41 +508,48 @@ namespace VisionPlatform.Wpf
         /// <param name="index">位置在列表中的索引</param>
         public void GetImageLocation(int index)
         {
-            if (index < 0)
+            try
             {
-                return;
-            }
-
-            if (IsSceneValid)
-            {
-                string result;
-                RunStatus runStatus = Scene.Execute(1000, out result);
-
-                if (runStatus.Result == EResult.Accept)
+                if (index < 0)
                 {
-                    VisionResult = result;
+                    return;
+                }
 
-                    foreach (var item in Scene.VisionFrame.Outputs)
+                if (IsSceneValid)
+                {
+                    string result;
+                    RunStatus runStatus = Scene.Execute(1000, out result);
+
+                    if (runStatus.Result == EResult.Accept)
                     {
-                        if (item.Value is Location[])
+                        VisionResult = result;
+
+                        foreach (var item in Scene.VisionFrame.Outputs)
                         {
-                            var locations = item.Value as Location[];
-                            for (int i = 0; i < locations.Length; i++)
+                            if (item.Value is Location[])
                             {
-                                SetImageCalibrationPoint(index++, locations[i].X, locations[i].Y);
+                                var locations = item.Value as Location[];
+                                for (int i = 0; i < locations.Length; i++)
+                                {
+                                    SetImageCalibrationPoint(index++, locations[i].X, locations[i].Y);
+                                }
+                            }
+                            else if (item.Value is Location)
+                            {
+                                var location = (Location)item.Value;
+                                SetImageCalibrationPoint(index++, location.X, location.Y);
                             }
                         }
-                        else if (item.Value is Location)
-                        {
-                            var location = (Location)item.Value;
-                            SetImageCalibrationPoint(index++, location.X, location.Y);
-                        }
+                    }
+                    else
+                    {
+                        VisionResult = $"{runStatus.Result}: {runStatus.Message}";
                     }
                 }
-                else
-                {
-                    VisionResult = $"{runStatus.Result}: {runStatus.Message}";
-                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
 
         }
@@ -490,16 +560,33 @@ namespace VisionPlatform.Wpf
         /// <param name="index">位置在列表中的索引</param>
         public void GetRobotLocation(int index)
         {
-            if (index < 0)
+            try
             {
-                return;
-            }
+                if (index < 0)
+                {
+                    return;
+                }
 
-            if (robotCommunication != null)
+                if (robotCommunication != null)
+                {
+                    double x, y, z;
+                    robotCommunication.GetRobotLocation(out x, out y, out z);
+                    SetRobotCalibrationPoint(index, x, y);
+
+                    if (index < baseCalibreationViewModel.CalibPointList.Count - 1)
+                    {
+                        baseCalibreationViewModel.SelectedIndex = index + 1;
+                    }
+                    else
+                    {
+                        baseCalibreationViewModel.SelectedIndex = -1;
+                    }
+                    RobotPointIndex = index + 1;
+                }
+            }
+            catch (Exception ex)
             {
-                double x, y, z;
-                robotCommunication.GetRobotLocation(out x, out y, out z);
-                SetRobotCalibrationPoint(index, x, y);
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
 
@@ -510,51 +597,100 @@ namespace VisionPlatform.Wpf
         /// <param name="port">机器人端口号</param>
         public void ConnectRobot(string ip, int port)
         {
-            if (robotCommunication != null)
-            {
-
-            }
-
-            //从集合中获取实例
             try
             {
-                if (RobotAssembly != null)
+                if (robotCommunication?.IsConnect == true)
                 {
-                    //创建视觉框架实例
-                    foreach (var item in RobotAssembly.ExportedTypes)
-                    {
-                        if (item.Name == "RobotComunication")
-                        {
-                            object obj = RobotAssembly.CreateInstance(item.FullName);
+                    //断开连接
+                    robotCommunication.Disconnect();
 
-                            if (obj is IRobotCommunication)
+                    RobotConnectButtonContent = "连接";
+                }
+                else
+                {
+                    //从集合中获取实例
+                    if ((robotCommunication == null) && (RobotAssembly != null))
+                    {
+                        //创建视觉框架实例
+                        foreach (var item in RobotAssembly.ExportedTypes)
+                        {
+                            if (item.Name == "RobotComunication")
                             {
-                                robotCommunication = obj as IRobotCommunication;
+                                object obj = RobotAssembly.CreateInstance(item.FullName);
+
+                                if (obj is IRobotCommunication)
+                                {
+                                    robotCommunication = obj as IRobotCommunication;
+                                }
                             }
                         }
                     }
-                }
 
-                if (robotCommunication != null)
-                {
-                    if (!robotCommunication.IsConnect)
+                    if (robotCommunication != null)
                     {
                         robotCommunication.Connect(ip, port);
-                    }
-                    else
-                    {
-                        robotCommunication.Disconnect();
+                        RobotConnectButtonContent = "断开";
                     }
                 }
-
                 NotifyOfPropertyChange(() => IsRobotConnect);
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 加载标定文件
+        /// </summary>
+        /// <param name="file">标定文件路径</param>
+        public void LoadCalibrationFile(string file)
+        {
+            try
+            {
+                if ((!string.IsNullOrEmpty(file)) && File.Exists(file))
+                {
+                    BaseCalibreationViewModel.CalibParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 保存配置文件
+        /// </summary>
+        /// <param name="file">标定文件路径</param>
+        public void SaveCalibrationFile(string file)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new ArgumentException("无效文件路径!");
+                }
+                if (!JsonSerialization.SerializeObjectToFile(BaseCalibreationViewModel.CalibParam, file))
+                {
+                    throw new Exception("保存文件失败!");
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 确认
+        /// </summary>
+        public void Accept()
+        {
+            OnCalibrationConfigurationCompleted(BaseCalibreationViewModel.CalibParam);
+        }
+
         #endregion
     }
 }

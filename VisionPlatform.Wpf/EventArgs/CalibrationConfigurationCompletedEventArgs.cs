@@ -13,15 +13,10 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 创建CalibrationConfigurationCompletedEventArgs新实例
         /// </summary>
-        /// <param name="filePath">文件路径</param>
         /// <param name="calibParam">标定参数</param>
-        /// <param name="isSuccess">成功标志</param>
-        public CalibrationConfigurationCompletedEventArgs(string filePath, CalibParam calibParam, bool isSuccess)
+        public CalibrationConfigurationCompletedEventArgs(CalibParam calibParam)
         {
-            FilePath = filePath;
             CalibParam = calibParam;
-            IsSuccess = isSuccess;
-
         }
 
         #endregion
@@ -29,19 +24,9 @@ namespace VisionPlatform.Wpf
         #region 属性
 
         /// <summary>
-        /// 文件路径
-        /// </summary>
-        public string FilePath { get; private set; }
-
-        /// <summary>
         /// 标定参数
         /// </summary>
         public CalibParam CalibParam { get; private set; }
-
-        /// <summary>
-        /// 成功标志
-        /// </summary>
-        public bool IsSuccess { get; private set; }
 
         #endregion
     }

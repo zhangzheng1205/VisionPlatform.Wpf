@@ -43,12 +43,11 @@ namespace VisionPlatform.Wpf
             //获取默认路径
             var viewModel = CameraConfigView.DataContext as CameraConfigViewModel;
             string cameraSerial = viewModel?.Camera?.Info?.SerialNumber;
+            var directoryInfo = new DirectoryInfo("./");
 
-            string defaultPath = "";
-            DirectoryInfo directoryInfo = new DirectoryInfo("./");
             if (!string.IsNullOrEmpty(cameraSerial))
             {
-                defaultPath = $"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile";
+                string defaultPath = $"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile";
 
                 directoryInfo = new DirectoryInfo(defaultPath);
 

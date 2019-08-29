@@ -184,6 +184,24 @@ namespace VisionPlatform.Wpf
 
         }
 
+        private int selectedIndex;
+
+        /// <summary>
+        /// 选择项索引
+        /// </summary>
+        public int SelectedIndex
+        {
+            get
+            {
+                return selectedIndex;
+            }
+            set
+            {
+                selectedIndex = value;
+                NotifyOfPropertyChange(() => SelectedIndex);
+            }
+        }
+
         #endregion
 
         #region 委托
