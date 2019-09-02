@@ -259,11 +259,6 @@ namespace VisionPlatform.Core
         public string CameraSerial { get; set; }
 
         /// <summary>
-        /// 标定文件
-        /// </summary>
-        public string CalibFile { get; set; }
-
-        /// <summary>
         /// 相机配置文件
         /// </summary>
         public string CameraConfigFile { get; set; }
@@ -272,6 +267,16 @@ namespace VisionPlatform.Core
         /// 相机配置参数
         /// </summary>
         private CameraConfigParam cameraConfigParam;
+
+        /// <summary>
+        /// 标定文件
+        /// </summary>
+        public string CalibrationFile { get; set; }
+
+        /// <summary>
+        /// 标定参数
+        /// </summary>
+        private CalibParam calibrationParam = new CalibParam();
 
         #endregion
 
@@ -430,7 +435,7 @@ namespace VisionPlatform.Core
         /// <param name="value">数值</param>
         /// <param name="subSeparatorChar">二级分隔符</param>
         /// <returns>转换的字符串</returns>
-        private static string ValueToString(object value, char subSeparatorChar)
+        private string ValueToString(object value, char subSeparatorChar)
         {
             if (value.GetType().Equals(typeof(float)) || value.GetType().Equals(typeof(double)))
             {
@@ -439,6 +444,12 @@ namespace VisionPlatform.Core
             else if (value is Location)
             {
                 var location = (Location)value;
+
+                //进行标定转换
+                //if (calibrationParam.)
+                {
+
+                }
 
                 return $"{location.X:0.###}{subSeparatorChar}{location.Y:0.###}{subSeparatorChar}{location.Angle:0.###}";
             }
@@ -455,7 +466,7 @@ namespace VisionPlatform.Core
         /// <param name="mainSeparatorChar">一级分割符</param>
         /// <param name="subSeparatorChar">二级分割符</param>
         /// <returns></returns>
-        private static string ConvertItemCollectionToString(ItemCollection itemBases, char mainSeparatorChar, char subSeparatorChar)
+        private string ConvertItemCollectionToString(ItemCollection itemBases, char mainSeparatorChar, char subSeparatorChar)
         {
             var visionResult = "";
 
@@ -542,9 +553,9 @@ namespace VisionPlatform.Core
 
                     if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                     {
-                        if (string.IsNullOrEmpty(CalibFile))
+                        if (string.IsNullOrEmpty(CalibrationFile))
                         {
-                            CalibFile = $"default.json";
+                            CalibrationFile = $"default.json";
                         }
                         if (string.IsNullOrEmpty(CameraConfigFile))
                         {
@@ -590,6 +601,24 @@ namespace VisionPlatform.Core
             {
                 cameraConfigParam = CameraFactory.GetCameraConfigration(CameraSerial);
                 JsonSerialization.SerializeObjectToFile(cameraConfigParam, configFile);
+            }
+
+        }
+
+        /// <summary>
+        /// 设置相机标定文件
+        /// </summary>
+        /// <param name="file">配置文件(不需包含目录)</param>
+        public void SetCameraCalibrationFile(string file)
+        {
+            CalibrationFile = file;
+
+            //获取相机配置参数
+            string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CalibrationFile}";
+
+            if (File.Exists(calibrationFile))
+            {
+                calibrationParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(calibrationFile);
             }
 
         }
@@ -779,8 +808,9 @@ namespace VisionPlatform.Core
                         {
                             SetCameraConfigFile(CameraConfigFile);
                         }
-                        
-                        //获取标定文件
+
+                        //配置标定信息
+                        SetCameraCalibrationFile(CalibrationFile);
                     }
 
                 }

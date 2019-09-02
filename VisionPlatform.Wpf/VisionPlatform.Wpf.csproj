@@ -123,10 +123,6 @@
       <DependentUpon>BaseCalibreationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="BaseCalibreationViewModel.cs" />
-    <Compile Include="CalibrationView.xaml.cs">
-      <DependentUpon>CalibrationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CalibrationViewModel.cs" />
     <Compile Include="CameraConfigView.xaml.cs">
       <DependentUpon>CameraConfigView.xaml</DependentUpon>
     </Compile>
@@ -137,6 +133,7 @@
     <Compile Include="CameraViewModel.cs" />
     <Compile Include="Converters\BoolInvertConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\MatrixConverter.cs" />
     <Compile Include="EventArgs\CalibrationConfigurationCompletedEventArgs.cs" />
     <Compile Include="EventArgs\CalibrationPointListChangedEventArgs.cs" />
     <Compile Include="EventArgs\CalibrationPointSelectionChangedEventArgs.cs" />
@@ -179,10 +176,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BaseCalibreationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CalibrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

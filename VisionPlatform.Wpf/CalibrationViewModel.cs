@@ -502,7 +502,7 @@ namespace VisionPlatform.Wpf
         /// <param name="isSuccess">成功标志</param>
         protected void OnCalibrationConfigurationCompleted(string filePath, CalibParam calibParam, bool isSuccess)
         {
-            CalibrationConfigurationCompleted?.Invoke(this, new CalibrationConfigurationCompletedEventArgs(filePath, calibParam, isSuccess));
+            CalibrationConfigurationCompleted?.Invoke(this, new CalibrationConfigurationCompletedEventArgs(calibParam));
 
         }
 

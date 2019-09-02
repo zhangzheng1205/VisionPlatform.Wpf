@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,10 +41,27 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                var ofd = new Microsoft.Win32.OpenFileDialog();
+                var directoryInfo = new DirectoryInfo("./VisionPlatform/Camera/CameraConfig");
 
-                ofd.DefaultExt = ".json";
-                ofd.Filter = "json file|*.json";
+                if (!string.IsNullOrEmpty(CameraSerialTextBlock.Text))
+                {
+                    string defaultPath = $"VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
+
+                    directoryInfo = new DirectoryInfo(defaultPath);
+                }
+
+                //假如目录不存在,则创建对应的目录
+                if (!directoryInfo.Exists)
+                {
+                    directoryInfo.Create();
+                }
+
+                var ofd = new Microsoft.Win32.OpenFileDialog
+                {
+                    DefaultExt = ".json",
+                    Filter = "json file|*.json",
+                    InitialDirectory = directoryInfo.FullName,
+                };
 
                 if (ofd.ShowDialog() == true)
                 {
@@ -58,12 +76,28 @@ namespace VisionPlatform.Wpf
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            //创建一个保存文件式的对话框  
-            var sfd = new Microsoft.Win32.SaveFileDialog();
+            var directoryInfo = new DirectoryInfo("./VisionPlatform/Camera/CameraConfig");
 
-            //设置保存的文件的类型，注意过滤器的语法  
-            sfd.Filter = "json file|*.json";
-            sfd.FileName = "";
+            if (!string.IsNullOrEmpty(CameraSerialTextBlock.Text))
+            {
+                string defaultPath = $"VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
+
+                directoryInfo = new DirectoryInfo(defaultPath);
+            }
+
+            //假如目录不存在,则创建对应的目录
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+
+            //创建一个保存文件式的对话框  
+            var sfd = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "json file|*.json",
+                FileName = "",
+                InitialDirectory = directoryInfo.FullName,
+            };
 
             //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
             if (sfd.ShowDialog() == true)

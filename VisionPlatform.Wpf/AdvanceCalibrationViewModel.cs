@@ -139,6 +139,8 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => Scene);
                 NotifyOfPropertyChange(() => IsSceneValid);
                 NotifyOfPropertyChange(() => CalibrationOperationViewWindow);
+                NotifyOfPropertyChange(() => CameraSerial);
+                NotifyOfPropertyChange(() => CameraName);
             }
         }
 
@@ -187,6 +189,36 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        /// <summary>
+        /// 相机序列号
+        /// </summary>
+        public string CameraSerial
+        {
+            get
+            {
+                if (IsSceneValid && (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera))
+                {
+                    return Scene.CameraSerial;
+                }
+
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 相机名
+        /// </summary>
+        public string CameraName
+        {
+            get
+            {
+                if (IsSceneValid && (Scene?.VisionFrame.IsEnableCamera == true))
+                {
+                    return Scene.Camera.ToString();
+                }
+                return "";
+            }
+        }
 
         #endregion
 
@@ -649,10 +681,13 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                if ((!string.IsNullOrEmpty(file)) && File.Exists(file))
+                if (string.IsNullOrEmpty(file) || (!File.Exists(file)))
                 {
-                    BaseCalibreationViewModel.CalibParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(file);
+                    throw new ArgumentException("无效文件路径!");
                 }
+
+                BaseCalibreationViewModel.CalibParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(file);
+
             }
             catch (Exception ex)
             {

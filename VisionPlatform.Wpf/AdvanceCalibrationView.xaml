@@ -29,6 +29,10 @@
                             <ComboBox ItemsSource="{Binding Scenes}" SelectedValue="{Binding Scene}"/>
                         </DockPanel>
                         <DockPanel IsEnabled="{Binding IsSceneValid}" Margin="10,10,10,0">
+                            <TextBlock MinWidth="70">相机名</TextBlock>
+                            <TextBlock Text="{Binding CameraName, Mode=OneWay}"/>
+                        </DockPanel>
+                        <DockPanel IsEnabled="{Binding IsSceneValid}" Margin="10,10,10,0">
                             <TextBlock MinWidth="60" Margin="0,0,10,0" VerticalAlignment="Center">图像结果</TextBlock>
                             <Button cal:Message.Attach="GetImageLocation(ImageIndexComboBox.SelectedItem)" MinWidth="40" DockPanel.Dock="Right" Margin="10,0,0,0">获取</Button>
                             <TextBlock DockPanel.Dock="Right" Margin="10,0,0,0" VerticalAlignment="Center">(若多个结果则延顺)</TextBlock>
@@ -61,6 +65,7 @@
             </GroupBox>
             <GroupBox DockPanel.Dock="Bottom" Header="参数加载/保存" Margin="5">
                 <StackPanel Orientation="Horizontal" Margin="10,10,10,5">
+                    <TextBlock x:Name="CameraSerialTextBlock" Text="{Binding CameraSerial}" Visibility="Collapsed"/>
                     <TextBlock x:Name="CalibrationFileTextBlock" Visibility="Collapsed"/>
                     <Button cal:Message.Attach="LoadCalibrationFile(CalibrationFileTextBlock.Text)" Click="LoadButton_Click" MinWidth="60" Margin="0,0,10,0">加载文件</Button>
                     <Button cal:Message.Attach="SaveCalibrationFile(CalibrationFileTextBlock.Text)" Click="SaveButton_Click" MinWidth="60" Margin="0,0,10,0">保存文件</Button>
