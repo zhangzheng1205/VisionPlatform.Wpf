@@ -626,8 +626,8 @@ namespace VisionPlatform.Wpf
                 SceneParamDebugWindow = new Window();
                 SceneParamDebugWindow.MinWidth = view.MinWidth;
                 SceneParamDebugWindow.MinHeight = view.MinHeight;
-                SceneParamDebugWindow.Width = view.MinWidth + 100;
-                SceneParamDebugWindow.Height = view.MinHeight + 100;
+                SceneParamDebugWindow.Width = view.MinWidth + 600;
+                SceneParamDebugWindow.Height = view.MinHeight + 200;
                 SceneParamDebugWindow.Content = view;
                 SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 //SceneParamDebugWindow.Owner = Window.GetWindow(this);
@@ -664,11 +664,11 @@ namespace VisionPlatform.Wpf
             {
                 string visionResult = "";
                 RunStatus runStatus = Scene?.ExecuteByFile(file, out visionResult);
-                if (runStatus.Result == EResult.Accept)
+                if ((runStatus.Result == EResult.Accept) || (runStatus.Result == EResult.Warning))
                 {
                     VisionResult = visionResult;
                 }
-                else
+                else if ((runStatus.Result == EResult.Error) || (runStatus.Result == EResult.Reject))
                 {
                     OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
                 }
@@ -688,11 +688,11 @@ namespace VisionPlatform.Wpf
             {
                 string visionResult = "";
                 RunStatus runStatus = Scene?.Execute(2000, out visionResult);
-                if (runStatus.Result == EResult.Accept)
+                if ((runStatus.Result == EResult.Accept) || (runStatus.Result == EResult.Warning))
                 {
                     VisionResult = visionResult;
                 }
-                else
+                else if ((runStatus.Result == EResult.Error) || (runStatus.Result == EResult.Reject))
                 {
                     OnMessageRaised(MessageLevel.Err, runStatus.Message, runStatus.Exception);
                 }

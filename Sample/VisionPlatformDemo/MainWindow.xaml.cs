@@ -46,6 +46,7 @@ namespace VisionPlatformDemo
                 CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
                 CameraFactory.AddCamera(@"E:\测试图像\眼镜");
                 CameraFactory.AddCamera(@"E:\测试图像\定位圆");
+                CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
             }
 
             //获取场景管理器实例(单例)

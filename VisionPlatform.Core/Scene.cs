@@ -964,6 +964,9 @@ namespace VisionPlatform.Core
         {
             visionResult = "";
 
+            //开始计时
+            totalProcessStopwatch.Restart();
+
             try
             {
                 if ((VisionFrame == null) || (!VisionFrame.IsInit))
@@ -981,6 +984,12 @@ namespace VisionPlatform.Core
             catch (Exception ex)
             {
                 return new RunStatus(0, EResult.Error, ex.Message);
+            }
+            finally
+            {
+                //停止计时
+                totalProcessStopwatch.Stop();
+                VisionFrame.RunStatus.TotalTime = totalProcessStopwatch.Elapsed.TotalMilliseconds;
             }
 
             return VisionFrame.RunStatus;

@@ -19,82 +19,96 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="5">
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <Label Content="场景名称:" Margin="0,0,10,0"/>
-                <Label Content="{Binding SceneName, Mode=OneWay}"/>
-            </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+            <ScrollViewer.Resources>
+                <Style TargetType="ScrollBar">
+                    <Style.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Width" Value="10"/>
+                            <Setter Property="MinWidth" Value="5"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Resources>
 
-            <StackPanel Margin="0,10,0,0" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal">
-                <Label Content="绑定相机:" Margin="0,0,10,0"/>
-                <Label Content="{Binding CameraName, Mode=OneWay}" />
-            </StackPanel>
+            <StackPanel Margin="5">
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <Label Content="场景名称:" Margin="0,0,10,0"/>
+                    <Label Content="{Binding SceneName, Mode=OneWay}"/>
+                </StackPanel>
 
-            <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableInput, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Label Content="输入参数:"/>
-                <DataGrid ItemsSource="{Binding Inputs}"
+                <StackPanel Margin="0,0,0,0" Visibility="{Binding IsEnableCamera, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal">
+                    <Label Content="绑定相机:" Margin="0,0,10,0"/>
+                    <Label Content="{Binding CameraName, Mode=OneWay}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableInput, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Label Content="输入参数:"/>
+                    <DataGrid ItemsSource="{Binding Inputs}"
                       CanUserSortColumns="True" 
                       CanUserAddRows="False"
                       AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
-                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Value, StringFormat={}{0:0.###}}" Header="数值" IsReadOnly="False" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
+                        <DataGrid.Columns>
+                            <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
+                            <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding Value, StringFormat={}{0:0.###}}" Header="数值" IsReadOnly="False" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
 
-            <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableOutput, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Label Content="输出参数:"/>
-                <DataGrid ItemsSource="{Binding Outputs}"
+                <StackPanel Margin="0,10,0,0"  Visibility="{Binding IsEnableOutput, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Label Content="输出参数:"/>
+                    <DataGrid ItemsSource="{Binding Outputs}"
                       CanUserSortColumns="True" 
                       CanUserAddRows="False"
                       AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
-                        <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
-                        <DataGridTextColumn Binding="{Binding Value, StringFormat={}{0:0.###}}" Header="数值" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
-                        <DataGridCheckBoxColumn Binding="{Binding IsAvailable}"  Header="有效性"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Description}" Header="描述"  IsReadOnly="True" Width="Auto"/>
+                            <!--<DataGridTextColumn Binding="{Binding Name}" Header="名称" IsReadOnly="True" Width="Auto"/>-->
+                            <DataGridTextColumn Binding="{Binding Value, StringFormat={}{0:0.###}}" Header="数值" IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding ValueType}" Header="数值类型" IsReadOnly="True" Width="Auto"/>
+                            <DataGridCheckBoxColumn Binding="{Binding IsAvailable}"  Header="有效性"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
 
-            <StackPanel Margin="0,10,0,0">
-                <Label Content="运行状态:"/>
-                <DataGrid ItemsSource="{Binding RunStatus, Mode=OneWay}" 
+                <StackPanel Margin="0,10,0,0">
+                    <Label Content="运行状态:"/>
+                    <DataGrid ItemsSource="{Binding RunStatus, Mode=OneWay}" 
                           CanUserSortColumns="True" 
                           CanUserAddRows="False"
                           AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding ProcessingTime, StringFormat={}{0:F3}}" Header="算法时间" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding TotalTime, StringFormat={}{0:F3}}" Header="总时间" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Result}" Header="执行结果" IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Message}" Header="错误信息"  IsReadOnly="True" Width="Auto"/>
-                        <DataGridTextColumn Binding="{Binding Exception}" Header="异常"  IsReadOnly="True" Width="Auto"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
-            
-            <StackPanel Margin="0,10,0,0">
-                <Label Content="运行结果:"/>
-                <TextBox Text="{Binding VisionResult}" IsReadOnly="True"/>
-            </StackPanel>
-            
-            <StackPanel Margin="0,10,0,0">
-                <Label Content="场景控制"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ImagePathTextBlock" Visibility="Collapsed"/>
-                    <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" Content="执行图片" MinWidth="60" Margin="0,0,10,0"/>
-                    <Button cal:Message.Attach="Execute" Content="执行" MinWidth="60" Margin="0,0,10,0"/>
-                    <!--<Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding ProcessingTime, StringFormat={}{0:F3}}" Header="算法时间" IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding TotalTime, StringFormat={}{0:F3}}" Header="总时间" IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding Result}" Header="执行结果" IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding Message}" Header="错误信息"  IsReadOnly="True" Width="Auto"/>
+                            <DataGridTextColumn Binding="{Binding Exception}" Header="异常"  IsReadOnly="True" Width="Auto"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <Label Content="运行结果:"/>
+                    <TextBox Text="{Binding VisionResult}" IsReadOnly="True"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <Label Content="场景控制"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="ImagePathTextBlock" Visibility="Collapsed"/>
+                        <Button cal:Message.Attach="ExecuteByFile(ImagePathTextBlock.Text)" Click="ExecuteImageButton_Click" Content="执行图片" MinWidth="60" Margin="0,0,10,0"/>
+                        <Button cal:Message.Attach="Execute" Content="执行" MinWidth="60" Margin="0,0,10,0"/>
+                        <!--<Button cal:Message.Attach="ExecuteAsync" Content="异步执行" MinWidth="60"/>
                     <StackPanel Width="10"/>-->
-                    <Button cal:Message.Attach="Accept" Content="保存" MinWidth="60" Margin="0,0,10,0"/>
-                    <!--<Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>-->
+                        <Button cal:Message.Attach="Accept" Content="保存" MinWidth="60" Margin="0,0,10,0"/>
+                        <!--<Button cal:Message.Attach="SaveScene" Content="保存场景" MinWidth="60"/>-->
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
+
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray" />
         <ContentControl Content="{Binding ConfigWindow}" Grid.Column="2" Margin="5"/>
     </Grid>

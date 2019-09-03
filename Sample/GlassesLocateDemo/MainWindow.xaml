@@ -1,0 +1,28 @@
+﻿<Window x:Class="GlassesLocateDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GlassesLocateDemo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" MinWidth="300"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ContentControl x:Name="RunningWindow1" Grid.Column="0" Margin="5"/>
+            <ContentControl x:Name="RunningWindow2" Grid.Column="1" Margin="5"/>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="AliceBlue"/>
+    </Grid>
+</Window>

@@ -39,5 +39,24 @@ namespace VisionPlatform.BaseType
             Angle = angle;
         }
 
+        /// <summary>
+        /// 转换成字符串
+        /// </summary>
+        /// <returns>字符串</returns>
+        public override string ToString()
+        {
+            return ToString(','); 
+        }
+
+        /// <summary>
+        /// 转换成字符串
+        /// </summary>
+        /// <param name="separatorChar">分隔符</param>
+        /// <returns>结果字符串</returns>
+        public string ToString(char separatorChar)
+        {
+            return $"{X:0.###}{separatorChar}{Y:0.###}{separatorChar}{Angle:0.###}";
+        }
+
     }
 }
