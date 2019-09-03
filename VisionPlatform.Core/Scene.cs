@@ -1,5 +1,6 @@
 ﻿using Framework.Camera;
 using Framework.Infrastructure.Serialization;
+using Framework.Vision;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -444,14 +445,16 @@ namespace VisionPlatform.Core
             else if (value is Location)
             {
                 var location = (Location)value;
+                double qx = location.X;
+                double qy = location.Y;
 
                 //进行标定转换
-                //if (calibrationParam.)
+                if (calibrationParam.IsValid)
                 {
-
+                    SimpleVision.Calibration.Calibrate(calibrationParam.Matrix, location.X, location.Y, out qx, out qy);
                 }
 
-                return $"{location.X:0.###}{subSeparatorChar}{location.Y:0.###}{subSeparatorChar}{location.Angle:0.###}";
+                return $"{qx:0.###}{subSeparatorChar}{qy:0.###}{subSeparatorChar}{location.Angle:0.###}";
             }
             else
             {

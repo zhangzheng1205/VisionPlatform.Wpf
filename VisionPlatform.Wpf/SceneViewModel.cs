@@ -289,6 +289,43 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        private ObservableCollection<string> cameraCalibrationFiles;
+
+        /// <summary>
+        /// 相机标定文件列表
+        /// </summary>
+        public ObservableCollection<string> CameraCalibrationFiles
+        {
+            get
+            {
+                return cameraCalibrationFiles;
+            }
+            set
+            {
+                cameraCalibrationFiles = value;
+                NotifyOfPropertyChange(() => CameraCalibrationFiles);
+            }
+        }
+
+        /// <summary>
+        /// 选择的标定文件
+        /// </summary>
+        public string SelectionCameraCalibrationFiles
+        {
+            get
+            {
+                return Scene?.CameraConfigFile;
+            }
+            set
+            {
+                if ((Scene != null) && (value != "不选择任何文件"))
+                {
+                    Scene.SetCameraCalibrationFile(value);
+                }
+                NotifyOfPropertyChange(() => CameraCalibrationFiles);
+            }
+        }
+
         #endregion
 
         #region 分隔符
@@ -473,8 +510,14 @@ namespace VisionPlatform.Wpf
         {
             if (SelectedCamera != null)
             {
-                FileInfo[] fileInfos = CameraFactory.GetCameraConfigFile(SelectedCamera?.Info.SerialNumber);
-                CameraConfigFiles = new ObservableCollection<string>(fileInfos.ToList().ConvertAll(x=>x.Name));
+                //获取相机配置文件
+                FileInfo[] configFileInfos = CameraFactory.GetCameraConfigFile(SelectedCamera?.Info.SerialNumber);
+                CameraConfigFiles = new ObservableCollection<string>(configFileInfos.ToList().ConvertAll(x=>x.Name));
+
+                //获取相机标定文件
+                FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFile(SelectedCamera?.Info.SerialNumber);
+                CameraCalibrationFiles = new ObservableCollection<string>(calibrationFileInfos.ToList().ConvertAll(x => x.Name));
+                CameraCalibrationFiles.Add("不选择任何文件");
             }
             
         }

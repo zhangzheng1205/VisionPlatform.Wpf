@@ -339,13 +339,13 @@ namespace VisionPlatform.Core
 
         #endregion
 
-        #region 配置管理
+        #region 文件管理
 
         /// <summary>
         /// 获取相机配置文件
         /// </summary>
         /// <param name="cameraSerial">相机配置文件</param>
-        /// <returns></returns>
+        /// <returns>文件信息列表</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
         public static FileInfo[] GetCameraConfigFile(string cameraSerial)
         {
@@ -353,7 +353,7 @@ namespace VisionPlatform.Core
 
             try
             {
-                if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
+                if (DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                 {
                     var directory = new DirectoryInfo($"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile");
 
@@ -366,6 +366,39 @@ namespace VisionPlatform.Core
 
             return fileInfos;
         }
+
+
+        /// <summary>
+        /// 获取相机标定文件
+        /// </summary>
+        /// <param name="cameraSerial">相机配置文件</param>
+        /// <returns>文件信息列表</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        public static FileInfo[] GetCameraCalibrationFile(string cameraSerial)
+        {
+            FileInfo[] fileInfos = new FileInfo[0];
+
+            try
+            {
+                if (DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
+                {
+                    var directory = new DirectoryInfo($"VisionPlatform/Camera/CameraConfig/{cameraSerial}/CalibrationFile");
+
+                    fileInfos = directory?.GetFiles("*.json", SearchOption.TopDirectoryOnly) ?? new FileInfo[0];
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return fileInfos;
+        }
+
+
+
+        #endregion
+
+        #region 配置管理
 
         /// <summary>
         /// 配置相机
