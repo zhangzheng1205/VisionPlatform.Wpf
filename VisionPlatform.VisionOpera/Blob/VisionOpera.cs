@@ -27,19 +27,15 @@ namespace Blob
             //配置输入参数
             Inputs = new ItemCollection()
             {
-                new ItemBase("MinGray", (int)0, "最小灰度(阈值分割)"),
-                new ItemBase("MaxGray", (int)120, "最大灰度(阈值分割)"),
-                new ItemBase("MorphologicalKernalWidth", (int)20, "形态学运算核宽度"),
-                new ItemBase("MorphologicalKernalHeight", (int)50, "形态学运算核高度"),
-                new ItemBase("ErosionRectangleWidth", (int)10, "腐蚀矩形宽度"),
-                new ItemBase("ErosionRectangleHeight", (int)90, "腐蚀矩形高度"),
+                new ItemBase("MinThreshold", 0, typeof(int), "最小阈值"),
+                new ItemBase("MaxThreshold", 70, typeof(int), "最大阈值"),
+                new ItemBase("BlobArea", 10000, typeof(int), "过滤杂斑面积"),
             };
 
             //配置输出参数
             Outputs = new ItemCollection()
             {
-                new ItemBase("X", typeof(double[]), "X坐标"),
-                new ItemBase("Y", typeof(double[]), "Y坐标"),
+                new ItemBase("ItemLocation", new Location[0], typeof(Location[]), "物料位置(数组)")
             };
         }
 
@@ -188,6 +184,140 @@ namespace Blob
 
         }
 
+        // Procedures 
+        // Chapter: Graphics / Text
+        // Short Description: This procedure writes a text message. 
+        public void disp_message(HTuple hv_WindowHandle, HTuple hv_String, HTuple hv_CoordSystem,
+            HTuple hv_Row, HTuple hv_Column, HTuple hv_Color, HTuple hv_Box)
+        {
+
+
+
+            // Local iconic variables 
+
+            // Local control variables 
+
+            HTuple hv_GenParamName = null, hv_GenParamValue = null;
+            HTuple hv_Color_COPY_INP_TMP = hv_Color.Clone();
+            HTuple hv_Column_COPY_INP_TMP = hv_Column.Clone();
+            HTuple hv_CoordSystem_COPY_INP_TMP = hv_CoordSystem.Clone();
+            HTuple hv_Row_COPY_INP_TMP = hv_Row.Clone();
+
+            // Initialize local and output iconic variables 
+            //This procedure displays text in a graphics window.
+            //
+            //Input parameters:
+            //WindowHandle: The WindowHandle of the graphics window, where
+            //   the message should be displayed
+            //String: A tuple of strings containing the text message to be displayed
+            //CoordSystem: If set to 'window', the text position is given
+            //   with respect to the window coordinate system.
+            //   If set to 'image', image coordinates are used.
+            //   (This may be useful in zoomed images.)
+            //Row: The row coordinate of the desired text position
+            //   A tuple of values is allowed to display text at different
+            //   positions.
+            //Column: The column coordinate of the desired text position
+            //   A tuple of values is allowed to display text at different
+            //   positions.
+            //Color: defines the color of the text as string.
+            //   If set to [], '' or 'auto' the currently set color is used.
+            //   If a tuple of strings is passed, the colors are used cyclically...
+            //   - if |Row| == |Column| == 1: for each new textline
+            //   = else for each text position.
+            //Box: If Box[0] is set to 'true', the text is written within an orange box.
+            //     If set to' false', no box is displayed.
+            //     If set to a color string (e.g. 'white', '#FF00CC', etc.),
+            //       the text is written in a box of that color.
+            //     An optional second value for Box (Box[1]) controls if a shadow is displayed:
+            //       'true' -> display a shadow in a default color
+            //       'false' -> display no shadow
+            //       otherwise -> use given string as color string for the shadow color
+            //
+            //It is possible to display multiple text strings in a single call.
+            //In this case, some restrictions apply:
+            //- Multiple text positions can be defined by specifying a tuple
+            //  with multiple Row and/or Column coordinates, i.e.:
+            //  - |Row| == n, |Column| == n
+            //  - |Row| == n, |Column| == 1
+            //  - |Row| == 1, |Column| == n
+            //- If |Row| == |Column| == 1,
+            //  each element of String is display in a new textline.
+            //- If multiple positions or specified, the number of Strings
+            //  must match the number of positions, i.e.:
+            //  - Either |String| == n (each string is displayed at the
+            //                          corresponding position),
+            //  - or     |String| == 1 (The string is displayed n times).
+            //
+            //
+            //Convert the parameters for disp_text.
+            if ((int)((new HTuple(hv_Row_COPY_INP_TMP.TupleEqual(new HTuple()))).TupleOr(
+                new HTuple(hv_Column_COPY_INP_TMP.TupleEqual(new HTuple())))) != 0)
+            {
+
+                return;
+            }
+            if ((int)(new HTuple(hv_Row_COPY_INP_TMP.TupleEqual(-1))) != 0)
+            {
+                hv_Row_COPY_INP_TMP = 12;
+            }
+            if ((int)(new HTuple(hv_Column_COPY_INP_TMP.TupleEqual(-1))) != 0)
+            {
+                hv_Column_COPY_INP_TMP = 12;
+            }
+            //
+            //Convert the parameter Box to generic parameters.
+            hv_GenParamName = new HTuple();
+            hv_GenParamValue = new HTuple();
+            if ((int)(new HTuple((new HTuple(hv_Box.TupleLength())).TupleGreater(0))) != 0)
+            {
+                if ((int)(new HTuple(((hv_Box.TupleSelect(0))).TupleEqual("false"))) != 0)
+                {
+                    //Display no box
+                    hv_GenParamName = hv_GenParamName.TupleConcat("box");
+                    hv_GenParamValue = hv_GenParamValue.TupleConcat("false");
+                }
+                else if ((int)(new HTuple(((hv_Box.TupleSelect(0))).TupleNotEqual("true"))) != 0)
+                {
+                    //Set a color other than the default.
+                    hv_GenParamName = hv_GenParamName.TupleConcat("box_color");
+                    hv_GenParamValue = hv_GenParamValue.TupleConcat(hv_Box.TupleSelect(0));
+                }
+            }
+            if ((int)(new HTuple((new HTuple(hv_Box.TupleLength())).TupleGreater(1))) != 0)
+            {
+                if ((int)(new HTuple(((hv_Box.TupleSelect(1))).TupleEqual("false"))) != 0)
+                {
+                    //Display no shadow.
+                    hv_GenParamName = hv_GenParamName.TupleConcat("shadow");
+                    hv_GenParamValue = hv_GenParamValue.TupleConcat("false");
+                }
+                else if ((int)(new HTuple(((hv_Box.TupleSelect(1))).TupleNotEqual("true"))) != 0)
+                {
+                    //Set a shadow color other than the default.
+                    hv_GenParamName = hv_GenParamName.TupleConcat("shadow_color");
+                    hv_GenParamValue = hv_GenParamValue.TupleConcat(hv_Box.TupleSelect(1));
+                }
+            }
+            //Restore default CoordSystem behavior.
+            if ((int)(new HTuple(hv_CoordSystem_COPY_INP_TMP.TupleNotEqual("window"))) != 0)
+            {
+                hv_CoordSystem_COPY_INP_TMP = "image";
+            }
+            //
+            if ((int)(new HTuple(hv_Color_COPY_INP_TMP.TupleEqual(""))) != 0)
+            {
+                //disp_text does not accept an empty string for Color.
+                hv_Color_COPY_INP_TMP = new HTuple();
+            }
+            //
+            HOperatorSet.DispText(hv_WindowHandle, hv_String, hv_CoordSystem_COPY_INP_TMP,
+                hv_Row_COPY_INP_TMP, hv_Column_COPY_INP_TMP, hv_Color_COPY_INP_TMP, hv_GenParamName,
+                hv_GenParamValue);
+
+            return;
+        }
+
         /// <summary>
         /// 执行
         /// </summary>
@@ -201,31 +331,21 @@ namespace Blob
 
             stopwatch.Restart();
 
-            HObject ho_GrayImage = null, ho_Regions = null;
-            HObject ho_RegionClosing = null, ho_RegionFillUp = null, ho_ConnectedRegions = null;
-            HObject ho_SelectedRegions = null, ho_RegionOpening = null;
-            HObject ho_Rectangle = null, ho_RegionErosion = null, ho_ConnectedRegions1 = null;
-            HObject ho_SelectedRegions1 = null, ho_Rectangle1 = null, ho_Cross = null;
+
+            HObject ho_Image20190904144527, ho_GrayImage;
+            HObject ho_Regions, ho_ConnectedRegions, ho_SelectedRegions;
+            HObject ho_ContCircle;
 
             // Local control variables 
-            HTuple hv_Row1 = new HTuple();
-            HTuple hv_Column1 = new HTuple(), hv_Phi = new HTuple();
-            HTuple hv_Length1 = new HTuple(), hv_Length2 = new HTuple();
-            HTuple hv_Area = new HTuple(), hv_Row = new HTuple(), hv_Column = new HTuple();
+            HTuple hv_Number = new HTuple();
+            HTuple hv_Row = null, hv_Column = null, hv_Radius = null;
             // Initialize local and output iconic variables 
+            HOperatorSet.GenEmptyObj(out ho_Image20190904144527);
             HOperatorSet.GenEmptyObj(out ho_GrayImage);
             HOperatorSet.GenEmptyObj(out ho_Regions);
-            HOperatorSet.GenEmptyObj(out ho_RegionClosing);
-            HOperatorSet.GenEmptyObj(out ho_RegionFillUp);
             HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
             HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
-            HOperatorSet.GenEmptyObj(out ho_RegionOpening);
-            HOperatorSet.GenEmptyObj(out ho_Rectangle);
-            HOperatorSet.GenEmptyObj(out ho_RegionErosion);
-            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions1);
-            HOperatorSet.GenEmptyObj(out ho_SelectedRegions1);
-            HOperatorSet.GenEmptyObj(out ho_Rectangle1);
-            HOperatorSet.GenEmptyObj(out ho_Cross);
+            HOperatorSet.GenEmptyObj(out ho_ContCircle);
 
             try
             {
@@ -279,42 +399,63 @@ namespace Blob
                 ho_GrayImage.Dispose();
                 HOperatorSet.Rgb1ToGray(hImage, out ho_GrayImage);
 
-                //动态阈值的方式提取眼镜区域
+                //阈值分割
                 ho_Regions.Dispose();
-                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, new HTuple(Inputs["MinGray"].Value), new HTuple(Inputs["MaxGray"].Value));
+                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, new HTuple(Inputs["MinThreshold"].Value), new HTuple(Inputs["MaxThreshold"].Value));
 
-                //提取眼镜区域
-                ho_RegionClosing.Dispose();
-                HOperatorSet.ClosingRectangle1(ho_Regions, out ho_RegionClosing, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
-                ho_RegionFillUp.Dispose();
-                HOperatorSet.FillUp(ho_RegionClosing, out ho_RegionFillUp);
+                //提取有效区域
                 ho_ConnectedRegions.Dispose();
-                HOperatorSet.Connection(ho_RegionFillUp, out ho_ConnectedRegions);
+                HOperatorSet.Connection(ho_Regions, out ho_ConnectedRegions);
+                ho_SelectedRegions.Dispose();
+                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions, "area",
+                    "and", new HTuple(Inputs["BlobArea"].Value), 999999999);
 
-                HOperatorSet.AreaCenter(ho_ConnectedRegions, out hv_Area, out hv_Row, out hv_Column);
-                ho_Cross.Dispose();
-                HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row, hv_Column, 35, 0.785398);
-
-                //显示结果
-                if (runningWindow != null)
+                HOperatorSet.CountObj(ho_SelectedRegions, out hv_Number);
+                if (hv_Number.I > 0)
                 {
-                    HOperatorSet.DispObj(ho_GrayImage, runningWindow);
-                    HOperatorSet.DispObj(ho_ConnectedRegions, runningWindow);
-                    HOperatorSet.DispObj(ho_Cross, runningWindow);
+
+                    //提取有效区域
+                    HOperatorSet.SmallestCircle(ho_SelectedRegions, out hv_Row, out hv_Column, out hv_Radius);
+                    ho_ContCircle.Dispose();
+                    HOperatorSet.GenCircleContourXld(out ho_ContCircle, hv_Row, hv_Column, hv_Radius + 20,
+                        0, 6.28318, "positive", 1);
+
+                    var locations = new Location[hv_Column.Length];
+                    for (int i = 0; i < hv_Column.Length; i++)
+                    {
+                        locations[i] = new Location(hv_Column[i].D, hv_Row[i].D, 0);
+                    }
+                    Outputs["ItemLocation"].Value = locations;
+
+                    //显示结果
+                    if (runningWindow != null)
+                    {
+                        HOperatorSet.DispObj(ho_GrayImage, runningWindow);
+                        HOperatorSet.DispObj(ho_ContCircle, runningWindow);
+                        disp_message(runningWindow, (hv_Column + new HTuple(",")) + hv_Row, "image",
+            hv_Row - 100, hv_Column + 100, "black", "true");
+                    }
+
+                    if (configWindow != null)
+                    {
+                        HOperatorSet.DispObj(ho_GrayImage, configWindow);
+                        HOperatorSet.DispObj(ho_ContCircle, configWindow);
+                        disp_message(configWindow, (hv_Column + new HTuple(",")) + hv_Row, "image",
+            hv_Row - 100, hv_Column + 100, "black", "true");
+                    }
+
+                    stopwatch.Stop();
+                    RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
+                }
+                else
+                {
+                    //没有有效的结果
+                    Outputs["ItemLocation"].Value = new Location[0];
+
+                    stopwatch.Stop();
+                    RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds, EResult.Warning, "没找到有效目标");
                 }
 
-                if (configWindow != null)
-                {
-                    HOperatorSet.DispObj(ho_GrayImage, configWindow);
-                    HOperatorSet.DispObj(ho_ConnectedRegions, configWindow);
-                    HOperatorSet.DispObj(ho_Cross, configWindow);
-                }
-
-                Outputs["X"].Value = hv_Column.DArr;
-                Outputs["Y"].Value = hv_Column.DArr;
-
-                stopwatch.Stop();
-                RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
 
                 outputs = new ItemCollection(Outputs);
 
@@ -328,6 +469,12 @@ namespace Blob
             finally
             {
                 hImage.Dispose();
+
+                ho_GrayImage.Dispose();
+                ho_Regions.Dispose();
+                ho_ConnectedRegions.Dispose();
+                ho_SelectedRegions.Dispose();
+                ho_ContCircle.Dispose();
             }
         }
 

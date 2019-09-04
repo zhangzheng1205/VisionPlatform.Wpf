@@ -1,25 +1,14 @@
 ﻿using Framework.Infrastructure.Logging;
 using Framework.Infrastructure.Logging.Log4Net;
+using Framework.TcpSocket;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
 using VisionPlatform.Wpf;
-using Framework.TcpSocket;
-using System.Net;
 
 namespace GlassesLocateDemo
 {
@@ -64,7 +53,7 @@ namespace GlassesLocateDemo
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.Pylon;
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
@@ -104,7 +93,7 @@ namespace GlassesLocateDemo
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            CameraFactory.RemoveAllCameras();
         }
 
         private void AddSceneButton_Click(object sender, RoutedEventArgs e)
@@ -349,13 +338,9 @@ namespace GlassesLocateDemo
             {
                 if (!IsRobotConnect)
                 {
-                    //获取本地IP名
-                    string hostName = Dns.GetHostName();
-                    IPHostEntry localhost = Dns.GetHostEntry(hostName);
-
                     var tcpSocketClientConfiguration = new TcpSocketClientConfiguration();
                     tcpSocketClientConfiguration.FrameBuilder = new RawBufferFrameBuilder();
-                    RobotTcpSocketClient = new TcpSocketClient(IPAddress.Parse(RobotIP.Text), int.Parse(RobotPort.Text), localhost.AddressList[localhost.AddressList.Length - 1], localPort++, tcpSocketClientConfiguration);
+                    RobotTcpSocketClient = new TcpSocketClient(IPAddress.Parse(RobotIP.Text), int.Parse(RobotPort.Text), IPAddress.Parse("192.168.0.110"), localPort++, tcpSocketClientConfiguration);
 
                     RobotTcpSocketClient.ServerConnected += RobotTcpSocketClient_ServerConnected;
                     RobotTcpSocketClient.ServerDisconnected += RobotTcpSocketClient_ServerDisconnected;
@@ -385,7 +370,7 @@ namespace GlassesLocateDemo
         {
             //获取机器人消息
             string Message = Encoding.UTF8.GetString(e.Data, e.DataOffset, e.DataLength);
-            
+
             if (SceneManager.Scenes.ContainsKey(Message.TrimEnd('$')))
             {
 
@@ -412,7 +397,7 @@ namespace GlassesLocateDemo
                 });
             }
             else
-            { 
+            {
                 //返回错误信息
                 e.Client.Send(Encoding.UTF8.GetBytes("Invalid Command$"));
             }

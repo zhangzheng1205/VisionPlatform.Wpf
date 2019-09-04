@@ -560,10 +560,12 @@ namespace VisionPlatform.Core
                         {
                             CalibrationFile = $"default.json";
                         }
+                        SetCameraCalibrationFile(CalibrationFile);
                         if (string.IsNullOrEmpty(CameraConfigFile))
                         {
                             CameraConfigFile = $"default.json";
                         }
+                        SetCameraConfigFile(CameraConfigFile);
                     }
                 }
             }
@@ -617,11 +619,16 @@ namespace VisionPlatform.Core
             CalibrationFile = file;
 
             //获取相机配置参数
-            string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CalibrationFile}";
+            string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/CalibrationFile/{CalibrationFile}";
 
             if (File.Exists(calibrationFile))
             {
                 calibrationParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(calibrationFile);
+            }
+            else
+            {
+                calibrationParam = new CalibParam();
+                JsonSerialization.SerializeObjectToFile(calibrationParam, calibrationFile);
             }
 
         }

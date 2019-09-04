@@ -1,5 +1,6 @@
 ﻿using HalconDotNet;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using VisionPlatform.BaseType;
@@ -27,12 +28,12 @@ namespace GlassesLocate
             //配置输入参数
             Inputs = new ItemCollection()
             {
-                new ItemBase("HMinThreshold", 15, typeof(int), "H通道最小阈值"),
-                new ItemBase("HMaxThreshold", 77, typeof(int), "H通道最大阈值"),
-                new ItemBase("SMinThreshold", 14, typeof(int), "S通道最小阈值"),
-                new ItemBase("SMaxThreshold", 55, typeof(int), "S通道最大阈值"),
-                new ItemBase("IMinThreshold", 171, typeof(int), "I通道最小阈值"),
-                new ItemBase("IMaxThreshold", 226, typeof(int), "I通道最大阈值"),
+                new ItemBase("HMinThreshold", 60, typeof(int), "H通道最小阈值"),
+                new ItemBase("HMaxThreshold", 140, typeof(int), "H通道最大阈值"),
+                new ItemBase("SMinThreshold", 0, typeof(int), "S通道最小阈值"),
+                new ItemBase("SMaxThreshold", 35, typeof(int), "S通道最大阈值"),
+                new ItemBase("IMinThreshold", 90, typeof(int), "I通道最小阈值"),
+                new ItemBase("IMaxThreshold", 135, typeof(int), "I通道最大阈值"),
 
                 new ItemBase("OpenRadius", 3.5, typeof(double), "开运算半径"),
                 new ItemBase("CloseRadius", 1.0, typeof(double), "闭运算半径"),
@@ -41,7 +42,7 @@ namespace GlassesLocate
                 new ItemBase("MaxArea", 250000, typeof(int), "最大筛选面积"),
 
                 new ItemBase("MinLen1", 600, typeof(int), "最小长边长度"),
-                new ItemBase("MaxLen1", 1000, typeof(int), "最小长边长度"),
+                new ItemBase("MaxLen1", 1500, typeof(int), "最小长边长度"),
 
                 new ItemBase("MinLen2", 40, typeof(int), "最小短边长度"),
                 new ItemBase("MaxLen2", 200, typeof(int), "最小短边长度"),
@@ -52,7 +53,7 @@ namespace GlassesLocate
             //配置输出参数
             Outputs = new ItemCollection()
             {
-                new ItemBase("ItemLocation", new Location(), typeof(Location), "物料位置")
+                new ItemBase("ItemLocation", new Location[0], typeof(Location[]), "物料位置(数组)")
             };
 
         }
@@ -229,7 +230,7 @@ namespace GlassesLocate
             HObject ho_JuncPoints = null, ho_RegionDifference1 = null, ho_ConnectedRegions1 = null;
             HObject ho_SelectedRegions1 = null, ho_Rectangle = null, ho_Contours = null;
             HObject ho_SelectedXLD = null, ho_UnionContours = null, ho_SelectedXLD1 = null;
-            HObject ho_Cross = null;
+            HObject ho_Cross = null, ho_ObjectSelected = null;
 
             HTuple hv_Number = new HTuple();
             HTuple hv_Row = new HTuple(), hv_Column = new HTuple();
@@ -272,6 +273,7 @@ namespace GlassesLocate
             HOperatorSet.GenEmptyObj(out ho_UnionContours);
             HOperatorSet.GenEmptyObj(out ho_SelectedXLD1);
             HOperatorSet.GenEmptyObj(out ho_Cross);
+            HOperatorSet.GenEmptyObj(out ho_ObjectSelected);
 
             try
             {
@@ -284,8 +286,7 @@ namespace GlassesLocate
                     isInit = true;
 
                     ho_ROI_0?.Dispose();
-                    HOperatorSet.GenRectangle2(out ho_ROI_0, 967.498, 1255, (new HTuple(2.39768)).TupleRad()
-                        , 1363.19, 889.424);
+                    HOperatorSet.GenRectangle1(out ho_ROI_0, 0, 0, height, width);
                 }
 
                 if (runningWindow == null)
@@ -379,72 +380,82 @@ namespace GlassesLocate
                 HOperatorSet.CountObj(ho_SelectedRegions, out hv_Number);
                 if (hv_Number.I > 0)
                 {
-                    //产生骨骼
-                    ho_Skeleton.Dispose();
-                    HOperatorSet.Skeleton(ho_SelectedRegions, out ho_Skeleton);
+                    Location[] locations = new Location[hv_Number.I];
 
-                    //计算骨骼端点和关节点
-                    ho_EndPoints.Dispose(); ho_JuncPoints.Dispose();
-                    HOperatorSet.JunctionsSkeleton(ho_Skeleton, out ho_EndPoints, out ho_JuncPoints
-                        );
-
-                    //从骨骼中去除关节点
-                    ho_RegionDifference1.Dispose();
-                    HOperatorSet.Difference(ho_Skeleton, ho_JuncPoints, out ho_RegionDifference1
-                        );
-
-                    //提取最长的骨骼
-                    ho_ConnectedRegions1.Dispose();
-                    HOperatorSet.Connection(ho_RegionDifference1, out ho_ConnectedRegions1
-                        );
-                    ho_SelectedRegions1.Dispose();
-                    HOperatorSet.SelectShapeStd(ho_ConnectedRegions1, out ho_SelectedRegions1,
-                        "max_area", 70);
-
-                    HOperatorSet.SmallestRectangle2(ho_SelectedRegions1, out hv_Row, out hv_Column,
-                        out hv_Phi, out hv_Length1, out hv_Length2);
-                    ho_Rectangle.Dispose();
-                    HOperatorSet.GenRectangle2(out ho_Rectangle, hv_Row, hv_Column, hv_Phi,
-                        hv_Length1, hv_Length2);
-
-                    //转成xld
-                    ho_Contours.Dispose();
-                    HOperatorSet.GenContoursSkeletonXld(ho_Skeleton, out ho_Contours, 1,
-                        "filter");
-
-                    ho_SelectedXLD.Dispose();
-                    HOperatorSet.SelectShapeXld(ho_Contours, out ho_SelectedXLD, (new HTuple("rect2_phi")).TupleConcat(
-                        "rect2_phi"), "or", (((((hv_Phi.TupleDeg()) - new HTuple(Inputs["XLDPhi"].Value))).TupleRad())).TupleConcat(
-                        ((((hv_Phi.TupleDeg()) + 180) - new HTuple(Inputs["XLDPhi"].Value))).TupleRad()), (((((hv_Phi.TupleDeg()
-                        ) + new HTuple(Inputs["XLDPhi"].Value))).TupleRad())).TupleConcat(((((hv_Phi.TupleDeg()) + 180) + new HTuple(Inputs["XLDPhi"].Value))).TupleRad()
-                        ));
-                    ho_UnionContours.Dispose();
-                    HOperatorSet.UnionAdjacentContoursXld(ho_SelectedXLD, out ho_UnionContours,
-                        30, 1, "attr_keep");
-                    ho_SelectedXLD1.Dispose();
-                    HOperatorSet.SelectShapeXld(ho_UnionContours, out ho_SelectedXLD1, "area",
-                        "and", 150, 99999);
-                    HOperatorSet.GetContourXld(ho_SelectedXLD1, out hv_Row1, out hv_Col1);
-                    HOperatorSet.TupleMedian(hv_Row1, out hv_RowMedian);
-                    HOperatorSet.TupleMedian(hv_Col1, out hv_ColMedian);
-                    ho_Cross.Dispose();
-                    HOperatorSet.GenCrossContourXld(out ho_Cross, hv_RowMedian, hv_ColMedian,
-                        100, ((new HTuple(45)).TupleRad()) + hv_Phi);
-
-                    if (runningWindow != null)
+                    for (int i = 0; i < hv_Number.I; i++)
                     {
-                        HOperatorSet.DispObj(ho_SelectedXLD1, runningWindow);
-                        HOperatorSet.DispObj(ho_Cross, runningWindow);
-                    }
+                        ho_ObjectSelected.Dispose();
+                        HOperatorSet.SelectObj(ho_SelectedRegions, out ho_ObjectSelected, i + 1);
 
-                    if (configWindow != null)
-                    {
-                        HOperatorSet.DispObj(ho_SelectedXLD1, configWindow);
-                        HOperatorSet.DispObj(ho_Cross, configWindow);
+                        //产生骨骼
+                        ho_Skeleton.Dispose();
+                        HOperatorSet.Skeleton(ho_ObjectSelected, out ho_Skeleton);
+
+                        //计算骨骼端点和关节点
+                        ho_EndPoints.Dispose(); ho_JuncPoints.Dispose();
+                        HOperatorSet.JunctionsSkeleton(ho_Skeleton, out ho_EndPoints, out ho_JuncPoints
+                            );
+
+                        //从骨骼中去除关节点
+                        ho_RegionDifference1.Dispose();
+                        HOperatorSet.Difference(ho_Skeleton, ho_JuncPoints, out ho_RegionDifference1
+                            );
+
+                        //提取最长的骨骼
+                        ho_ConnectedRegions1.Dispose();
+                        HOperatorSet.Connection(ho_RegionDifference1, out ho_ConnectedRegions1
+                            );
+                        ho_SelectedRegions1.Dispose();
+                        HOperatorSet.SelectShapeStd(ho_ConnectedRegions1, out ho_SelectedRegions1,
+                            "max_area", 70);
+
+                        HOperatorSet.SmallestRectangle2(ho_SelectedRegions1, out hv_Row, out hv_Column,
+                            out hv_Phi, out hv_Length1, out hv_Length2);
+                        ho_Rectangle.Dispose();
+                        HOperatorSet.GenRectangle2(out ho_Rectangle, hv_Row, hv_Column, hv_Phi,
+                            hv_Length1, hv_Length2);
+
+                        //转成xld
+                        ho_Contours.Dispose();
+                        HOperatorSet.GenContoursSkeletonXld(ho_Skeleton, out ho_Contours, 1,
+                            "filter");
+
+                        ho_SelectedXLD.Dispose();
+                        HOperatorSet.SelectShapeXld(ho_Contours, out ho_SelectedXLD, (new HTuple("rect2_phi")).TupleConcat(
+                            "rect2_phi"), "or", (((((hv_Phi.TupleDeg()) - new HTuple(Inputs["XLDPhi"].Value))).TupleRad())).TupleConcat(
+                            ((((hv_Phi.TupleDeg()) + 180) - new HTuple(Inputs["XLDPhi"].Value))).TupleRad()), (((((hv_Phi.TupleDeg()
+                            ) + new HTuple(Inputs["XLDPhi"].Value))).TupleRad())).TupleConcat(((((hv_Phi.TupleDeg()) + 180) + new HTuple(Inputs["XLDPhi"].Value))).TupleRad()
+                            ));
+                        ho_UnionContours.Dispose();
+                        HOperatorSet.UnionAdjacentContoursXld(ho_SelectedXLD, out ho_UnionContours,
+                            30, 1, "attr_keep");
+                        ho_SelectedXLD1.Dispose();
+                        HOperatorSet.SelectShapeXld(ho_UnionContours, out ho_SelectedXLD1, "area",
+                            "and", 150, 99999);
+                        HOperatorSet.GetContourXld(ho_SelectedXLD1, out hv_Row1, out hv_Col1);
+                        HOperatorSet.TupleMedian(hv_Row1, out hv_RowMedian);
+                        HOperatorSet.TupleMedian(hv_Col1, out hv_ColMedian);
+                        ho_Cross.Dispose();
+                        HOperatorSet.GenCrossContourXld(out ho_Cross, hv_RowMedian, hv_ColMedian,
+                            100, ((new HTuple(45)).TupleRad()) + hv_Phi);
+
+                        if (runningWindow != null)
+                        {
+                            HOperatorSet.DispObj(ho_SelectedXLD1, runningWindow);
+                            HOperatorSet.DispObj(ho_Cross, runningWindow);
+                        }
+
+                        if (configWindow != null)
+                        {
+                            HOperatorSet.DispObj(ho_SelectedXLD1, configWindow);
+                            HOperatorSet.DispObj(ho_Cross, configWindow);
+                        }
+
+                        locations[i] = new Location(hv_ColMedian[0].D, hv_RowMedian[0].D, hv_Phi[0].D);
                     }
 
                     //封装有效结果
-                    Outputs["ItemLocation"].Value = new Location(hv_ColMedian[0].D, hv_RowMedian[0].D, hv_Phi[0].D);
+                    Outputs["ItemLocation"].Value = locations;
 
                     stopwatch.Stop();
                     RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
@@ -452,7 +463,7 @@ namespace GlassesLocate
                 else
                 {
                     //没有有效的结果
-                    Outputs["ItemLocation"].Value = new Location();
+                    Outputs["ItemLocation"].Value = new Location[0];
 
                     stopwatch.Stop();
                     RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds, EResult.Warning, "没找到有效目标");
@@ -505,7 +516,8 @@ namespace GlassesLocate
                 ho_UnionContours.Dispose();
                 ho_SelectedXLD1.Dispose();
                 ho_Cross.Dispose();
-
+                ho_ObjectSelected.Dispose();
+                
             }
         }
 
