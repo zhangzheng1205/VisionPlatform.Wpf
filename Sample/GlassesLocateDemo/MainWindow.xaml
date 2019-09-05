@@ -62,8 +62,18 @@
                                 <DockPanel x:Name="RobotConnectionInputDockPanel">
                                     <TextBlock Text="IP/端口" Margin="0,0,10,0" VerticalAlignment="Center"></TextBlock>
                                     <TextBox x:Name="RobotPort" DockPanel.Dock="Right" MinWidth="40" Margin="10,0,0,0" TabIndex="1">5000</TextBox>
-                                    <TextBox x:Name="RobotIP" MinWidth="80" TabIndex="0">192.168.0.199</TextBox>
+                                    <TextBox x:Name="RobotIP" MinWidth="80" TabIndex="0">192.168.0.1</TextBox>
                                 </DockPanel>
+                            </DockPanel>
+
+                            <DockPanel IsEnabled="{Binding IsRobotAssemblyValid}" Margin="10,10,10,0">
+                                <TextBlock Text="接收" Margin="0,0,10,0" VerticalAlignment="Center" MinWidth="40"></TextBlock>
+                                <TextBox x:Name="RecvMsgTextBox" MinWidth="80"  IsReadOnly="True"/>
+                            </DockPanel>
+
+                            <DockPanel IsEnabled="{Binding IsRobotAssemblyValid}" Margin="10,10,10,0">
+                                <TextBlock Text="发送" Margin="0,0,10,0" VerticalAlignment="Center" MinWidth="40"></TextBlock>
+                                <TextBox x:Name="SendMsgTextBox" MinWidth="80" IsReadOnly="True"/>
                             </DockPanel>
                         </StackPanel>
                     </GroupBox>

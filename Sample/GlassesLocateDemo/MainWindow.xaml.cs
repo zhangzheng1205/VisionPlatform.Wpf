@@ -1,8 +1,10 @@
 ﻿using Framework.Infrastructure.Logging;
 using Framework.Infrastructure.Logging.Log4Net;
+using Framework.Infrastructure.Serialization;
 using Framework.TcpSocket;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows;
@@ -39,9 +41,28 @@ namespace GlassesLocateDemo
 
         private int localPort = 1000;
 
+        public SystemParams SystemParams { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            SystemParams = new SystemParams();
+
+            if (File.Exists("SystemParams.json"))
+            {
+                var obj = JsonSerialization.DeserializeObjectFromFile<SystemParams>("SystemParams.json");
+
+                if (obj != null)
+                {
+                    SystemParams = obj;
+                }
+            }
+            else
+            {
+                JsonSerialization.SerializeObjectToFile(SystemParams, "SystemParams.json");
+            }
+
 
             //创建日志接口
             Logging.Init(new Log4Net());
@@ -49,20 +70,21 @@ namespace GlassesLocateDemo
 
             //更新视觉框架集合
             VisionFrameFactory.UpdateAssembly();
-            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
+            VisionFrameFactory.DefaultVisionFrameType = SystemParams.DefaultVisionFrameType;
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.Pylon;
+            CameraFactory.DefaultCameraSdkType = SystemParams.DefaultCameraSdkType;
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
-                CameraFactory.AddCamera(@"E:\测试图像\刹车片");
-                CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
-                CameraFactory.AddCamera(@"E:\测试图像\眼镜");
-                CameraFactory.AddCamera(@"E:\测试图像\定位圆");
-                CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
+                CameraFactory.AddCamera(@"D:\20190904CXC\图片");
+                //CameraFactory.AddCamera(@"E:\测试图像\刹车片");
+                //CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
+                //CameraFactory.AddCamera(@"E:\测试图像\眼镜");
+                //CameraFactory.AddCamera(@"E:\测试图像\定位圆");
+                //CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
             }
 
             //获取场景管理器实例(单例)
@@ -88,12 +110,31 @@ namespace GlassesLocateDemo
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //加载训练集
 
+            try
+            {
+                SrVision.SRV_Init(SystemParams.SrDetFilePath);
+            }
+            catch (Exception ex)
+            {
+                Logging.Error(ex);
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             CameraFactory.RemoveAllCameras();
+            try
+            {
+                SrVision.SRV_Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logging.Error(ex);
+            }
+
         }
 
         private void AddSceneButton_Click(object sender, RoutedEventArgs e)
@@ -247,11 +288,65 @@ namespace GlassesLocateDemo
             VisionResultTextBox.Text = result;
         }
 
+        /// <summary>
+        /// 执行场景
+        /// </summary>
+        /// <param name="scene"></param>
+        private RunStatus ExecuteScene(Scene scene, out string visionResult, out int glassesType)
+        {
+            visionResult = "";
+            glassesType = -1;
+
+            if (RunningWindow1.Content != scene.VisionFrame.RunningWindow)
+            {
+                RunningWindow1.Content = scene.VisionFrame.RunningWindow;
+            }
+
+
+            RunStatus runStatus = scene.Execute(2000, out visionResult);
+            ShowResult(runStatus, visionResult);
+
+            if (runStatus.Result == EResult.Accept)
+            {
+                if (File.Exists(SystemParams.DefaultImageFile))
+                {
+                    try
+                    {
+                        try
+                        {
+                            glassesType = SrVision.SRV_Run(SystemParams.DefaultImageFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logging.Error(ex);
+                        }
+                        UpdateGlassesType(glassesType);
+                    }
+                    catch (Exception)
+                    {
+                        UpdateGlassesType(-1);
+                    }
+                }
+            }
+            else if(runStatus.Result == EResult.Error)
+            {
+                UpdateGlassesType(-1);
+                MessageBox.Show(runStatus.Message);
+            }
+            else
+            {
+                UpdateGlassesType(-1);
+            }
+
+            return runStatus;
+        }
+
         private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string result;
+                int glassesType = -1;
                 var scene1 = ScenesListView.SelectedItem as Scene;
 
                 if (scene1 == null)
@@ -259,19 +354,7 @@ namespace GlassesLocateDemo
                     return;
                 }
 
-                if (RunningWindow1.Content != scene1.VisionFrame.RunningWindow)
-                {
-                    RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
-
-                }
-                RunStatus runStatus = scene1.Execute(1000, out result);
-                ShowResult(runStatus, result);
-
-                if (runStatus.Result == EResult.Error)
-                {
-                    MessageBox.Show(runStatus.Message);
-                }
-
+                ExecuteScene(scene1, out result, out glassesType);
             }
             catch (Exception ex)
             {
@@ -340,7 +423,7 @@ namespace GlassesLocateDemo
                 {
                     var tcpSocketClientConfiguration = new TcpSocketClientConfiguration();
                     tcpSocketClientConfiguration.FrameBuilder = new RawBufferFrameBuilder();
-                    RobotTcpSocketClient = new TcpSocketClient(IPAddress.Parse(RobotIP.Text), int.Parse(RobotPort.Text), IPAddress.Parse("192.168.0.110"), localPort++, tcpSocketClientConfiguration);
+                    RobotTcpSocketClient = new TcpSocketClient(IPAddress.Parse(RobotIP.Text), int.Parse(RobotPort.Text), IPAddress.Parse(SystemParams.IP), localPort++, tcpSocketClientConfiguration);
 
                     RobotTcpSocketClient.ServerConnected += RobotTcpSocketClient_ServerConnected;
                     RobotTcpSocketClient.ServerDisconnected += RobotTcpSocketClient_ServerDisconnected;
@@ -365,34 +448,49 @@ namespace GlassesLocateDemo
             }
 
         }
+        private void UpdateGlassesType(int glassesType)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (glassesType >= 0)
+                {
+                    GlassesTypeLabel.Content = glassesType.ToString();
+                }
+                else
+                {
+                    GlassesTypeLabel.Content = "无效结果";
+                }
+            });
 
+        }
         private void RobotTcpSocketClient_ServerDataReceived(object sender, TcpServerDataReceivedEventArgs e)
         {
             //获取机器人消息
             string Message = Encoding.UTF8.GetString(e.Data, e.DataOffset, e.DataLength);
-
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                RecvMsgTextBox.Text = $"{DateTime.Now}:{Message}";
+            });
             if (SceneManager.Scenes.ContainsKey(Message.TrimEnd('$')))
             {
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (RunningWindow1.Content != SceneManager.Scenes[Message.TrimEnd('$')].VisionFrame.RunningWindow)
-                    {
-                        RunningWindow1.Content = SceneManager.Scenes[Message.TrimEnd('$')].VisionFrame.RunningWindow;
-                    }
-
                     string visionResult;
-                    RunStatus runStatus = SceneManager.Scenes[Message.TrimEnd('$')].Execute(2000, out visionResult);
-                    ShowResult(runStatus, visionResult);
+                    int glassesType = -1;
+                    RunStatus runStatus = ExecuteScene(SceneManager.Scenes[Message.TrimEnd('$')], out visionResult, out glassesType);
 
                     if (runStatus.Result == EResult.Accept)
                     {
                         //返回执行结果
-                        e.Client.Send(Encoding.UTF8.GetBytes($"{visionResult}$"));
+                        e.Client.Send(Encoding.UTF8.GetBytes($"{glassesType},{visionResult}$"));
+                        SendMsgTextBox.Text = $"{DateTime.Now}:{glassesType},{visionResult}$";
                     }
                     else
                     {
+                        UpdateGlassesType(-1);
                         e.Client.Send(Encoding.UTF8.GetBytes("NG$"));
+                        SendMsgTextBox.Text = $"{DateTime.Now}:NG$";
                     }
                 });
             }
@@ -400,6 +498,11 @@ namespace GlassesLocateDemo
             {
                 //返回错误信息
                 e.Client.Send(Encoding.UTF8.GetBytes("Invalid Command$"));
+                
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SendMsgTextBox.Text = $"{DateTime.Now}:Invalid Command$";
+                });
             }
         }
 

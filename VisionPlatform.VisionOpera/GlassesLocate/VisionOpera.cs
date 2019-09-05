@@ -48,6 +48,9 @@ namespace GlassesLocate
                 new ItemBase("MaxLen2", 200, typeof(int), "最小短边长度"),
 
                 new ItemBase("XLDPhi", 30, typeof(int), "XLD骨骼方向范围(角度)"),
+
+                new ItemBase("AutoSave", true, typeof(bool), "是否自动保存图片"),
+                new ItemBase("ImagePath", "image.bmp", typeof(string), "自动保存的图像路径"),
             };
 
             //配置输出参数
@@ -226,7 +229,7 @@ namespace GlassesLocate
             HObject ho_ImageReduced3 = null, ho_Regions2 = null, ho_RegionOpening2 = null;
             HObject ho_RegionClosing2 = null, ho_RegionDifference = null;
             HObject ho_RegionOpening3 = null, ho_ConnectedRegions = null;
-            HObject ho_SelectedRegions = null, ho_Skeleton = null, ho_EndPoints = null;
+            HObject ho_RegionFillUp = null, ho_SelectedRegions = null, ho_Skeleton = null, ho_EndPoints = null;
             HObject ho_JuncPoints = null, ho_RegionDifference1 = null, ho_ConnectedRegions1 = null;
             HObject ho_SelectedRegions1 = null, ho_Rectangle = null, ho_Contours = null;
             HObject ho_SelectedXLD = null, ho_UnionContours = null, ho_SelectedXLD1 = null;
@@ -238,6 +241,7 @@ namespace GlassesLocate
             HTuple hv_Length2 = new HTuple(), hv_Row1 = new HTuple();
             HTuple hv_Col1 = new HTuple(), hv_RowMedian = new HTuple();
             HTuple hv_ColMedian = new HTuple(), hv_Exception = new HTuple();
+            HTuple hv_Length = new HTuple();
 
             HOperatorSet.GenEmptyObj(out ho_ImageReduced);
             HOperatorSet.GenEmptyObj(out ho_R);
@@ -260,6 +264,7 @@ namespace GlassesLocate
             HOperatorSet.GenEmptyObj(out ho_RegionDifference);
             HOperatorSet.GenEmptyObj(out ho_RegionOpening3);
             HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_RegionFillUp);
             HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
             HOperatorSet.GenEmptyObj(out ho_Skeleton);
             HOperatorSet.GenEmptyObj(out ho_EndPoints);
@@ -370,8 +375,10 @@ namespace GlassesLocate
                     8);
                 ho_ConnectedRegions.Dispose();
                 HOperatorSet.Connection(ho_RegionOpening3, out ho_ConnectedRegions);
+                ho_RegionFillUp.Dispose();
+                HOperatorSet.FillUp(ho_ConnectedRegions, out ho_RegionFillUp);
                 ho_SelectedRegions.Dispose();
-                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions, (
+                HOperatorSet.SelectShape(ho_RegionFillUp, out ho_SelectedRegions, (
                     (new HTuple("area")).TupleConcat("rect2_len1")).TupleConcat("rect2_len2"),
                     "and", ((new HTuple(Inputs["MinArea"].Value)).TupleConcat(new HTuple(Inputs["MinLen1"].Value))).TupleConcat(new HTuple(Inputs["MinLen2"].Value)), ((new HTuple(Inputs["MaxArea"].Value)).TupleConcat(
                     new HTuple(Inputs["MaxLen1"].Value))).TupleConcat(new HTuple(Inputs["MaxLen2"].Value)));
@@ -429,14 +436,18 @@ namespace GlassesLocate
                         ho_UnionContours.Dispose();
                         HOperatorSet.UnionAdjacentContoursXld(ho_SelectedXLD, out ho_UnionContours,
                             30, 1, "attr_keep");
+                        
+                        //选择最长的xlds
+                        HTuple hv_SortIndex = new HTuple();
+                        HOperatorSet.LengthXld(ho_UnionContours, out hv_Length);
+                        HOperatorSet.TupleSortIndex(hv_Length, out hv_SortIndex);
                         ho_SelectedXLD1.Dispose();
-                        HOperatorSet.SelectShapeXld(ho_UnionContours, out ho_SelectedXLD1, "area",
-                            "and", 150, 99999);
+                        HOperatorSet.SelectObj(ho_UnionContours, out ho_SelectedXLD1, hv_SortIndex[hv_SortIndex.Length - 1].I + 1);
                         HOperatorSet.GetContourXld(ho_SelectedXLD1, out hv_Row1, out hv_Col1);
-                        HOperatorSet.TupleMedian(hv_Row1, out hv_RowMedian);
-                        HOperatorSet.TupleMedian(hv_Col1, out hv_ColMedian);
+
+                        
                         ho_Cross.Dispose();
-                        HOperatorSet.GenCrossContourXld(out ho_Cross, hv_RowMedian, hv_ColMedian,
+                        HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row1[hv_Row1.Length / 2], hv_Col1[hv_Col1.Length / 2],
                             100, ((new HTuple(45)).TupleRad()) + hv_Phi);
 
                         if (runningWindow != null)
@@ -451,7 +462,13 @@ namespace GlassesLocate
                             HOperatorSet.DispObj(ho_Cross, configWindow);
                         }
 
-                        locations[i] = new Location(hv_ColMedian[0].D, hv_RowMedian[0].D, hv_Phi[0].D);
+                        locations[i] = new Location(hv_Col1[hv_Col1.Length / 2].D, hv_Row1[hv_Row1.Length / 2].D, hv_Phi[0].D);
+                    }
+
+                    if ((bool)Inputs["AutoSave"].Value == true)
+                    {
+                        //保存文件到本地
+                        HOperatorSet.WriteImage(hImage, "bmp", 0, new HTuple(Inputs["ImagePath"].Value));
                     }
 
                     //封装有效结果
@@ -503,6 +520,7 @@ namespace GlassesLocate
                 ho_RegionDifference.Dispose();
                 ho_RegionOpening3.Dispose();
                 ho_ConnectedRegions.Dispose();
+                ho_RegionFillUp.Dispose();
                 ho_SelectedRegions.Dispose();
                 ho_Skeleton.Dispose();
                 ho_EndPoints.Dispose();
