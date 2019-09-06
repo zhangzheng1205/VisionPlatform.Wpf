@@ -232,7 +232,7 @@ namespace VisionPlatform.Core
         /// </summary>
         /// <remarks>
         /// 针对于不同的平台,算子文件可以使用不同格式的文件,例如,
-        /// Halcon平台,算子文件为实现IVisionOpera接口的类库(*.dll);
+        /// Halcon平台,算子文件为实现IVisionOperation接口的类库(*.dll);
         /// VisionPro平台,算子文件为ToolBlock工具保存的二进制文件(*.vpp);
         /// </remarks>
         public string VisionOperaFile { get; set; }
@@ -719,7 +719,7 @@ namespace VisionPlatform.Core
             }
 
             //确认文件是否本地路径,如果不是,则复制到本地路径下
-            string dstDirectory = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOpera";
+            string dstDirectory = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOperation";
             string dstFile = $"{dstDirectory}/{Path.GetFileName(file)}";
 
             if (!Directory.Exists(dstDirectory))
@@ -789,7 +789,7 @@ namespace VisionPlatform.Core
                     throw new ArgumentException("VisionOperaFile cannot be null");
                 }
 
-                string visionOperaFilePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOpera/{VisionOperaFile}";
+                string visionOperaFilePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOperation/{VisionOperaFile}";
                 VisionFrame.Init(visionOperaFilePath);
 
                 //还原输入参数

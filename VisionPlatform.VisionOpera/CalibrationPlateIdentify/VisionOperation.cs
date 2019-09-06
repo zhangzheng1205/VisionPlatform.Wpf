@@ -1,17 +1,18 @@
 ﻿using HalconDotNet;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using VisionPlatform.BaseType;
 
-namespace Glasses
+namespace CalibrationPlateIdentify
 {
-
-    public class VisionOpera : IVisionOpera
+    public class VisionOperation : IVisionOperation
     {
         #region 构造函数
 
-        public VisionOpera()
+        public VisionOperation()
         {
             //创建运行时/配置窗口控件
             var runningSmartWindow = new HSmartWindowControlWPF();
@@ -25,22 +26,14 @@ namespace Glasses
             ConfigWindow = configSmartWindow;
 
             //配置输入参数
-            Inputs = new ItemCollection()
-            {
-                new ItemBase("MinGray", (int)0, "最小灰度(阈值分割)"),
-                new ItemBase("MaxGray", (int)120, "最大灰度(阈值分割)"),
-                new ItemBase("MorphologicalKernalWidth", (int)20, "形态学运算核宽度"),
-                new ItemBase("MorphologicalKernalHeight", (int)50, "形态学运算核高度"),
-                new ItemBase("ErosionRectangleWidth", (int)10, "腐蚀矩形宽度"),
-                new ItemBase("ErosionRectangleHeight", (int)90, "腐蚀矩形高度"),
-            };
+            Inputs.Clear();
 
             //配置输出参数
             Outputs = new ItemCollection()
             {
-                new ItemBase("X", typeof(double), "X坐标"),
-                new ItemBase("Y", typeof(double), "Y坐标"),
-                new ItemBase("Angle", typeof(double), "角度"),
+                new ItemBase("BaseX", typeof(double), "基准点X"),
+                new ItemBase("BaseY", typeof(double), "基准点Y"),
+                new ItemBase("Angle", typeof(double), "角度(弧度)"),
             };
         }
 
@@ -48,7 +41,7 @@ namespace Glasses
         {
             runningWindow = (sender as HSmartWindowControlWPF).HalconWindow;
             HOperatorSet.SetColor(runningWindow, "lime green");
-            HOperatorSet.SetLineWidth(runningWindow, 2);
+            HOperatorSet.SetLineWidth(runningWindow, 3);
             HOperatorSet.SetDraw(runningWindow, "margin");
         }
 
@@ -56,7 +49,7 @@ namespace Glasses
         {
             configWindow = (sender as HSmartWindowControlWPF).HalconWindow;
             HOperatorSet.SetColor(configWindow, "lime green");
-            HOperatorSet.SetLineWidth(configWindow, 2);
+            HOperatorSet.SetLineWidth(configWindow, 3);
             HOperatorSet.SetDraw(configWindow, "margin");
         }
 
@@ -82,19 +75,10 @@ namespace Glasses
 
         #region 字段
 
-        /// <summary>
-        /// 运行时窗口
-        /// </summary>
         private HWindow runningWindow;
 
-        /// <summary>
-        /// 配置窗口
-        /// </summary>
         private HWindow configWindow;
 
-        /// <summary>
-        /// 初始化标志
-        /// </summary>
         private bool isInit = false;
 
         /// <summary>
@@ -202,31 +186,26 @@ namespace Glasses
 
             stopwatch.Restart();
 
-            HObject ho_GrayImage = null, ho_Regions = null;
-            HObject ho_RegionClosing = null, ho_RegionFillUp = null, ho_ConnectedRegions = null;
-            HObject ho_SelectedRegions = null, ho_RegionOpening = null;
-            HObject ho_Rectangle = null, ho_RegionErosion = null, ho_ConnectedRegions1 = null;
-            HObject ho_SelectedRegions1 = null, ho_Rectangle1 = null, ho_Cross = null;
+            //初始化变量
+            HObject ho_GrayImage, ho_Regions;
+            HObject ho_ConnectedRegions, ho_SelectedRegions, ho_SelectedRegions1;
+            HObject ho_Cross1 = null, ho_Cross2 = null;
 
             // Local control variables 
-            HTuple hv_Row1 = new HTuple();
-            HTuple hv_Column1 = new HTuple(), hv_Phi = new HTuple();
-            HTuple hv_Length1 = new HTuple(), hv_Length2 = new HTuple();
-            HTuple hv_Area = new HTuple(), hv_Row = new HTuple(), hv_Column = new HTuple();
+            HTuple hv_Area = null, hv_Row = null, hv_Column = null;
+            HTuple hv_Area1 = null, hv_Row1 = null, hv_Column1 = null;
+            HTuple hv_DistanceMin = new HTuple(), hv_DistanceMax = new HTuple();
+            HTuple hv_Index = new HTuple(), hv_TempDistance = new HTuple();
+            HTuple hv_Distance = new HTuple(), hv_Indices = new HTuple();
+            HTuple hv_Angle = new HTuple(), hv_Deg = new HTuple();
             // Initialize local and output iconic variables 
             HOperatorSet.GenEmptyObj(out ho_GrayImage);
             HOperatorSet.GenEmptyObj(out ho_Regions);
-            HOperatorSet.GenEmptyObj(out ho_RegionClosing);
-            HOperatorSet.GenEmptyObj(out ho_RegionFillUp);
             HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
             HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
-            HOperatorSet.GenEmptyObj(out ho_RegionOpening);
-            HOperatorSet.GenEmptyObj(out ho_Rectangle);
-            HOperatorSet.GenEmptyObj(out ho_RegionErosion);
-            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions1);
             HOperatorSet.GenEmptyObj(out ho_SelectedRegions1);
-            HOperatorSet.GenEmptyObj(out ho_Rectangle1);
-            HOperatorSet.GenEmptyObj(out ho_Cross);
+            HOperatorSet.GenEmptyObj(out ho_Cross1);
+            HOperatorSet.GenEmptyObj(out ho_Cross2);
 
             try
             {
@@ -261,6 +240,7 @@ namespace Glasses
                     }
                 }
 
+                HOperatorSet.SetSystem("flush_graphic", "false");
                 if (runningWindow != null)
                 {
                     SetWindowPart(runningWindow, width, height);
@@ -276,77 +256,95 @@ namespace Glasses
                 }
 
                 //执行主任务
-                //转灰度图
                 ho_GrayImage.Dispose();
                 HOperatorSet.Rgb1ToGray(hImage, out ho_GrayImage);
 
-                //动态阈值的方式提取眼镜区域
+                //Blob
                 ho_Regions.Dispose();
-                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, new HTuple(Inputs["MinGray"].Value), new HTuple(Inputs["MaxGray"].Value));
-
-                //提取眼镜区域
-                ho_RegionClosing.Dispose();
-                HOperatorSet.ClosingRectangle1(ho_Regions, out ho_RegionClosing, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
-                ho_RegionFillUp.Dispose();
-                HOperatorSet.FillUp(ho_RegionClosing, out ho_RegionFillUp);
+                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, 100, 255);
                 ho_ConnectedRegions.Dispose();
-                HOperatorSet.Connection(ho_RegionFillUp, out ho_ConnectedRegions);
+                HOperatorSet.Connection(ho_Regions, out ho_ConnectedRegions);
+
+                //选择圆
                 ho_SelectedRegions.Dispose();
-                HOperatorSet.SelectShapeStd(ho_ConnectedRegions, out ho_SelectedRegions, "max_area",
-                    70);
+                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions, (new HTuple("circularity")).TupleConcat(
+                    "area"), "and", (new HTuple(0.85)).TupleConcat(7000), (new HTuple(1)).TupleConcat(
+                    8000));
+                HOperatorSet.AreaCenter(ho_SelectedRegions, out hv_Area, out hv_Row, out hv_Column);
 
-                //形态学调整
-                ho_RegionOpening.Dispose();
-                HOperatorSet.OpeningRectangle1(ho_SelectedRegions, out ho_RegionOpening, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
-
-                //腐蚀region区域,以适配弯脚的情况
-                ho_Rectangle.Dispose();
-                HOperatorSet.GenRectangle1(out ho_Rectangle, 0, 0, new HTuple(Inputs["ErosionRectangleHeight"].Value), new HTuple(Inputs["ErosionRectangleWidth"].Value));
-                ho_RegionErosion.Dispose();
-                HOperatorSet.Erosion1(ho_RegionOpening, ho_Rectangle, out ho_RegionErosion,
-                    2);
-
-                //选择最大的区域
-                ho_ConnectedRegions1.Dispose();
-                HOperatorSet.Connection(ho_RegionErosion, out ho_ConnectedRegions1);
+                //选择Mask点
                 ho_SelectedRegions1.Dispose();
-                HOperatorSet.SelectShapeStd(ho_ConnectedRegions1, out ho_SelectedRegions1,
-                    "max_area", 70);
-                HOperatorSet.SmallestRectangle2(ho_SelectedRegions1, out hv_Row1, out hv_Column1,
-                    out hv_Phi, out hv_Length1, out hv_Length2);
-                ho_Rectangle1.Dispose();
-                HOperatorSet.GenRectangle2(out ho_Rectangle1, hv_Row1, hv_Column1, hv_Phi,
-                    hv_Length1, hv_Length2);
+                HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions1, ((new HTuple("height")).TupleConcat(
+                    "area")).TupleConcat("width"), "and", ((new HTuple(35)).TupleConcat(1000)).TupleConcat(
+                    35), ((new HTuple(70)).TupleConcat(1600)).TupleConcat(70));
+                HOperatorSet.AreaCenter(ho_SelectedRegions1, out hv_Area1, out hv_Row1, out hv_Column1);
 
-                //选定region中心
-                HOperatorSet.AreaCenter(ho_Rectangle1, out hv_Area, out hv_Row, out hv_Column);
-                ho_Cross.Dispose();
-                HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row, hv_Column, 35, 0.785398);
-
-                Outputs["X"].Value = hv_Column.D;
-                Outputs["Y"].Value = hv_Row.D;
-                Outputs["Angle"].Value = hv_Phi.D;
-
-                //显示结果
-                if (runningWindow != null)
+                if ((int)((new HTuple((new HTuple(hv_Row.TupleLength())).TupleGreater(1))).TupleAnd(
+                    new HTuple((new HTuple(hv_Row1.TupleLength())).TupleGreater(0)))) != 0)
                 {
-                    HOperatorSet.DispObj(ho_GrayImage, runningWindow);
-                    HOperatorSet.DispObj(ho_Cross, runningWindow);
-                    HOperatorSet.DispObj(ho_Rectangle1, runningWindow);
-                }
 
-                if (configWindow != null)
-                {
-                    HOperatorSet.DispObj(ho_GrayImage, configWindow);
-                    HOperatorSet.DispObj(ho_Cross, configWindow);
-                    HOperatorSet.DispObj(ho_Rectangle1, configWindow);
+                    //找出与Mask点距离最短的原点
+                    HOperatorSet.DistancePr(ho_SelectedRegions, hv_Row1, hv_Column1, out hv_DistanceMin,
+                        out hv_DistanceMax);
+                    for (hv_Index = 1; (int)hv_Index <= (int)(new HTuple(hv_Row.TupleLength())); hv_Index = (int)hv_Index + 1)
+                    {
+                        HOperatorSet.DistancePp(hv_Row.TupleSelect(hv_Index - 1), hv_Column.TupleSelect(
+                            hv_Index - 1), hv_Row1.TupleSelect(0), hv_Column1.TupleSelect(0), out hv_TempDistance);
+                        hv_Distance = hv_Distance.TupleConcat(hv_TempDistance);
+                    }
+                    HOperatorSet.TupleSortIndex(hv_Distance, out hv_Indices);
+
+                    //原点角度
+                    HOperatorSet.AngleLx(hv_Row.TupleSelect(hv_Indices.TupleSelect(0)), hv_Column.TupleSelect(
+                        hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength()
+                        )) - 1)), hv_Column.TupleSelect(hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength()
+                        )) - 1)), out hv_Angle);
+                    HOperatorSet.TupleDeg(hv_Angle, out hv_Deg);
+
+                    Outputs["BaseX"].Value = hv_Column.TupleSelect(hv_Indices.TupleSelect(0)).D;
+                    Outputs["BaseY"].Value = hv_Row.TupleSelect(hv_Indices.TupleSelect(0)).D;
+                    Outputs["Angle"].Value = hv_Angle.D;
+
+                    //显示结果
+                    ho_Cross1.Dispose();
+                    HOperatorSet.GenCrossContourXld(out ho_Cross1, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), 24, 0.785398);
+                    ho_Cross2.Dispose();
+                    HOperatorSet.GenCrossContourXld(out ho_Cross2, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                        (new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(hv_Indices.TupleSelect(
+                        (new HTuple(hv_Indices.TupleLength())) - 1)), 24, 0.785398);
+
+
+                    if (runningWindow != null)
+                    {
+                        HOperatorSet.DispObj(hImage, runningWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions, runningWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, runningWindow);
+                        HOperatorSet.DispObj(ho_Cross1, runningWindow);
+                        HOperatorSet.DispObj(ho_Cross2, runningWindow);
+                        HOperatorSet.DispLine(runningWindow, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                            0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
+                    }
+
+                    if (configWindow != null)
+                    {
+                        HOperatorSet.DispObj(ho_SelectedRegions, configWindow);
+                        HOperatorSet.DispObj(ho_SelectedRegions1, configWindow);
+                        HOperatorSet.DispObj(ho_Cross1, configWindow);
+                        HOperatorSet.DispObj(ho_Cross2, configWindow);
+                        HOperatorSet.DispLine(configWindow, hv_Row.TupleSelect(hv_Indices.TupleSelect(
+                            0)), hv_Column.TupleSelect(hv_Indices.TupleSelect(0)), hv_Row.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)), hv_Column.TupleSelect(
+                            hv_Indices.TupleSelect((new HTuple(hv_Indices.TupleLength())) - 1)));
+                    }
                 }
 
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
 
                 outputs = new ItemCollection(Outputs);
-
             }
             catch (Exception ex)
             {
@@ -356,20 +354,17 @@ namespace Glasses
             }
             finally
             {
+                HOperatorSet.SetSystem("flush_graphic", "true");
+
+                //释放本次运行的临时资源
                 hImage.Dispose();
                 ho_GrayImage.Dispose();
                 ho_Regions.Dispose();
-                ho_RegionClosing.Dispose();
-                ho_RegionFillUp.Dispose();
                 ho_ConnectedRegions.Dispose();
                 ho_SelectedRegions.Dispose();
-                ho_RegionOpening.Dispose();
-                ho_Rectangle.Dispose();
-                ho_RegionErosion.Dispose();
-                ho_ConnectedRegions1.Dispose();
                 ho_SelectedRegions1.Dispose();
-                ho_Rectangle1.Dispose();
-                ho_Cross.Dispose();
+                ho_Cross1.Dispose();
+                ho_Cross2.Dispose();
             }
         }
 
@@ -393,7 +388,7 @@ namespace Glasses
         }
 
         // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~VisionOpera()
+        // ~VisionOperation()
         // {
         //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
         //   Dispose(false);

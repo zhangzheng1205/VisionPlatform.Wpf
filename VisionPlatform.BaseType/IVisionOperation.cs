@@ -5,7 +5,7 @@ namespace VisionPlatform.BaseType
     /// <summary>
     /// 视觉算子接口
     /// </summary>
-    public interface IVisionOpera : IDisposable
+    public interface IVisionOperation : IDisposable
     {
         #region 属性
 

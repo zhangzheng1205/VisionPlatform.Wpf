@@ -78,13 +78,21 @@ namespace GlassesLocateDemo
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
-                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
-                CameraFactory.AddCamera(@"D:\20190904CXC\图片");
-                //CameraFactory.AddCamera(@"E:\测试图像\刹车片");
-                //CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
-                //CameraFactory.AddCamera(@"E:\测试图像\眼镜");
-                //CameraFactory.AddCamera(@"E:\测试图像\定位圆");
-                //CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
+                try
+                {
+                    CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+                    CameraFactory.AddCamera(@"D:\20190904CXC\图片");
+                    //CameraFactory.AddCamera(@"E:\测试图像\刹车片");
+                    //CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
+                    //CameraFactory.AddCamera(@"E:\测试图像\眼镜");
+                    //CameraFactory.AddCamera(@"E:\测试图像\定位圆");
+                    //CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
+                }
+                catch (Exception ex)
+                {
+                    Logging.Error(ex);
+                    MessageBox.Show(ex.Message);
+                }
             }
 
             //获取场景管理器实例(单例)

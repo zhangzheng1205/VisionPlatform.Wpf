@@ -6,6 +6,11 @@
     public enum EVisionFrameType
     {
         /// <summary>
+        /// 未知
+        /// </summary>
+        Unknown = 0,
+
+        /// <summary>
         /// Halcon平台
         /// </summary>
         Halcon,
@@ -20,9 +25,5 @@
         /// </summary>
         NIVision,
 
-        /// <summary>
-        /// 未知
-        /// </summary>
-        Unknown,
     }
 }

@@ -6,6 +6,11 @@
     public enum ECameraSdkType
     {
         /// <summary>
+        /// 未知
+        /// </summary>
+        Unknown = 0,
+
+        /// <summary>
         /// 支持巴斯勒相机
         /// </summary>
         Pylon,
@@ -62,9 +67,6 @@
         /// </remarks>
         VirtualCamera,
 
-        /// <summary>
-        /// 未知
-        /// </summary>
-        Unknown,
+        
     }
 }

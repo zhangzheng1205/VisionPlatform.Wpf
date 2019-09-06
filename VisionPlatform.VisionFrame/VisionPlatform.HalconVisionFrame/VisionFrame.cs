@@ -28,7 +28,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 视觉算子接口
         /// </summary>
-        public IVisionOpera VisionOpera { get; set; }
+        public IVisionOperation VisionOperation { get; set; }
 
         /// <summary>
         /// 视觉算子文件类型
@@ -42,7 +42,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                return VisionOpera?.Inputs;
+                return VisionOperation?.Inputs;
             }
         }
 
@@ -53,7 +53,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                return VisionOpera?.Outputs;
+                return VisionOperation?.Outputs;
             }
         }
 
@@ -64,7 +64,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                if (VisionOpera != null)
+                if (VisionOperation != null)
                 {
                     return true;
                 }
@@ -111,7 +111,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                return VisionOpera?.RunningWindow;
+                return VisionOperation?.RunningWindow;
             }
         }
 
@@ -122,7 +122,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             get
             {
-                return VisionOpera?.ConfigWindow;
+                return VisionOperation?.ConfigWindow;
             }
         }
 
@@ -137,7 +137,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// </summary>
         /// <param name="dllPath">dll路径</param>
         /// <returns>视觉算子实例</returns>
-        private static IVisionOpera GetVisionOperaInstance(string dllPath)
+        private static IVisionOperation GetVisionOperaInstance(string dllPath)
         {
 
             if (string.IsNullOrEmpty(dllPath))
@@ -160,7 +160,7 @@ namespace VisionPlatform.HalconVisionFrame
 
                 foreach (var item in types)
                 {
-                    if (item.Name == "VisionOpera")
+                    if (item.Name == "VisionOperation")
                     {
                         obj = visionOperaAssembly.CreateInstance(item.FullName);
                         break;
@@ -168,7 +168,7 @@ namespace VisionPlatform.HalconVisionFrame
                 }
 
                 //若视觉算子DLL有效,则创建默认配置
-                if (!(obj is IVisionOpera))
+                if (!(obj is IVisionOperation))
                 {
                     throw new Exception($"VisionOperaDll 数据类型异常! {obj.GetType()}");
                 }
@@ -179,7 +179,7 @@ namespace VisionPlatform.HalconVisionFrame
             }
 
             //创建默认配置
-            return obj as IVisionOpera;
+            return obj as IVisionOperation;
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace VisionPlatform.HalconVisionFrame
         {
             try
             {
-                VisionOpera = GetVisionOperaInstance(filePath);
+                VisionOperation = GetVisionOperaInstance(filePath);
             }
             catch (Exception)
             {
@@ -311,9 +311,9 @@ namespace VisionPlatform.HalconVisionFrame
         /// <param name="outputs">输出结果</param>
         public void ExecuteByImageInfo(ImageInfo imageInfo, out ItemCollection outputs)
         {
-            if (VisionOpera == null)
+            if (VisionOperation == null)
             {
-                Exception exception = new NullReferenceException("VisionOpera invalid");
+                Exception exception = new NullReferenceException("VisionOperation invalid");
                 RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
 
                 throw exception;
@@ -325,8 +325,8 @@ namespace VisionPlatform.HalconVisionFrame
                 hImage?.Dispose();
                 CreateHImage(imageInfo, out hImage);
 
-                VisionOpera.Execute(hImage, out outputs);
-                RunStatus = VisionOpera.RunStatus;
+                VisionOperation.Execute(hImage, out outputs);
+                RunStatus = VisionOperation.RunStatus;
             }
             catch (Exception ex)
             {
@@ -343,9 +343,9 @@ namespace VisionPlatform.HalconVisionFrame
         /// <param name="outputs">输出参数</param>
         public void ExecuteByFile(string file, out ItemCollection outputs)
         {
-            if (VisionOpera == null)
+            if (VisionOperation == null)
             {
-                Exception exception = new NullReferenceException("VisionOpera invalid");
+                Exception exception = new NullReferenceException("VisionOperation invalid");
                 RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
 
                 throw exception;
@@ -355,8 +355,8 @@ namespace VisionPlatform.HalconVisionFrame
             {
                 hImage?.Dispose();
                 HOperatorSet.ReadImage(out hImage, file);
-                VisionOpera.Execute(hImage, out outputs);
-                RunStatus = VisionOpera.RunStatus;
+                VisionOperation.Execute(hImage, out outputs);
+                RunStatus = VisionOperation.RunStatus;
             }
             catch (Exception ex)
             {
@@ -379,8 +379,8 @@ namespace VisionPlatform.HalconVisionFrame
 
                 // TODO: 释放未托管的资源(未托管的对象)并在以下内容中替代终结器。
                 // TODO: 将大型字段设置为 null。
-                VisionOpera?.Dispose();
-                VisionOpera = null;
+                VisionOperation?.Dispose();
+                VisionOperation = null;
 
                 //Camera = null;
 

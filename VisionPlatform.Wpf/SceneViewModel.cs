@@ -273,7 +273,7 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 选择的配置文件
         /// </summary>
-        public string SelectionCameraConfigFile
+        public string SelectedCameraConfigFile
         {
             get
             {
@@ -310,7 +310,7 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 选择的标定文件
         /// </summary>
-        public string SelectionCameraCalibrationFiles
+        public string SelectedCalibrationFile
         {
             get
             {
@@ -322,7 +322,7 @@ namespace VisionPlatform.Wpf
                 {
                     Scene.SetCameraCalibrationFile(value);
                 }
-                NotifyOfPropertyChange(() => CameraCalibrationFiles);
+                NotifyOfPropertyChange(() => SelectedCalibrationFile);
             }
         }
 
@@ -572,7 +572,7 @@ namespace VisionPlatform.Wpf
             UpdateCameraFile();
 
             //重新从配置文件中加载配置参数
-            Scene.SetCameraConfigFile(SelectionCameraConfigFile);
+            Scene.SetCameraConfigFile(SelectedCameraConfigFile);
         }
 
         /// <summary>

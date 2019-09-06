@@ -7,14 +7,14 @@ using ItemCollection = VisionPlatform.BaseType.ItemCollection;
 
 namespace VisionPlatform.HalconOperaDemo
 {
-    public class VisionOpera : IVisionOpera
+    public class VisionOperation : IVisionOperation
     {
         #region 构造函数
 
         /// <summary>
-        /// 创建VisionOpera新实例
+        /// 创建VisionOperation新实例
         /// </summary>
-        public VisionOpera()
+        public VisionOperation()
         {
             RunningWindow = new HSmartWindowControlWPF();
             ConfigWindow = new ConfigWindow();
@@ -282,7 +282,7 @@ namespace VisionPlatform.HalconOperaDemo
         }
 
         // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~VisionOpera()
+        // ~VisionOperation()
         // {
         //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
         //   Dispose(false);

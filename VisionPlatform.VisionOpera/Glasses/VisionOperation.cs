@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Windows;
 using VisionPlatform.BaseType;
 
-namespace VisionOperationTemplate
+namespace Glasses
 {
 
-    public class VisionOpera : IVisionOpera
+    public class VisionOperation : IVisionOperation
     {
         #region 构造函数
 
-        public VisionOpera()
+        public VisionOperation()
         {
             //创建运行时/配置窗口控件
             var runningSmartWindow = new HSmartWindowControlWPF();
@@ -25,17 +25,30 @@ namespace VisionOperationTemplate
             ConfigWindow = configSmartWindow;
 
             //配置输入参数
-            Inputs.Clear();
+            Inputs = new ItemCollection()
+            {
+                new ItemBase("MinGray", (int)0, "最小灰度(阈值分割)"),
+                new ItemBase("MaxGray", (int)120, "最大灰度(阈值分割)"),
+                new ItemBase("MorphologicalKernalWidth", (int)20, "形态学运算核宽度"),
+                new ItemBase("MorphologicalKernalHeight", (int)50, "形态学运算核高度"),
+                new ItemBase("ErosionRectangleWidth", (int)10, "腐蚀矩形宽度"),
+                new ItemBase("ErosionRectangleHeight", (int)90, "腐蚀矩形高度"),
+            };
 
             //配置输出参数
-            Outputs.Clear();
+            Outputs = new ItemCollection()
+            {
+                new ItemBase("X", typeof(double), "X坐标"),
+                new ItemBase("Y", typeof(double), "Y坐标"),
+                new ItemBase("Angle", typeof(double), "角度"),
+            };
         }
 
         private void RunningSmartWindow_HInitWindow(object sender, EventArgs e)
         {
             runningWindow = (sender as HSmartWindowControlWPF).HalconWindow;
             HOperatorSet.SetColor(runningWindow, "lime green");
-            HOperatorSet.SetLineWidth(runningWindow, 3);
+            HOperatorSet.SetLineWidth(runningWindow, 2);
             HOperatorSet.SetDraw(runningWindow, "margin");
         }
 
@@ -43,7 +56,7 @@ namespace VisionOperationTemplate
         {
             configWindow = (sender as HSmartWindowControlWPF).HalconWindow;
             HOperatorSet.SetColor(configWindow, "lime green");
-            HOperatorSet.SetLineWidth(configWindow, 3);
+            HOperatorSet.SetLineWidth(configWindow, 2);
             HOperatorSet.SetDraw(configWindow, "margin");
         }
 
@@ -189,6 +202,32 @@ namespace VisionOperationTemplate
 
             stopwatch.Restart();
 
+            HObject ho_GrayImage = null, ho_Regions = null;
+            HObject ho_RegionClosing = null, ho_RegionFillUp = null, ho_ConnectedRegions = null;
+            HObject ho_SelectedRegions = null, ho_RegionOpening = null;
+            HObject ho_Rectangle = null, ho_RegionErosion = null, ho_ConnectedRegions1 = null;
+            HObject ho_SelectedRegions1 = null, ho_Rectangle1 = null, ho_Cross = null;
+
+            // Local control variables 
+            HTuple hv_Row1 = new HTuple();
+            HTuple hv_Column1 = new HTuple(), hv_Phi = new HTuple();
+            HTuple hv_Length1 = new HTuple(), hv_Length2 = new HTuple();
+            HTuple hv_Area = new HTuple(), hv_Row = new HTuple(), hv_Column = new HTuple();
+            // Initialize local and output iconic variables 
+            HOperatorSet.GenEmptyObj(out ho_GrayImage);
+            HOperatorSet.GenEmptyObj(out ho_Regions);
+            HOperatorSet.GenEmptyObj(out ho_RegionClosing);
+            HOperatorSet.GenEmptyObj(out ho_RegionFillUp);
+            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions);
+            HOperatorSet.GenEmptyObj(out ho_RegionOpening);
+            HOperatorSet.GenEmptyObj(out ho_Rectangle);
+            HOperatorSet.GenEmptyObj(out ho_RegionErosion);
+            HOperatorSet.GenEmptyObj(out ho_ConnectedRegions1);
+            HOperatorSet.GenEmptyObj(out ho_SelectedRegions1);
+            HOperatorSet.GenEmptyObj(out ho_Rectangle1);
+            HOperatorSet.GenEmptyObj(out ho_Cross);
+
             try
             {
                 HTuple width, height;
@@ -237,7 +276,71 @@ namespace VisionOperationTemplate
                 }
 
                 //执行主任务
+                //转灰度图
+                ho_GrayImage.Dispose();
+                HOperatorSet.Rgb1ToGray(hImage, out ho_GrayImage);
 
+                //动态阈值的方式提取眼镜区域
+                ho_Regions.Dispose();
+                HOperatorSet.Threshold(ho_GrayImage, out ho_Regions, new HTuple(Inputs["MinGray"].Value), new HTuple(Inputs["MaxGray"].Value));
+
+                //提取眼镜区域
+                ho_RegionClosing.Dispose();
+                HOperatorSet.ClosingRectangle1(ho_Regions, out ho_RegionClosing, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
+                ho_RegionFillUp.Dispose();
+                HOperatorSet.FillUp(ho_RegionClosing, out ho_RegionFillUp);
+                ho_ConnectedRegions.Dispose();
+                HOperatorSet.Connection(ho_RegionFillUp, out ho_ConnectedRegions);
+                ho_SelectedRegions.Dispose();
+                HOperatorSet.SelectShapeStd(ho_ConnectedRegions, out ho_SelectedRegions, "max_area",
+                    70);
+
+                //形态学调整
+                ho_RegionOpening.Dispose();
+                HOperatorSet.OpeningRectangle1(ho_SelectedRegions, out ho_RegionOpening, new HTuple(Inputs["MorphologicalKernalWidth"].Value), new HTuple(Inputs["MorphologicalKernalHeight"].Value));
+
+                //腐蚀region区域,以适配弯脚的情况
+                ho_Rectangle.Dispose();
+                HOperatorSet.GenRectangle1(out ho_Rectangle, 0, 0, new HTuple(Inputs["ErosionRectangleHeight"].Value), new HTuple(Inputs["ErosionRectangleWidth"].Value));
+                ho_RegionErosion.Dispose();
+                HOperatorSet.Erosion1(ho_RegionOpening, ho_Rectangle, out ho_RegionErosion,
+                    2);
+
+                //选择最大的区域
+                ho_ConnectedRegions1.Dispose();
+                HOperatorSet.Connection(ho_RegionErosion, out ho_ConnectedRegions1);
+                ho_SelectedRegions1.Dispose();
+                HOperatorSet.SelectShapeStd(ho_ConnectedRegions1, out ho_SelectedRegions1,
+                    "max_area", 70);
+                HOperatorSet.SmallestRectangle2(ho_SelectedRegions1, out hv_Row1, out hv_Column1,
+                    out hv_Phi, out hv_Length1, out hv_Length2);
+                ho_Rectangle1.Dispose();
+                HOperatorSet.GenRectangle2(out ho_Rectangle1, hv_Row1, hv_Column1, hv_Phi,
+                    hv_Length1, hv_Length2);
+
+                //选定region中心
+                HOperatorSet.AreaCenter(ho_Rectangle1, out hv_Area, out hv_Row, out hv_Column);
+                ho_Cross.Dispose();
+                HOperatorSet.GenCrossContourXld(out ho_Cross, hv_Row, hv_Column, 35, 0.785398);
+
+                Outputs["X"].Value = hv_Column.D;
+                Outputs["Y"].Value = hv_Row.D;
+                Outputs["Angle"].Value = hv_Phi.D;
+
+                //显示结果
+                if (runningWindow != null)
+                {
+                    HOperatorSet.DispObj(ho_GrayImage, runningWindow);
+                    HOperatorSet.DispObj(ho_Cross, runningWindow);
+                    HOperatorSet.DispObj(ho_Rectangle1, runningWindow);
+                }
+
+                if (configWindow != null)
+                {
+                    HOperatorSet.DispObj(ho_GrayImage, configWindow);
+                    HOperatorSet.DispObj(ho_Cross, configWindow);
+                    HOperatorSet.DispObj(ho_Rectangle1, configWindow);
+                }
 
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
@@ -254,6 +357,19 @@ namespace VisionOperationTemplate
             finally
             {
                 hImage.Dispose();
+                ho_GrayImage.Dispose();
+                ho_Regions.Dispose();
+                ho_RegionClosing.Dispose();
+                ho_RegionFillUp.Dispose();
+                ho_ConnectedRegions.Dispose();
+                ho_SelectedRegions.Dispose();
+                ho_RegionOpening.Dispose();
+                ho_Rectangle.Dispose();
+                ho_RegionErosion.Dispose();
+                ho_ConnectedRegions1.Dispose();
+                ho_SelectedRegions1.Dispose();
+                ho_Rectangle1.Dispose();
+                ho_Cross.Dispose();
             }
         }
 
@@ -277,7 +393,7 @@ namespace VisionOperationTemplate
         }
 
         // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~VisionOpera()
+        // ~VisionOperation()
         // {
         //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
         //   Dispose(false);

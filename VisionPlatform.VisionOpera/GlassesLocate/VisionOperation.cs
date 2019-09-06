@@ -8,11 +8,11 @@ using VisionPlatform.BaseType;
 namespace GlassesLocate
 {
 
-    public class VisionOpera : IVisionOpera
+    public class VisionOperation : IVisionOperation
     {
         #region 构造函数
 
-        public VisionOpera()
+        public VisionOperation()
         {
             //创建运行时/配置窗口控件
             var runningSmartWindow = new HSmartWindowControlWPF();
@@ -560,7 +560,7 @@ namespace GlassesLocate
         }
 
         // TODO: 仅当以上 Dispose(bool disposing) 拥有用于释放未托管资源的代码时才替代终结器。
-        // ~VisionOpera()
+        // ~VisionOperation()
         // {
         //   // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
         //   Dispose(false);
