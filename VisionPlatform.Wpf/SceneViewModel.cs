@@ -511,11 +511,11 @@ namespace VisionPlatform.Wpf
             if (SelectedCamera != null)
             {
                 //获取相机配置文件
-                FileInfo[] configFileInfos = CameraFactory.GetCameraConfigFile(SelectedCamera?.Info.SerialNumber);
+                FileInfo[] configFileInfos = CameraFactory.GetCameraConfigFiles(SelectedCamera?.Info.SerialNumber);
                 CameraConfigFiles = new ObservableCollection<string>(configFileInfos.ToList().ConvertAll(x=>x.Name));
 
                 //获取相机标定文件
-                FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFile(SelectedCamera?.Info.SerialNumber);
+                FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFiles(SelectedCamera?.Info.SerialNumber);
                 CameraCalibrationFiles = new ObservableCollection<string>(calibrationFileInfos.ToList().ConvertAll(x => x.Name));
                 CameraCalibrationFiles.Add("不选择任何文件");
             }

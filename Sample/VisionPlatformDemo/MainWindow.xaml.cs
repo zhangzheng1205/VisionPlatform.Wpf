@@ -37,7 +37,7 @@ namespace VisionPlatformDemo
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.uEye;
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionProVpp) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {

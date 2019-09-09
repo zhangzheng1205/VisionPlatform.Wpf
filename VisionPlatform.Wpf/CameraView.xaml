@@ -32,38 +32,79 @@
                 </Style>
             </ScrollViewer.Resources>
             <StackPanel Margin="5">
-                <GroupBox Header="相机列表" Grid.Row="0">
-                    <StackPanel>
-                        <ListView ItemsSource="{Binding Cameras}" SelectedItem="{Binding SelectedCamera}" 
+                <GroupBox Header="相机及配置列表" Grid.Row="0">
+                    <StackPanel Margin="5,10">
+                        <DockPanel>
+                            <Button MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0">刷新</Button>
+                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">相机</TextBlock>
+                            <ComboBox x:Name="CameraListComboBox" 
+                                      ItemsSource="{Binding Cameras}" 
+                                      SelectedItem="{Binding Camera}" 
+                                      cal:Message.Attach="[Event SelectionChanged] = [Action SetCamera(CameraListComboBox.SelectedValue)]" />
+                        </DockPanel>
+                        <!--<ListView ItemsSource="{Binding Cameras}" SelectedItem="{Binding SelectedCamera}" 
                                   cal:Message.Attach="[Event SelectionChanged] = [Action SetCamera(CameraListComboBox.SelectedValue)]" 
                                   x:Name="CameraListComboBox"  MinHeight="100" Margin="5" />
-                        <Button cal:Message.Attach="UpdateCameras" Content="刷新相机" Margin="0,0,5,0" MinWidth="60" HorizontalAlignment="Right"/>
+                        <Button cal:Message.Attach="UpdateCameras" Content="刷新相机" Margin="0,0,5,0" MinWidth="60" HorizontalAlignment="Right"/>-->
+
+                        <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
+
+                        <DockPanel>
+                            <Button cal:Message.Attach="UpdateCameraConfigFiles" MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0">刷新</Button>
+                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">配置</TextBlock>
+                            <ComboBox x:Name="CameraConfigFileListComboBox" 
+                                      ItemsSource="{Binding CameraConfigFiles}" 
+                                      SelectedItem="{Binding CameraConfigFile}" 
+                                      cal:Message.Attach="[Event SelectionChanged] = [Action UpdateConfig(CameraConfigFileListComboBox.SelectedItem)]"
+                                      IsEditable="True"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock x:Name="NewConfigFileTextBlock" Visibility="Collapsed"/>
+                            <!--<Button cal:Message.Attach="SaveToFile(NewConfigFileTextBlock.Text)"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">另存为...</Button>-->
+                            <Button cal:Message.Attach="SaveToCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">保存</Button>
+                            <Button cal:Message.Attach="DeleteCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">删除</Button>
+                            <!--<Button cal:Message.Attach="LoadParam"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">加载</Button>-->
+                            <!--<Button cal:Message.Attach="UpdateCameraConfigFiles"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">刷新</Button>-->
+                            <StackPanel/>
+                        </DockPanel>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="相机参数" Grid.Row="1" Margin="0,5,0,0">
-                    <StackPanel IsEnabled="{Binding IsCameraValid}">
-                        <local:CameraConfigView x:Name="CameraConfigView"  DataContext="{Binding CameraConfigViewModel}"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <StackPanel IsEnabled="{Binding IsCameraValid}" Margin="5,10,0,10">
+                        <!--<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <Button cal:Message.Attach="GrapOnce"  MinWidth="60" Margin="0,0,10,0" ToolTip="单拍一张图片,并显示在窗口中">单拍</Button>
                             <Button cal:Message.Attach="ContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Converter={StaticResource BoolInvertConverter}, Mode=OneWay}" MinWidth="60" Margin="0,0,10,0" ToolTip="连续拍摄,并显示在窗口中">连拍</Button>
                             <Button cal:Message.Attach="StopContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Mode=OneWay}" MinWidth="60" Margin="0,0,10,0" ToolTip="停止采集">停止拍照</Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        </StackPanel>-->
+                        <local:CameraConfigView x:Name="CameraConfigView"  DataContext="{Binding CameraConfigViewModel}"/>
+                        <!--<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <Button cal:Message.Attach="GrapOnce"  MinWidth="60" Margin="0,0,10,0" ToolTip="单拍一张图片,并显示在窗口中">单拍</Button>
+                            <Button cal:Message.Attach="ContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Converter={StaticResource BoolInvertConverter}, Mode=OneWay}" MinWidth="60" Margin="0,0,10,0" ToolTip="连续拍摄,并显示在窗口中">连拍</Button>
+                            <Button cal:Message.Attach="StopContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Mode=OneWay}" MinWidth="60" Margin="0,0,10,0" ToolTip="停止采集">停止拍照</Button>
+                        </StackPanel>-->
+                        <DockPanel Margin="0,5,5,5">
+                            <Button cal:Message.Attach="StopContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Mode=OneWay}" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0" Content="停止拍照"/>
+                            <Button cal:Message.Attach="ContinuesGrap" IsEnabled="{Binding IsContinuesGrap, Converter={StaticResource BoolInvertConverter}, Mode=OneWay}" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0" Content="连拍"/>
+                            <Button cal:Message.Attach="GrapOnce"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0" Content="单拍"/>
+                            <StackPanel/>
+                        </DockPanel>
+
+                        <!--<StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <TextBlock x:Name="LoadTextBlock" Visibility="Collapsed" />
                             <TextBlock x:Name="SaveTextBlock" Visibility="Collapsed" />
                             <TextBlock x:Name="AcceptTextBlock" Visibility="Collapsed" />
                             <Button cal:Message.Attach="LoadFromFile(LoadTextBlock.Text)" x:Name="LoadButton" Click="LoadButton_Click" MinWidth="60" Margin="0,0,10,0">加载配置</Button>
                             <Button cal:Message.Attach="SaveToFile(SaveTextBlock.Text)" x:Name="SaveButton" Click="SaveButton_Click"  MinWidth="60" Margin="0,0,10,0">保存配置</Button>
                             <Button cal:Message.Attach="Accept(AcceptTextBlock.Text)" Click="AcceptButton_Click" MinWidth="60" Margin="0,0,10,0">退出</Button>
-                        </StackPanel>
-                        
+                        </StackPanel>-->
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            </Grid>
+                        </Grid>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

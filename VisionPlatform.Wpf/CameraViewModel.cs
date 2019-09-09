@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
@@ -289,6 +290,15 @@ namespace VisionPlatform.Wpf
         public void SetCamera(ICamera camera)
         {
             Camera = camera;
+
+            //更新配置文件
+            UpdateCameraConfigFiles();
+
+            if (!string.IsNullOrEmpty(CameraConfigFile))
+            {
+                LoadFromCurrentFile(CameraConfigFile);
+            }
+
         }
 
         /// <summary>
@@ -358,10 +368,107 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
-        /// 加载配置文件
+        /// 确认
         /// </summary>
-        /// <param name="file">文件路径</param>
-        public void LoadFromFile(string file)
+        public void Accept(bool isAccpet)
+        {
+            if (isAccpet)
+            {
+                if ((Camera?.IsOpen == true) && (Camera?.TriggerMode == ETriggerModeStatus.Off))
+                {
+                    StopContinuesGrap();
+                }
+
+                OnCameraConfigurationCompleted(Camera);
+            }
+        }
+
+        #endregion
+
+        #region 相机文件配置
+
+        private ObservableCollection<string> cameraConfigFiles;
+
+        /// <summary>
+        /// 相机配置文件列表
+        /// </summary>
+        public ObservableCollection<string> CameraConfigFiles
+        {
+            get
+            {
+                return cameraConfigFiles;
+            }
+            set
+            {
+                cameraConfigFiles = value;
+                NotifyOfPropertyChange(() => CameraConfigFiles);
+                NotifyOfPropertyChange(() => CameraConfigFile);
+            }
+        }
+
+        private string cameraConfigFile;
+
+        /// <summary>
+        /// 相机配置文件列表
+        /// </summary>
+        public string CameraConfigFile
+        {
+            get
+            {
+                return cameraConfigFile;
+            }
+            set
+            {
+                cameraConfigFile = value;
+                NotifyOfPropertyChange(() => CameraConfigFile);
+            }
+        }
+
+        /// <summary>
+        /// 更新相机配置文件
+        /// </summary>
+        public void UpdateCameraConfigFiles()
+        {
+            if (Camera?.IsOpen == true)
+            {
+                //获取相机配置文件
+                FileInfo[] configFileInfos = CameraFactory.GetCameraConfigFiles(Camera?.Info.SerialNumber);
+                CameraConfigFiles = new ObservableCollection<string>(configFileInfos.ToList().ConvertAll(x => x.Name));
+            }
+
+        }
+
+        /// <summary>
+        /// 保存到当前文件
+        /// </summary>
+        /// <param name="fileName">配置文件名(不包含路径)</param>
+        public void SaveToCurrentFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            try
+            {
+                if (Camera?.IsOpen == true)
+                {
+                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    SaveToFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 保存到文件中
+        /// </summary>
+        /// <param name="file">文件路径(全路径)</param>
+        public void SaveToFile(string file)
         {
             if (string.IsNullOrEmpty(file))
             {
@@ -370,6 +477,64 @@ namespace VisionPlatform.Wpf
 
             try
             {
+                if (Camera?.IsOpen == true)
+                {
+                    var cameraConfigParam = new CameraConfigParam();
+
+                    cameraConfigParam.PixelFormat = Camera.PixelFormat;
+                    cameraConfigParam.TriggerMode = Camera.TriggerMode;
+                    cameraConfigParam.TriggerSource = Camera.TriggerSource;
+                    cameraConfigParam.TriggerActivation = Camera.TriggerActivation;
+                    cameraConfigParam.ExposureTime = Camera.ExposureTime;
+                    cameraConfigParam.Gain = Camera.Gain;
+
+                    JsonSerialization.SerializeObjectToFile(cameraConfigParam, file);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 从当前文件中加载
+        /// </summary>
+        /// <param name="fileName">配置文件名(不包含路径)</param>
+        public void LoadFromCurrentFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentException("无效路径/文件不存在");
+                }
+
+                if (Camera?.IsOpen == true)
+                {
+                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    LoadFromFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 加载配置文件
+        /// </summary>
+        /// <param name="file">文件路径</param>
+        public void LoadFromFile(string file)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new ArgumentException("无效路径/文件不存在");
+                }
+
                 CameraConfigParam cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(file);
 
                 if (Camera?.IsOpen == true)
@@ -394,56 +559,22 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
-        /// 保存配置文件
+        /// 更新当前配置
         /// </summary>
-        /// <param name="file">文件路径</param>
-        public void SaveToFile(string file)
+        public void UpdateConfig(string fileName)
         {
-            if (string.IsNullOrEmpty(file))
+            if (Camera?.IsOpen == true)
             {
-                return;
-            }
+                string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
 
-            try
-            {
-                if (Camera?.IsOpen == true)
+                if (File.Exists(file))
                 {
-                    var cameraConfigParam = new CameraConfigParam();
-
-                    cameraConfigParam.PixelFormat = Camera.PixelFormat;
-                    cameraConfigParam.TriggerMode = Camera.TriggerMode;
-                    cameraConfigParam.TriggerSource = Camera.TriggerSource;
-                    cameraConfigParam.TriggerActivation = Camera.TriggerActivation;
-                    cameraConfigParam.ExposureTime = Camera.ExposureTime;
-                    cameraConfigParam.Gain = Camera.Gain;
-
-                    string path = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(file)}.json";
-                    JsonSerialization.SerializeObjectToFile(cameraConfigParam, path);
+                    LoadFromFile(file);
                 }
-            }
-            catch (Exception ex)
-            {
-                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
-            }
-            
-        }
-
-        /// <summary>
-        /// 确认
-        /// </summary>
-        public void Accept(bool isAccpet)
-        {
-            if (isAccpet)
-            {
-                if ((Camera?.IsOpen == true) && (Camera?.TriggerMode == ETriggerModeStatus.Off))
-                {
-                    StopContinuesGrap();
-                }
-
-                OnCameraConfigurationCompleted(Camera);
             }
         }
 
         #endregion
+
     }
 }

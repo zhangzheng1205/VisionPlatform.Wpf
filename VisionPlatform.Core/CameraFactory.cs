@@ -347,7 +347,7 @@ namespace VisionPlatform.Core
         /// <param name="cameraSerial">相机配置文件</param>
         /// <returns>文件信息列表</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
-        public static FileInfo[] GetCameraConfigFile(string cameraSerial)
+        public static FileInfo[] GetCameraConfigFiles(string cameraSerial)
         {
             FileInfo[] fileInfos = new FileInfo[0];
 
@@ -373,7 +373,7 @@ namespace VisionPlatform.Core
         /// <param name="cameraSerial">相机配置文件</param>
         /// <returns>文件信息列表</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
-        public static FileInfo[] GetCameraCalibrationFile(string cameraSerial)
+        public static FileInfo[] GetCameraCalibrationFiles(string cameraSerial)
         {
             FileInfo[] fileInfos = new FileInfo[0];
 
