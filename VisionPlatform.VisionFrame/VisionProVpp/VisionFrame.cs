@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using VisionPlatform.BaseType;
 
-namespace VisionPlatform.VisionProVisionFrame
+namespace VisionProVpp
 {
     public class VisionFrame : IVisionFrame
     {
@@ -77,7 +77,7 @@ namespace VisionPlatform.VisionProVisionFrame
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.VisionPro;
+        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.VisionProVpp;
 
         /// <summary>
         /// 视觉算子文件类型

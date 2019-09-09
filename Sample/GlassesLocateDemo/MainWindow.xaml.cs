@@ -76,7 +76,7 @@ namespace GlassesLocateDemo
             CameraFactory.UpdateAssembly();
             CameraFactory.DefaultCameraSdkType = SystemParams.DefaultCameraSdkType;
 
-            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
+            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionProVpp) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
                 try
                 {

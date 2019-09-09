@@ -11,14 +11,24 @@
         Unknown = 0,
 
         /// <summary>
-        /// Halcon平台
+        /// 基于DLL的Halcon平台
         /// </summary>
-        Halcon,
+        HalconDLL,
 
         /// <summary>
-        /// VisionPro平台
+        /// 基于HDevelop的Halcon平台
         /// </summary>
-        VisionPro,
+        HalconHdev,
+
+        /// <summary>
+        /// 基于DLL的VisionPro平台
+        /// </summary>
+        VisionProDLL,
+
+        /// <summary>
+        /// 基于VPP加载的VisionPro平台
+        /// </summary>
+        VisionProVpp,
 
         /// <summary>
         /// NIVision平台

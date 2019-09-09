@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VisionPlatform.VisionProVisionFrame.Properties
+namespace VisionProVpp.Properties
 {
     
     

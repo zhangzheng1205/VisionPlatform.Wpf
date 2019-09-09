@@ -12,7 +12,7 @@ namespace GlassesLocateDemo
         /// <summary>
         /// 默认视觉框架
         /// </summary>
-        public EVisionFrameType DefaultVisionFrameType { get; set; } = EVisionFrameType.Halcon;
+        public EVisionFrameType DefaultVisionFrameType { get; set; } = EVisionFrameType.HalconDLL;
 
         /// <summary>
         /// 默认相机框架

@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using VisionPlatform.BaseType;
 
-namespace VisionPlatform.HalconVisionFrame
+namespace HalconDLL
 {
     public class VisionFrame : IVisionFrame
     {
@@ -23,7 +23,7 @@ namespace VisionPlatform.HalconVisionFrame
         /// <summary>
         /// 视觉框架名
         /// </summary>
-        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.Halcon;
+        public EVisionFrameType EVisionFrameType { get; } = EVisionFrameType.HalconDLL;
 
         /// <summary>
         /// 视觉算子接口

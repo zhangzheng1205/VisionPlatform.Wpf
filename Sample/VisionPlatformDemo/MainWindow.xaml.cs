@@ -33,13 +33,13 @@ namespace VisionPlatformDemo
 
             //更新视觉框架集合
             VisionFrameFactory.UpdateAssembly();
-            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.Halcon;
+            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.HalconDLL;
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
             CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
 
-            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionPro) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
+            if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionProVpp) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
                 CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
                 CameraFactory.AddCamera(@"E:\测试图像\刹车片");
@@ -81,7 +81,7 @@ namespace VisionPlatformDemo
         {
             if (IsLoaded)
             {
-                if ((EVisionFrameType)e.AddedItems[0] == EVisionFrameType.VisionPro)
+                if ((EVisionFrameType)e.AddedItems[0] == EVisionFrameType.VisionProVpp)
                 {
                     CameraSdkDockPanel.Visibility = Visibility.Hidden;
                 }

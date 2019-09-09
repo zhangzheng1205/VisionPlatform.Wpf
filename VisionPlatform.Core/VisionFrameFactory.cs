@@ -44,12 +44,21 @@ namespace VisionPlatform.Core
         /// <returns>ECameraSdkType</returns>
         private static EVisionFrameType ConvertToEVisionFrameType(string directoryName)
         {
-            switch (directoryName)
+            try
             {
-                case "HalconVisionFrame": return EVisionFrameType.Halcon;
-                case "VisionProVisionFrame": return EVisionFrameType.VisionPro;
-                case "NiVisionVisionFrame": return EVisionFrameType.NIVision;
-                default: return EVisionFrameType.Unknown;
+                return (EVisionFrameType)Enum.Parse(typeof(EVisionFrameType), directoryName, true);
+            }
+            catch (ArgumentNullException)
+            {
+                return EVisionFrameType.Unknown;
+            }
+            catch (ArgumentException)
+            {
+                return EVisionFrameType.Unknown;
+            }
+            catch (OverflowException)
+            {
+                return EVisionFrameType.Unknown;
             }
         }
 
@@ -68,14 +77,20 @@ namespace VisionPlatform.Core
                 foreach (var item in directoryInfo.GetDirectories())
                 {
                     //获取集合
-                    var dllPath = $"{VisionFrameDllRootPath}/{item.Name}/VisionPlatform.{item.Name}.dll";
+                    var dllPath = $"{VisionFrameDllRootPath}/{item.Name}/{item.Name}.dll";
 
                     if (File.Exists(dllPath))
                     {
                         var assembly = Assembly.LoadFrom(dllPath);
 
+                        EVisionFrameType visionFrameType = ConvertToEVisionFrameType(item.Name);
+                        if (visionFrameType == EVisionFrameType.Unknown)
+                        {
+                            continue;
+                        }
+
                         //将dll添加到集合字典中
-                        VisionFrameAssemblys.Add(ConvertToEVisionFrameType(item.Name), assembly);
+                        VisionFrameAssemblys.Add(visionFrameType, assembly);
                     }
 
                 }
