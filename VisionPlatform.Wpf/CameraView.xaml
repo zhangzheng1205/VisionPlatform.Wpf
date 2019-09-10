@@ -35,8 +35,8 @@
                 <GroupBox Header="相机及配置列表" Grid.Row="0">
                     <StackPanel Margin="5,10">
                         <DockPanel>
-                            <Button MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0">刷新</Button>
-                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">相机</TextBlock>
+                            <Button MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0" Visibility="Collapsed">刷新</Button>
+                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Visibility="Collapsed">相机</TextBlock>
                             <ComboBox x:Name="CameraListComboBox" 
                                       ItemsSource="{Binding Cameras}" 
                                       SelectedItem="{Binding Camera}" 
@@ -46,27 +46,27 @@
                                   cal:Message.Attach="[Event SelectionChanged] = [Action SetCamera(CameraListComboBox.SelectedValue)]" 
                                   x:Name="CameraListComboBox"  MinHeight="100" Margin="5" />
                         <Button cal:Message.Attach="UpdateCameras" Content="刷新相机" Margin="0,0,5,0" MinWidth="60" HorizontalAlignment="Right"/>-->
-
                         <StackPanel MinHeight="2" Margin="10" Background="LightGray"/>
-
-                        <DockPanel>
-                            <Button cal:Message.Attach="UpdateCameraConfigFiles" MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0">刷新</Button>
-                            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">配置</TextBlock>
-                            <ComboBox x:Name="CameraConfigFileListComboBox" 
+                        <StackPanel IsEnabled="{Binding IsCameraValid}">
+                            <DockPanel>
+                                <Button cal:Message.Attach="UpdateCameraConfigFiles" MinWidth="60" DockPanel.Dock="Right" Margin="10,0,0,0">刷新</Button>
+                                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">配置</TextBlock>
+                                <ComboBox x:Name="CameraConfigFileListComboBox" 
                                       ItemsSource="{Binding CameraConfigFiles}" 
                                       SelectedItem="{Binding CameraConfigFile}" 
                                       cal:Message.Attach="[Event SelectionChanged] = [Action UpdateConfig(CameraConfigFileListComboBox.SelectedItem)]"
                                       IsEditable="True"/>
-                        </DockPanel>
-                        <DockPanel Margin="0,10,0,0">
-                            <TextBlock x:Name="NewConfigFileTextBlock" Visibility="Collapsed"/>
-                            <!--<Button cal:Message.Attach="SaveToFile(NewConfigFileTextBlock.Text)"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">另存为...</Button>-->
-                            <Button cal:Message.Attach="SaveToCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">保存</Button>
-                            <Button cal:Message.Attach="DeleteCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">删除</Button>
-                            <!--<Button cal:Message.Attach="LoadParam"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">加载</Button>-->
-                            <!--<Button cal:Message.Attach="UpdateCameraConfigFiles"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">刷新</Button>-->
-                            <StackPanel/>
-                        </DockPanel>
+                            </DockPanel>
+                            <DockPanel Margin="0,10,0,0">
+                                <TextBlock x:Name="NewConfigFileTextBlock" Visibility="Collapsed"/>
+                                <!--<Button cal:Message.Attach="SaveToFile(NewConfigFileTextBlock.Text)"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">另存为...</Button>-->
+                                <Button cal:Message.Attach="SaveToCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">保存</Button>
+                                <Button cal:Message.Attach="DeleteCurrentFile(CameraConfigFileListComboBox.Text)" DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">删除</Button>
+                                <!--<Button cal:Message.Attach="LoadParam"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">加载</Button>-->
+                                <!--<Button cal:Message.Attach="UpdateCameraConfigFiles"  DockPanel.Dock="Right" MinWidth="60" Margin="10,0,0,0">刷新</Button>-->
+                                <StackPanel/>
+                            </DockPanel>
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="相机参数" Grid.Row="1" Margin="0,5,0,0">

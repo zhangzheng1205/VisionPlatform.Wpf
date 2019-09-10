@@ -102,6 +102,7 @@
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" MinWidth="60" Click="OpenCalibButton_Click">标定窗口</Button>
+                        <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" MinWidth="60" Click="OpenCameraButton_Click">相机窗口</Button>
                     </Grid>
                 </StackPanel>
             </StackPanel>

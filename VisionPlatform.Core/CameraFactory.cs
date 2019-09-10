@@ -393,8 +393,6 @@ namespace VisionPlatform.Core
             return fileInfos;
         }
 
-
-
         #endregion
 
         #region 配置管理

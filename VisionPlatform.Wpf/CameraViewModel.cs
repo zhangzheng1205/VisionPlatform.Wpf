@@ -444,17 +444,21 @@ namespace VisionPlatform.Wpf
         /// <param name="fileName">配置文件名(不包含路径)</param>
         public void SaveToCurrentFile(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return;
-            }
-
             try
             {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentException("文件名无效");
+                }
+
                 if (Camera?.IsOpen == true)
                 {
                     string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
                     SaveToFile(file);
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Warning, "相机无效");
                 }
             }
             catch (Exception ex)
@@ -470,13 +474,13 @@ namespace VisionPlatform.Wpf
         /// <param name="file">文件路径(全路径)</param>
         public void SaveToFile(string file)
         {
-            if (string.IsNullOrEmpty(file))
-            {
-                return;
-            }
-
             try
             {
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new ArgumentException("文件名无效");
+                }
+
                 if (Camera?.IsOpen == true)
                 {
                     var cameraConfigParam = new CameraConfigParam();
@@ -489,6 +493,10 @@ namespace VisionPlatform.Wpf
                     cameraConfigParam.Gain = Camera.Gain;
 
                     JsonSerialization.SerializeObjectToFile(cameraConfigParam, file);
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Warning, "相机无效");
                 }
             }
             catch (Exception ex)
@@ -574,6 +582,39 @@ namespace VisionPlatform.Wpf
             }
         }
 
+        /// <summary>
+        /// 删除当前文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void DeleteCurrentFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentException("无效路径/文件不存在");
+                }
+
+                if (Camera?.IsOpen == true)
+                {
+                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                        UpdateCameraConfigFiles();
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"{nameof(file)}:{file}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
         #endregion
 
     }
