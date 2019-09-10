@@ -312,6 +312,9 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Accept()
         {
+            //保存输入输出参数到本地文件
+            Scene.SaveParamToLocalFile();
+
             OnSceneConfigurationCompleted(Scene);
         }
 

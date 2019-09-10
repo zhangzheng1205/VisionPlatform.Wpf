@@ -51,13 +51,13 @@
                         <DockPanel>
                             <TextBlock Margin="0,0,10,0" MinWidth="48" VerticalAlignment="Center">配置文件</TextBlock>
                             <Button cal:Message.Attach="OpenCameraView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">...</Button>
-                            <ComboBox ItemsSource="{Binding CameraConfigFiles}" SelectedItem="{Binding SelectedCameraConfigFile}"/>
+                            <ComboBox x:Name="CameraConfigFileComboBox" ItemsSource="{Binding CameraConfigFiles}" SelectedItem="{Binding SelectedCameraConfigFile}" cal:Message.Attach="[Event SelectionChanged] = [Action SetCameraConfigFile(CameraConfigFileComboBox.SelectedItem)]"/>
                         </DockPanel>
                         <StackPanel MinHeight="10"/>
                         <DockPanel>
                             <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">标定文件</TextBlock>
                             <Button cal:Message.Attach="OpenCalibrationView" Margin="5,0,0,0" DockPanel.Dock="Right" MinWidth="40">刷新</Button>
-                            <ComboBox ItemsSource="{Binding CameraCalibrationFiles}" SelectedItem="SelectedCalibrationFile"/>
+                            <ComboBox x:Name="CalibrationFileComboBox" ItemsSource="{Binding CameraCalibrationFiles}" SelectedItem="SelectedCalibrationFile" cal:Message.Attach="[Event SelectionChanged] = [Action SetCameraCalibrationFile(CalibrationFileComboBox.SelectedItem)]"/>
                         </DockPanel>
                     </StackPanel>
                 </StackPanel>

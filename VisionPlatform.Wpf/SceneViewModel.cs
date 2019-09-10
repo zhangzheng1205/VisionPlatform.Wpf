@@ -603,6 +603,54 @@ namespace VisionPlatform.Wpf
         {
         }
 
+        #region 相机参数配置
+
+        /// <summary>
+        /// 设置相机配置文件
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        public void SetCameraConfigFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return;
+                }
+
+                Scene.SetCameraConfigFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+            
+        }
+
+        /// <summary>
+        /// 设置相机标定文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void SetCameraCalibrationFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return;
+                }
+
+                Scene.SetCameraCalibrationFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+
         private Window SceneParamDebugWindow;
 
         /// <summary>
