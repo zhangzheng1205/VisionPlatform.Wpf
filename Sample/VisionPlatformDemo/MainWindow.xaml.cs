@@ -76,8 +76,24 @@ namespace VisionPlatformDemo
 
         private void ConfigFrameButton_Click(object sender, RoutedEventArgs e)
         {
+            //移除所有的场景和相机
+            CameraFactory.RemoveAllCameras();
+            SceneManager.ResetScenes();
+
+            //切换环境
             CameraFactory.DefaultCameraSdkType = (ECameraSdkType)CameraSDKComboBox.SelectedItem;
             VisionFrameFactory.DefaultVisionFrameType = (EVisionFrameType)VisionFrameComboBox.SelectedItem;
+
+            CameraFactory.AddAllCamera();
+            SceneManager.RecoverScenes();
+
+            //更新场景
+            ScenesListView.Items.Clear();
+            foreach (var item in SceneManager.Scenes.Values)
+            {
+                ScenesListView.Items.Add(item);
+            }
+
         }
 
         private void VisionFrameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

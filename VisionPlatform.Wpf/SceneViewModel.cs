@@ -267,6 +267,7 @@ namespace VisionPlatform.Wpf
             {
                 cameraConfigFiles = value;
                 NotifyOfPropertyChange(() => CameraConfigFiles);
+                NotifyOfPropertyChange(() => SelectedCameraConfigFile);
             }
         }
 
@@ -281,10 +282,7 @@ namespace VisionPlatform.Wpf
             }
             set
             {
-                if (Scene != null)
-                {
-                    Scene.SetCameraConfigFile(value);
-                }
+                Scene?.SetCameraConfigFile(value);
                 NotifyOfPropertyChange(() => CameraConfigFiles);
             }
         }
@@ -304,6 +302,7 @@ namespace VisionPlatform.Wpf
             {
                 cameraCalibrationFiles = value;
                 NotifyOfPropertyChange(() => CameraCalibrationFiles);
+                NotifyOfPropertyChange(() => SelectedCalibrationFile);
             }
         }
 
@@ -318,10 +317,7 @@ namespace VisionPlatform.Wpf
             }
             set
             {
-                if ((Scene != null) && (value != "不选择任何文件"))
-                {
-                    Scene.SetCameraCalibrationFile(value);
-                }
+                Scene?.SetCameraCalibrationFile((value == "不选择任何文件") ? null : value);
                 NotifyOfPropertyChange(() => SelectedCalibrationFile);
             }
         }
@@ -554,6 +550,7 @@ namespace VisionPlatform.Wpf
                 cameraViewWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 //SceneParamDebugWindow.Owner = Window.GetWindow(this);
                 cameraViewWindow.Title = "场景参数配置窗口";
+                cameraViewWindow.Closed += CameraViewWindow_Closed;
 
                 cameraViewWindow.ShowDialog();
 
@@ -564,10 +561,8 @@ namespace VisionPlatform.Wpf
             }
         }
 
-        private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
+        private void CameraViewWindow_Closed(object sender, EventArgs e)
         {
-            cameraViewWindow.Close();
-
             //刷新相机配置文件
             UpdateCameraFile();
 
@@ -575,81 +570,51 @@ namespace VisionPlatform.Wpf
             Scene.SetCameraConfigFile(SelectedCameraConfigFile);
         }
 
-        /// <summary>
-        /// 打开标定控件
-        /// </summary>
-        public void OpenCalibrationView()
+        private void ViewModel_CameraConfigurationCompleted(object sender, CameraConfigurationCompletedEventArgs e)
         {
-            try
-            {
-                if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.SerialNumber)))
-                {
-                    throw new DriveNotFoundException("没有选定相机");
-                }
+            cameraViewWindow.Close();
 
-                //var view = new CalibrationView();
-                //var viewModel = (view.DataContext as CalibrationViewModel);
-                //viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted;
-                //viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted;
-
-            }
-            catch (Exception ex)
-            {
-                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
-            }
         }
 
-        private void ViewModel_CalibrationConfigurationCompleted(object sender, CalibrationConfigurationCompletedEventArgs e)
-        {
-        }
+        ///// <summary>
+        ///// 打开标定控件
+        ///// </summary>
+        //public void OpenCalibrationView()
+        //{
+        //    try
+        //    {
+        //        if ((Scene?.VisionFrame.IsEnableCamera == true) && (string.IsNullOrEmpty(SelectedCamera?.Info?.SerialNumber)))
+        //        {
+        //            throw new DriveNotFoundException("没有选定相机");
+        //        }
 
-        #region 相机参数配置
+        //        //var view = new CalibrationView();
+        //        //var viewModel = (view.DataContext as CalibrationViewModel);
+        //        //viewModel.CalibrationConfigurationCompleted -= ViewModel_CalibrationConfigurationCompleted;
+        //        //viewModel.CalibrationConfigurationCompleted += ViewModel_CalibrationConfigurationCompleted;
 
-        /// <summary>
-        /// 设置相机配置文件
-        /// </summary>
-        /// <param name="fileName">文件名</param>
-        public void SetCameraConfigFile(string fileName)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    return;
-                }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+        //    }
+        //}
 
-                Scene.SetCameraConfigFile(fileName);
-            }
-            catch (Exception ex)
-            {
-                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
-            }
-            
-        }
+        //private void ViewModel_CalibrationConfigurationCompleted(object sender, CalibrationConfigurationCompletedEventArgs e)
+        //{
+
+        //}
 
         /// <summary>
-        /// 设置相机标定文件
+        /// 更新标定文件
         /// </summary>
-        /// <param name="fileName"></param>
-        public void SetCameraCalibrationFile(string fileName)
+        public void UpdateCalibrationFile()
         {
-            try
-            {
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    return;
-                }
-
-                Scene.SetCameraCalibrationFile(fileName);
-            }
-            catch (Exception ex)
-            {
-                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
-            }
+            //获取相机标定文件
+            FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFiles(SelectedCamera?.Info.SerialNumber);
+            CameraCalibrationFiles = new ObservableCollection<string>(calibrationFileInfos.ToList().ConvertAll(x => x.Name));
+            CameraCalibrationFiles.Add("不选择任何文件");
         }
-
-        #endregion
-
 
         private Window SceneParamDebugWindow;
 

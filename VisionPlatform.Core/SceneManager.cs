@@ -177,6 +177,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 恢复场景列表
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
         public void RecoverScenes()
         {
             Scenes.Clear();
@@ -206,6 +207,19 @@ namespace VisionPlatform.Core
                             catch (ArgumentException)
                             {
                             }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                //当前场景已被删除,移除该场景
+                                item.Delete(true);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                            
                         }
 
                     }

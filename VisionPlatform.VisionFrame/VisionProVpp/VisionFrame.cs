@@ -14,9 +14,36 @@ namespace VisionProVpp
         public VisionFrame()
         {
             visionProDisplayControl = new VisionProDisplayControl();
+            visionProDisplayControl.Unloaded += VisionProDisplayControl_Unloaded;
+
             visionProConfigControl = new VisionProConfigControl();
+            visionProConfigControl.Unloaded += VisionProConfigControl_Unloaded;
 
             visionProConfigControl.NewVppFileLoaded += VisionProConfigControl_NewVppFileLoaded;
+        }
+
+        private void VisionProDisplayControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            visionProDisplayControl = new VisionProDisplayControl();
+            visionProDisplayControl.Unloaded += VisionProDisplayControl_Unloaded;
+
+            if (!string.IsNullOrEmpty(vppFilePath) && File.Exists(vppFilePath))
+            {
+                Init(vppFilePath);
+            }
+        }
+
+        private void VisionProConfigControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            visionProConfigControl = new VisionProConfigControl();
+            visionProConfigControl.Unloaded += VisionProConfigControl_Unloaded;
+            visionProConfigControl.NewVppFileLoaded += VisionProConfigControl_NewVppFileLoaded;
+
+            if (!string.IsNullOrEmpty(vppFilePath) && File.Exists(vppFilePath))
+            {
+                Init(vppFilePath);
+            }
+            
         }
 
         /// <summary>
@@ -174,7 +201,7 @@ namespace VisionProVpp
                 Outputs.Clear();
                 for (int i = 0; i < cogToolBlock.Outputs.Count; i++)
                 {
-                    Outputs.Add(new ItemBase(cogToolBlock.Outputs[i].Name, cogToolBlock.Outputs[i].Value, cogToolBlock.Outputs[i].ValueType, cogToolBlock.Outputs[i].Description));
+                    Outputs.Add(new ItemBase(cogToolBlock.Outputs[i].Name, cogToolBlock.Outputs[i].Value, cogToolBlock.Outputs[i].ValueType, string.IsNullOrEmpty(cogToolBlock.Outputs[i].Description) ? cogToolBlock.Outputs[i].Name : cogToolBlock.Outputs[i].Description));
                 }
 
                 return true;
@@ -254,7 +281,8 @@ namespace VisionProVpp
                         Outputs.Clear();
                         for (int i = 0; i < cogToolBlock.Outputs.Count; i++)
                         {
-                            Outputs.Add(new ItemBase(cogToolBlock.Outputs[i].Name, cogToolBlock.Outputs[i].Value, cogToolBlock.Outputs[i].ValueType, cogToolBlock.Outputs[i].Description));
+                            Outputs.Add(new ItemBase(cogToolBlock.Outputs[i].Name, cogToolBlock.Outputs[i].Value, cogToolBlock.Outputs[i].ValueType, string.IsNullOrEmpty(cogToolBlock.Outputs[i].Description) ? cogToolBlock.Outputs[i].Name : cogToolBlock.Outputs[i].Description));
+
                         }
                         outputs = new ItemCollection(Outputs);
 

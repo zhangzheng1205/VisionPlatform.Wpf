@@ -455,6 +455,7 @@ namespace VisionPlatform.Wpf
                 {
                     string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
                     SaveToFile(file);
+                    OnMessageRaised(MessageLevel.Message, "保存成功");
                 }
                 else
                 {

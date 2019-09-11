@@ -585,27 +585,30 @@ namespace VisionPlatform.Core
         {
             CameraConfigFile = file;
 
-            //获取相机配置参数
-            string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
-
-            if (File.Exists(configFile))
+            if (!string.IsNullOrEmpty(file))
             {
-                cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(configFile);
+                //获取相机配置参数
+                string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
 
-                //还原相机配置
-                try
+                if (File.Exists(configFile))
                 {
-                    CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
-                }
-                catch (Exception)
-                {
+                    cameraConfigParam = JsonSerialization.DeserializeObjectFromFile<CameraConfigParam>(configFile);
 
+                    //还原相机配置
+                    try
+                    {
+                        CameraFactory.ConfigurateCamera(CameraSerial, cameraConfigParam);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
-            }
-            else
-            {
-                cameraConfigParam = CameraFactory.GetCameraConfigration(CameraSerial);
-                JsonSerialization.SerializeObjectToFile(cameraConfigParam, configFile);
+                else
+                {
+                    cameraConfigParam = CameraFactory.GetCameraConfigration(CameraSerial);
+                    JsonSerialization.SerializeObjectToFile(cameraConfigParam, configFile);
+                }
             }
 
         }
@@ -618,17 +621,20 @@ namespace VisionPlatform.Core
         {
             CalibrationFile = file;
 
-            //获取相机配置参数
-            string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/CalibrationFile/{CalibrationFile}";
+            if (!string.IsNullOrEmpty(file))
+            {
+                //获取相机配置参数
+                string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/CalibrationFile/{CalibrationFile}";
 
-            if (File.Exists(calibrationFile))
-            {
-                calibrationParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(calibrationFile);
-            }
-            else
-            {
-                calibrationParam = new CalibParam();
-                JsonSerialization.SerializeObjectToFile(calibrationParam, calibrationFile);
+                if (File.Exists(calibrationFile))
+                {
+                    calibrationParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(calibrationFile);
+                }
+                else
+                {
+                    calibrationParam = new CalibParam();
+                    JsonSerialization.SerializeObjectToFile(calibrationParam, calibrationFile);
+                }
             }
 
         }
