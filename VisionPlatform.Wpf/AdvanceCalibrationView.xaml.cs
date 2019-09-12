@@ -41,11 +41,11 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                var directoryInfo = new DirectoryInfo("./VisionPlatform/Camera/CameraConfig");
+                var directoryInfo = new DirectoryInfo($"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig");
 
                 if (!string.IsNullOrEmpty(CameraSerialTextBlock.Text))
                 {
-                    string defaultPath = $"VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
+                    string defaultPath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
 
                     directoryInfo = new DirectoryInfo(defaultPath);
                 }
@@ -80,7 +80,7 @@ namespace VisionPlatform.Wpf
 
             if (!string.IsNullOrEmpty(CameraSerialTextBlock.Text))
             {
-                string defaultPath = $"VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
+                string defaultPath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{CameraSerialTextBlock.Text}/CalibrationFile";
 
                 directoryInfo = new DirectoryInfo(defaultPath);
             }

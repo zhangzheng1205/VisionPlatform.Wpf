@@ -17,7 +17,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 相机DLL根目录
         /// </summary>
-        public static string CameraDllRootPath { get; } = "VisionPlatform/Camera/CameraSDK";
+        public static string CameraDllRootPath { get; } = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraSDK";
 
         /// <summary>
         /// 相机集合字典
@@ -355,7 +355,7 @@ namespace VisionPlatform.Core
             {
                 if (DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                 {
-                    var directory = new DirectoryInfo($"VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile");
+                    var directory = new DirectoryInfo($"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{cameraSerial}/ConfigFile");
 
                     fileInfos = directory?.GetFiles("*.json", SearchOption.TopDirectoryOnly) ?? new FileInfo[0];
                 }
@@ -381,7 +381,7 @@ namespace VisionPlatform.Core
             {
                 if (DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                 {
-                    var directory = new DirectoryInfo($"VisionPlatform/Camera/CameraConfig/{cameraSerial}/CalibrationFile");
+                    var directory = new DirectoryInfo($"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{cameraSerial}/CalibrationFile");
 
                     fileInfos = directory?.GetFiles("*.json", SearchOption.TopDirectoryOnly) ?? new FileInfo[0];
                 }

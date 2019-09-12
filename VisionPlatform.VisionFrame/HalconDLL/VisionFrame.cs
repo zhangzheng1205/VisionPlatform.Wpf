@@ -298,7 +298,7 @@ namespace HalconDLL
         /// <param name="outputs">输出结果</param>
         public void Execute(int timeout, out ItemCollection outputs)
         {
-            Exception exception = new NotImplementedException("当前视觉框架不支持此方法(HalconVisionFrame)");
+            Exception exception = new NotImplementedException("当前视觉框架不支持此方法(HalconDll)");
             RunStatus = new RunStatus(0, EResult.Error, exception.Message, exception);
 
             throw exception;

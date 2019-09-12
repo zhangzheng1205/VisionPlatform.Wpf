@@ -588,7 +588,7 @@ namespace VisionPlatform.Core
             if (!string.IsNullOrEmpty(file))
             {
                 //获取相机配置参数
-                string configFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
+                string configFile = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{CameraSerial}/ConfigFile/{CameraConfigFile}";
 
                 if (File.Exists(configFile))
                 {
@@ -624,7 +624,7 @@ namespace VisionPlatform.Core
             if (!string.IsNullOrEmpty(file))
             {
                 //获取相机配置参数
-                string calibrationFile = $"VisionPlatform/Camera/CameraConfig/{CameraSerial}/CalibrationFile/{CalibrationFile}";
+                string calibrationFile = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{CameraSerial}/CalibrationFile/{CalibrationFile}";
 
                 if (File.Exists(calibrationFile))
                 {
@@ -653,7 +653,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
+                string filePath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
 
                 if (isForceDefault)
                 {
@@ -687,7 +687,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
+                string filePath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
                 if (isForceDefault)
                 {
                     JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
@@ -795,7 +795,7 @@ namespace VisionPlatform.Core
                     throw new ArgumentException("VisionOperaFile cannot be null");
                 }
 
-                string visionOperaFilePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOperation/{VisionOperaFile}";
+                string visionOperaFilePath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{EVisionFrameType}/{Name}/VisionOperation/{VisionOperaFile}";
                 VisionFrame.Init(visionOperaFilePath);
 
                 //还原输入参数
@@ -1027,7 +1027,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
+                string filePath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{EVisionFrameType}/{Name}/InputParam/{InputParamFile}";
                 JsonSerialization.SerializeObjectToFile(VisionFrame.Inputs, filePath);
             }
 
@@ -1040,7 +1040,7 @@ namespace VisionPlatform.Core
                 }
 
                 //若文件不存在,则创建默认配置到此文件;若文件存在,则从配置文件中加载配置;
-                string filePath = $"VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
+                string filePath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{EVisionFrameType}/{Name}/OutputParam/{OutputParamFile}";
                 JsonSerialization.SerializeObjectToFile(VisionFrame.Outputs, filePath);
             }
 

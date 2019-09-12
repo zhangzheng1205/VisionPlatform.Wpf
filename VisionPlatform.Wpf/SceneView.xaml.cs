@@ -72,7 +72,7 @@ namespace VisionPlatform.Wpf
             var ofd = new Microsoft.Win32.OpenFileDialog
             {
                 DefaultExt = ".dll",
-                Filter = "常用格式|*.dll;*.vpp|其他|*.*"
+                Filter = "常用格式|*.dll;*.vpp;*.hdev|其他|*.*"
             };
 
             if (ofd.ShowDialog() == true)

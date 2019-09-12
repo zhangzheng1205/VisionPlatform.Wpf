@@ -444,7 +444,7 @@ namespace VisionPlatform.Wpf
             {
                 RobotAssemblys.Clear();
 
-                string robotDllRootPath = "VisionPlatform/RobotComunication";
+                string robotDllRootPath = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/RobotComunication";
 
                 //遍历目录
                 if (Directory.Exists(robotDllRootPath))

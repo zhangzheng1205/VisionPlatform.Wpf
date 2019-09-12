@@ -454,7 +454,7 @@ namespace VisionPlatform.Wpf
 
                 if (Camera?.IsOpen == true)
                 {
-                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
                     SaveToFile(file);
                     OnMessageRaised(MessageLevel.Message, "保存成功");
                 }
@@ -525,7 +525,7 @@ namespace VisionPlatform.Wpf
 
                 if (Camera?.IsOpen == true)
                 {
-                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
                     LoadFromFile(file);
                 }
             }
@@ -578,7 +578,7 @@ namespace VisionPlatform.Wpf
         {
             if (Camera?.IsOpen == true)
             {
-                string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
 
                 if (File.Exists(file))
                 {
@@ -602,7 +602,7 @@ namespace VisionPlatform.Wpf
 
                 if (Camera?.IsOpen == true)
                 {
-                    string file = $"VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Camera.Info.SerialNumber}/ConfigFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
 
                     if (File.Exists(file))
                     {

@@ -33,7 +33,7 @@ namespace VisionPlatformDemo
 
             //更新视觉框架集合
             VisionFrameFactory.UpdateAssembly();
-            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.HalconDLL;
+            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.HalconHdev;
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();

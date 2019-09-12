@@ -89,7 +89,7 @@ namespace VisionPlatform.Core
                 }
 
                 //保存场景到本地
-                string file = $"VisionPlatform/Scene/{scene.EVisionFrameType}/{scene.Name}/Scene.json";
+                string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{scene.EVisionFrameType}/{scene.Name}/Scene.json";
                 Scene.Serialize(scene, file);
             }
             catch (Exception)
@@ -114,7 +114,7 @@ namespace VisionPlatform.Core
                     //释放场景
                     Scenes[sceneName].Dispose();
 
-                    string file = $"VisionPlatform/Scene/{Scenes[sceneName].EVisionFrameType}/{Scenes[sceneName].Name}/Scene.json";
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{Scenes[sceneName].EVisionFrameType}/{Scenes[sceneName].Name}/Scene.json";
                     Scenes.Remove(sceneName);
                     File.Delete(file);
 
@@ -183,7 +183,7 @@ namespace VisionPlatform.Core
             Scenes.Clear();
             if (VisionFrameFactory.DefaultVisionFrameType != BaseType.EVisionFrameType.Unknown)
             {
-                var baseSceneDirectory = $"VisionPlatform/Scene/{VisionFrameFactory.DefaultVisionFrameType}";
+                var baseSceneDirectory = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Scene/{VisionFrameFactory.DefaultVisionFrameType}";
 
                 if (Directory.Exists(baseSceneDirectory))
                 {

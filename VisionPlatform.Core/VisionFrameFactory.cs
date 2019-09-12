@@ -17,7 +17,7 @@ namespace VisionPlatform.Core
         /// <summary>
         /// 视觉框架DLL根目录
         /// </summary>
-        public static string VisionFrameDllRootPath { get; } = "VisionPlatform/VisionFrame";
+        public static string VisionFrameDllRootPath { get; } = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/VisionFrame";
 
         /// <summary>
         /// 视觉平台集合字典
