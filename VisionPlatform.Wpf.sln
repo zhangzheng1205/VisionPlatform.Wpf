@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blob", "VisionPlatform.Visi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlassesLocate", "VisionPlatform.VisionOperation\GlassesLocate\GlassesLocate.csproj", "{B59B98B4-3A00-4934-99E6-F6EAD8CD591B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgvLocate", "VisionPlatform.VisionOperation\AgvLocate\AgvLocate.csproj", "{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,18 @@ Global
 		{B59B98B4-3A00-4934-99E6-F6EAD8CD591B}.Release|x64.Build.0 = Release|x64
 		{B59B98B4-3A00-4934-99E6-F6EAD8CD591B}.Release|x86.ActiveCfg = Release|Any CPU
 		{B59B98B4-3A00-4934-99E6-F6EAD8CD591B}.Release|x86.Build.0 = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|x64.Build.0 = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Debug|x86.Build.0 = Debug|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|x64.Build.0 = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|x86.ActiveCfg = Release|Any CPU
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +217,7 @@ Global
 		{AC9B9144-A9BA-4FDF-9C78-1435AFE4AA00} = {1B2A17D6-9F0F-4BA5-930A-84CDEE2C0137}
 		{3CEB6101-224C-46D3-99A4-28C6DCE98092} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 		{B59B98B4-3A00-4934-99E6-F6EAD8CD591B} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
+		{CE2BA300-9E4D-4F12-9E89-5FBC9E97D495} = {43F9884C-8AC0-4BF0-9D15-99B79D5332B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EC6FD06-F01F-434E-B785-2BA965A5BD61}

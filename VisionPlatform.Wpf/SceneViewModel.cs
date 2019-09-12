@@ -547,7 +547,7 @@ namespace VisionPlatform.Wpf
                 cameraViewWindow.Width = view.MinWidth + 100;
                 cameraViewWindow.Height = view.MinHeight + 100;
                 cameraViewWindow.Content = view;
-                cameraViewWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                cameraViewWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 //SceneParamDebugWindow.Owner = Window.GetWindow(this);
                 cameraViewWindow.Title = "场景参数配置窗口";
                 cameraViewWindow.Closed += CameraViewWindow_Closed;
@@ -642,7 +642,7 @@ namespace VisionPlatform.Wpf
                 SceneParamDebugWindow.Width = view.MinWidth + 600;
                 SceneParamDebugWindow.Height = view.MinHeight + 200;
                 SceneParamDebugWindow.Content = view;
-                SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 //SceneParamDebugWindow.Owner = Window.GetWindow(this);
                 SceneParamDebugWindow.Title = "场景参数配置窗口";
                 //SceneParamDebugWindow.WindowState = WindowState.Maximized;

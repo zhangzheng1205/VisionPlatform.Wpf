@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using VisionPlatform.BaseType;
 using VisionPlatform.Core;
@@ -494,6 +495,9 @@ namespace VisionPlatform.Wpf
                     cameraConfigParam.Gain = Camera.Gain;
 
                     JsonSerialization.SerializeObjectToFile(cameraConfigParam, file);
+
+                    //刷新配置文件列表
+                    UpdateCameraConfigFiles();
                 }
                 else
                 {
@@ -616,6 +620,25 @@ namespace VisionPlatform.Wpf
                 OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 新增配置文件
+        /// </summary>
+        public void AddConfigFile()
+        {
+            var inputWindow = new InputWindow();
+            inputWindow.InputAccepted += InputWindow_InputAccepted;
+
+            inputWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            inputWindow.ShowDialog();
+        }
+
+        private void InputWindow_InputAccepted(object sender, InputAcceptedEventArgs e)
+        {
+            //新增场景
+            SaveToCurrentFile(Path.GetFileNameWithoutExtension(e.Input.Trim(' ')) + ".json");
+        }
+
         #endregion
 
     }

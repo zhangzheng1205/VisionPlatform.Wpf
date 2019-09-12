@@ -153,7 +153,7 @@ namespace VisionPlatformDemo
             SceneConfigWindow.Width = 800;
             SceneConfigWindow.Height = 500;
             SceneConfigWindow.Content = view;
-            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             SceneConfigWindow.Owner = Window.GetWindow(this);
             SceneConfigWindow.Title = "场景配置窗口";
             SceneConfigWindow.WindowState = WindowState.Maximized;
@@ -204,7 +204,7 @@ namespace VisionPlatformDemo
             SceneConfigWindow.Width = 800;
             SceneConfigWindow.Height = 500;
             SceneConfigWindow.Content = view;
-            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             SceneConfigWindow.Owner = Window.GetWindow(this);
             SceneConfigWindow.Title = "场景配置窗口";
             SceneConfigWindow.WindowState = WindowState.Maximized;
@@ -375,7 +375,7 @@ namespace VisionPlatformDemo
             window.Width = view.MinWidth + 50;
             window.Height = view.MinHeight + 50;
             window.Content = view;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.Owner = Window.GetWindow(this);
             window.Title = "标定窗口";
             window.ShowDialog();

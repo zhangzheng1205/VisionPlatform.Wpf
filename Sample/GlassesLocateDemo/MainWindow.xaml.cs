@@ -167,7 +167,7 @@ namespace GlassesLocateDemo
                 SceneConfigWindow.Width = 800;
                 SceneConfigWindow.Height = 500;
                 SceneConfigWindow.Content = view;
-                SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 SceneConfigWindow.Owner = Window.GetWindow(this);
                 SceneConfigWindow.Title = "场景配置窗口";
                 SceneConfigWindow.WindowState = WindowState.Maximized;
@@ -242,7 +242,7 @@ namespace GlassesLocateDemo
                 SceneConfigWindow.Width = 800;
                 SceneConfigWindow.Height = 500;
                 SceneConfigWindow.Content = view;
-                SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                SceneConfigWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 SceneConfigWindow.Owner = Window.GetWindow(this);
                 SceneConfigWindow.Title = "场景配置窗口";
                 SceneConfigWindow.WindowState = WindowState.Maximized;
