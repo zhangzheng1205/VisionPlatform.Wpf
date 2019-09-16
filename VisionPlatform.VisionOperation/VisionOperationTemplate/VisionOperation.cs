@@ -143,37 +143,21 @@ namespace VisionOperationTemplate
         #region 方法
 
         /// <summary>
-        /// 设置halcon窗口布局
+        /// 更新窗口布局
         /// </summary>
-        /// <param name="hWindow">halcon窗口</param>
-        /// <param name="imageWidth">图像宽度</param>
-        /// <param name="imageHeiht">图像高度</param>
-        private static void SetWindowPart(HWindow hWindow, int imageWidth, int imageHeiht)
+        /// <param name="hWindow">窗口</param>
+        private void UpdatePart(HWindow hWindow)
         {
-            int winRow, winCol, winWidth, winHeight, partWidth, partHeight;
-
-            HOperatorSet.SetSystem("width", imageWidth);
-            HOperatorSet.SetSystem("height", imageHeiht);
-
-            if ((imageHeiht > 0) && (imageWidth > 0))
+            if (hWindow == null)
             {
-                hWindow.GetWindowExtents(out winRow, out winCol, out winWidth, out winHeight);
-                if (winWidth < winHeight)
-                {
-                    partWidth = imageWidth;
-                    partHeight = imageWidth * winHeight / winWidth;
-
-                    HOperatorSet.SetPart(hWindow, (imageHeiht - partHeight) / 2.0, 0, partHeight - 1 + ((imageHeiht - partHeight) / 2.0), partWidth - 1);
-                }
-                else
-                {
-                    partWidth = imageHeiht * winWidth / winHeight;
-                    partHeight = imageHeiht;
-
-                    HOperatorSet.SetPart(hWindow, 0, (imageWidth - partWidth) / 2.0, partHeight - 1, partWidth - 1 + ((imageWidth - partWidth) / 2.0));
-                }
+                return;
             }
 
+            HTuple row, column, row2, column2;
+            hWindow.SetPart(0, 0, -2, -2);
+            hWindow.GetPart(out row, out column, out row2, out column2);
+            var rect = new Rect(column, row, column2 - column + 1, row2 - row + 1);
+            hWindow.SetPart(rect.Top, rect.Left, rect.Bottom - 1.0, rect.Right - 1.0);
         }
 
         /// <summary>
@@ -224,20 +208,30 @@ namespace VisionOperationTemplate
 
                 if (runningWindow != null)
                 {
-                    SetWindowPart(runningWindow, width, height);
                     HOperatorSet.ClearWindow(runningWindow);
                     HOperatorSet.DispObj(hImage, runningWindow);
+                    UpdatePart(runningWindow);
                 }
 
                 if (configWindow != null)
                 {
-                    SetWindowPart(configWindow, width, height);
                     HOperatorSet.ClearWindow(configWindow);
                     HOperatorSet.DispObj(hImage, configWindow);
+                    UpdatePart(runningWindow);
                 }
 
                 //执行主任务
 
+                //显示结果
+                if (runningWindow != null)
+                {
+                    UpdatePart(runningWindow);
+                }
+
+                if (configWindow != null)
+                {
+                    UpdatePart(runningWindow);
+                }
 
                 stopwatch.Stop();
                 RunStatus = new RunStatus(stopwatch.Elapsed.TotalMilliseconds);
