@@ -50,6 +50,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Framework.Vision">
+      <HintPath>..\..\ThirdPartyPlatform\SoftwareFramework\Framework.Vision.dll</HintPath>
+    </Reference>
     <Reference Include="halcondotnet">
       <HintPath>C:\Program Files\MVTec\HALCON-17.12-Progress\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>

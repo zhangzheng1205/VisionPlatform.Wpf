@@ -28,6 +28,8 @@ namespace AgvLocate
             //配置输入参数
             Inputs = new ItemCollection()
             {
+                new ItemBase("CalibrationFile",$"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/Calibration.json", typeof(string), "标定文件路径"),
+
                 new ItemBase("MeanImageMaskWidth", 15, typeof(int), "均值滤波掩码宽度"),
                 new ItemBase("MeanImageMaskHeight", 15, typeof(int), "均值滤波掩码高度"),
                 new ItemBase("DynThresholdOffset", 5.0, typeof(double), "动态阈值偏移量"),
@@ -36,9 +38,9 @@ namespace AgvLocate
                 new ItemBase("Blob1MaxArea", 80000, typeof(int), "大圆最大面积"),
                 new ItemBase("Blob1MincirCularity", 0.8, typeof(double), "大圆最小圆度"),
 
-                new ItemBase("Blob1MinArea", 20000, typeof(int), "小圆最小面积"),
-                new ItemBase("Blob1MaxArea", 35000, typeof(int), "小圆最大面积"),
-                new ItemBase("Blob1MincirCularity", 0.8, typeof(double), "小圆最小圆度"),
+                new ItemBase("Blob2MinArea", 20000, typeof(int), "小圆最小面积"),
+                new ItemBase("Blob2MaxArea", 35000, typeof(int), "小圆最大面积"),
+                new ItemBase("Blob2MincirCularity", 0.8, typeof(double), "小圆最小圆度"),
 
                 new ItemBase("Elements", 30, typeof(int), "圆拟合边缘点数"),
                 new ItemBase("DetectHeight", 60, typeof(int), "卡尺工具高度"),
@@ -51,6 +53,7 @@ namespace AgvLocate
 
                 new ItemBase("BaseX", 1.0, typeof(double), "基础点"),
                 new ItemBase("BaseY", 1.0, typeof(double), "基础点"),
+                new ItemBase("BaseAngle", 1.0, typeof(double), "基础点角度"),
                 new ItemBase("LocationX1", 1.0, typeof(double), "点位1X"),
                 new ItemBase("LocationY1", 1.0, typeof(double), "点位1Y"),
                 new ItemBase("LocationX2", 1.0, typeof(double), "点位2X"),
@@ -313,10 +316,10 @@ namespace AgvLocate
 
                 //动态阈值分割
                 ho_ImageMean.Dispose();
-                HOperatorSet.MeanImage(ho_GrayImage, out ho_ImageMean, 15, 15);
+                HOperatorSet.MeanImage(ho_GrayImage, out ho_ImageMean, new HTuple(Inputs["MeanImageMaskHeight"].Value), new HTuple(Inputs["MeanImageMaskWidth"].Value));
                 ho_RegionDynThresh.Dispose();
                 HOperatorSet.DynThreshold(ho_GrayImage, ho_ImageMean, out ho_RegionDynThresh,
-                    5, "dark");
+                    new HTuple(Inputs["DynThresholdOffset"].Value), "dark");
 
                 //填充并获取圆
                 ho_RegionFillUp.Dispose();
@@ -325,12 +328,12 @@ namespace AgvLocate
                 HOperatorSet.Connection(ho_RegionFillUp, out ho_ConnectedRegions);
                 ho_SelectedRegions1.Dispose();
                 HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions1, (new HTuple("circularity")).TupleConcat(
-                    "area"), "and", (new HTuple(0.85)).TupleConcat(60000), (new HTuple(1.2)).TupleConcat(
-                    80000));
+                    "area"), "and", (new HTuple(Inputs["Blob1MincirCularity"].Value)).TupleConcat(new HTuple(Inputs["Blob1MinArea"].Value)), (new HTuple(1.2)).TupleConcat(
+                    new HTuple(Inputs["Blob1MaxArea"].Value)));
                 ho_SelectedRegions2.Dispose();
                 HOperatorSet.SelectShape(ho_ConnectedRegions, out ho_SelectedRegions2, (new HTuple("circularity")).TupleConcat(
-                    "area"), "and", (new HTuple(0.85)).TupleConcat(20000), (new HTuple(1.2)).TupleConcat(
-                    35000));
+                    "area"), "and", (new HTuple(Inputs["Blob2MincirCularity"].Value)).TupleConcat(new HTuple(Inputs["Blob2MinArea"].Value)), (new HTuple(1.2)).TupleConcat(
+                    new HTuple(Inputs["Blob2MaxArea"].Value)));
 
                 HOperatorSet.CountObj(ho_SelectedRegions1, out hv_Number1);
                 HOperatorSet.CountObj(ho_SelectedRegions2, out hv_Number2);
@@ -350,19 +353,19 @@ namespace AgvLocate
 
                     //对最小外接圆的位置进行圆拟合
                     ho_Regions1.Dispose();
-                    spoke(ho_GrayImage, out ho_Regions1, 30, 60, 15, 1, 20, "positive", "max",
+                    spoke(ho_GrayImage, out ho_Regions1, (new HTuple(Inputs["Elements"].Value)), (new HTuple(Inputs["DetectHeight"].Value)), (new HTuple(Inputs["DetectWidth"].Value)), (new HTuple(Inputs["Sigma"].Value)), (new HTuple(Inputs["Threshold"].Value)), (new HTuple(Inputs["Transition"].Value)), (new HTuple(Inputs["Select"].Value)),
                         hv_RowArray1, hv_ColumnArray1, "outer", out hv_ResultRow1, out hv_ResultColumn1,
                         out hv_ArcType1);
                     ho_Regions2.Dispose();
-                    spoke(ho_GrayImage, out ho_Regions2, 30, 60, 15, 1, 20, "positive", "max",
+                    spoke(ho_GrayImage, out ho_Regions2, (new HTuple(Inputs["Elements"].Value)), (new HTuple(Inputs["DetectHeight"].Value)), (new HTuple(Inputs["DetectWidth"].Value)), (new HTuple(Inputs["Sigma"].Value)), (new HTuple(Inputs["Threshold"].Value)), (new HTuple(Inputs["Transition"].Value)), (new HTuple(Inputs["Select"].Value)),
                         hv_RowArray2, hv_ColumnArray2, "outer", out hv_ResultRow2, out hv_ResultColumn2,
                         out hv_ArcType2);
                     ho_Circle1.Dispose();
-                    pts_to_best_circle(out ho_Circle1, hv_ResultRow1, hv_ResultColumn1, 20, "circle",
+                    pts_to_best_circle(out ho_Circle1, hv_ResultRow1, hv_ResultColumn1, (new HTuple(Inputs["ActiveNum"].Value)), "circle",
                         out hv_RowCenter1, out hv_ColCenter1, out hv_Radius1, out hv_StartPhi1,
                         out hv_EndPhi1, out hv_PointOrder1, out hv_ArcAngle1);
                     ho_Circle2.Dispose();
-                    pts_to_best_circle(out ho_Circle2, hv_ResultRow2, hv_ResultColumn2, 20, "circle",
+                    pts_to_best_circle(out ho_Circle2, hv_ResultRow2, hv_ResultColumn2, (new HTuple(Inputs["ActiveNum"].Value)), "circle",
                         out hv_RowCenter2, out hv_ColCenter2, out hv_Radius2, out hv_StartPhi2,
                         out hv_EndPhi2, out hv_PointOrder2, out hv_ArcAngle2);
 
@@ -378,12 +381,24 @@ namespace AgvLocate
                         hv_ColCenter2, 25, 25);
 
                     //计算仿射变换矩阵
-                    //HOperatorSet.VectorAngleToRigid(hv_BaseRow, hv_BaseCol, hv_BaseAngle, hv_RowCenter1,
-                    //    hv_ColCenter1, hv_Angle, out hv_HomMat2D);
-                    //
-                    ////计算仿射变换结果
-                    //HOperatorSet.AffineTransPoint2d(hv_HomMat2D, hv_ResultRow, hv_ResultCol, out hv_Qy,
-                    //    out hv_Qx);
+                    HOperatorSet.VectorAngleToRigid((new HTuple(Inputs["BaseY"].Value)), (new HTuple(Inputs["BaseX"].Value)), (new HTuple(Inputs["BaseAngle"].Value)), hv_RowCenter1,
+                        hv_ColCenter1, hv_Angle, out hv_HomMat2D);
+
+                    //计算仿射变换结果
+                    HOperatorSet.AffineTransPoint2d(hv_HomMat2D, (new HTuple(Inputs["LocationY1"].Value)), (new HTuple(Inputs["LocationX1"].Value)),
+                        out hv_Qy, out hv_Qx);
+                    Outputs["LocationX1"].Value = hv_Qx.D;
+                    Outputs["LocationY1"].Value = hv_Qy.D;
+
+                    HOperatorSet.AffineTransPoint2d(hv_HomMat2D, (new HTuple(Inputs["LocationY2"].Value)), (new HTuple(Inputs["LocationX2"].Value)),
+                        out hv_Qy, out hv_Qx);
+                    Outputs["LocationX2"].Value = hv_Qx.D;
+                    Outputs["LocationY2"].Value = hv_Qy.D;
+
+                    HOperatorSet.AffineTransPoint2d(hv_HomMat2D, (new HTuple(Inputs["LocationY3"].Value)), (new HTuple(Inputs["LocationX3"].Value)),
+                        out hv_Qy, out hv_Qx);
+                    Outputs["LocationX3"].Value = hv_Qx.D;
+                    Outputs["LocationY3"].Value = hv_Qy.D;
 
                     //显示结果
                     //HOperatorSet.DispObj(ho_Image, hv_ExpDefaultWinHandle);
