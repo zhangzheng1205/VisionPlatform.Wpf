@@ -1,14 +1,20 @@
 ﻿using Caliburn.Micro;
+using Framework.Infrastructure.Serialization;
 using Framework.Vision;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using VisionPlatform.BaseType;
+using VisionPlatform.Core;
 
 namespace VisionPlatform.Wpf
 {
@@ -181,6 +187,14 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 创建CalibrationPoint新实例
         /// </summary>
+        public CalibrationPoint() : base(-1,-1,-1,-1)
+        {
+            Location = ECalibrationPointLocation.Center;
+        }
+
+        /// <summary>
+        /// 创建CalibrationPoint新实例
+        /// </summary>
         /// <param name="px">原始X点位</param>
         /// <param name="py">原始Y点位</param>
         /// <param name="qx">转换X点位</param>
@@ -228,6 +242,24 @@ namespace VisionPlatform.Wpf
     }
 
     /// <summary>
+    /// 标定参数
+    /// </summary>
+    public class CalibrationParam : CalibParam
+    {
+        /// <summary>
+        /// 创建CalibrationParam新实例
+        /// </summary>
+        public CalibrationParam() : base()
+        {
+
+        }
+        /// <summary>
+        /// 标定点列表
+        /// </summary>
+        public new List<CalibrationPoint> CalibPointList { get; set; } = new List<CalibrationPoint>();
+    }
+
+    /// <summary>
     /// CalibreationView模型
     /// </summary>
     public class CalibrationViewModel : Screen
@@ -248,13 +280,29 @@ namespace VisionPlatform.Wpf
         /// <param name="calibParam">标定参数</param>
         public CalibrationViewModel(CalibParam calibParam)
         {
-            CalibParam = calibParam;
+            CalibrationParam = new CalibrationParam();
+
+            if (calibParam != null)
+            {
+                foreach (var item in calibParam.CalibPointList)
+                {
+                    CalibrationParam.CalibPointList.Add(new CalibrationPoint(item));
+                }
+
+                CalibrationParam.InvMatrix = calibParam.InvMatrix;
+                CalibrationParam.Matrix = calibParam.Matrix;
+                CalibrationParam.IsValid = calibParam.IsValid;
+            }
 
             calibrationPointLocations.Clear();
             foreach (ECalibrationPointLocation item in Enum.GetValues(typeof(ECalibrationPointLocation)))
             {
                 calibrationPointLocations.Add(item);
             }
+
+            sceneManager = SceneManager.GetInstance();
+            UpdateScenes();
+
             //foreach (ECalibrationPointLocation item in Enum.GetValues(typeof(ECalibrationPointLocation)))
             //{
             //    calibrationPointLocations.Add(item, (Attribute.GetCustomAttribute(item.GetType().GetField(item.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description);
@@ -263,9 +311,138 @@ namespace VisionPlatform.Wpf
 
         #endregion
 
+        #region 字段
+
+        private SceneManager sceneManager;
+
+        #endregion
+
         #region 属性
 
         #region 场景管理
+
+
+        private ObservableCollection<Scene> scenes;
+
+        /// <summary>
+        /// 场景列表
+        /// </summary>
+        public ObservableCollection<Scene> Scenes
+        {
+            get
+            {
+                return scenes;
+            }
+            set
+            {
+                scenes = value;
+                NotifyOfPropertyChange(() => Scenes);
+            }
+        }
+
+        private Scene scene;
+
+        /// <summary>
+        /// 当前场景实例
+        /// </summary>
+        public Scene Scene
+        {
+            get
+            {
+                return scene;
+            }
+            set
+            {
+                scene = value;
+                NotifyOfPropertyChange(() => Scene);
+                NotifyOfPropertyChange(() => IsSceneValid);
+                NotifyOfPropertyChange(() => CalibrationOperationViewWindow);
+                NotifyOfPropertyChange(() => CameraSerial);
+                NotifyOfPropertyChange(() => CameraName);
+
+                UpdateCameraCalibrationFiles();
+            }
+        }
+
+        /// <summary>
+        /// 场景有效标志
+        /// </summary>
+        public bool IsSceneValid
+        {
+            get
+            {
+                return Scene?.IsInit ?? false;
+            }
+        }
+
+        /// <summary>
+        /// 标定算子显示窗口
+        /// </summary>
+        public object CalibrationOperationViewWindow
+        {
+            get
+            {
+                if (IsSceneValid)
+                {
+                    return Scene.VisionFrame.RunningWindow;
+                }
+
+                return new Grid();
+            }
+        }
+
+        private string visionResult;
+
+        /// <summary>
+        /// 视觉结果
+        /// </summary>
+        public string VisionResult
+        {
+            get
+            {
+                return visionResult;
+            }
+            set
+            {
+                visionResult = value;
+                NotifyOfPropertyChange(() => VisionResult);
+            }
+        }
+
+        /// <summary>
+        /// 相机序列号
+        /// </summary>
+        public string CameraSerial
+        {
+            get
+            {
+                if (IsSceneValid && (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera))
+                {
+                    return Scene.CameraSerial;
+                }
+
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 相机名
+        /// </summary>
+        public string CameraName
+        {
+            get
+            {
+                if (IsSceneValid && (Scene?.VisionFrame.IsEnableCamera == true))
+                {
+                    return Scene.Camera.ToString();
+                }
+                return "";
+            }
+        }
+
+        #endregion
+
+        #region 输入栏参数
 
         private ObservableCollection<ECalibrationPointLocation> calibrationPointLocations = new ObservableCollection<ECalibrationPointLocation>();
 
@@ -297,10 +474,6 @@ namespace VisionPlatform.Wpf
                 NotifyOfPropertyChange(() => CalibrationPointLocation);
             }
         }
-
-        #endregion
-
-        #region 输入栏参数
 
         /// <summary>
         /// 原始点位X
@@ -390,21 +563,21 @@ namespace VisionPlatform.Wpf
 
         #region 标定点位
 
-        private CalibParam calibParam;
+        private CalibrationParam calibrationParam;
 
         /// <summary>
         /// 标定参数
         /// </summary>
-        public CalibParam CalibParam
+        public CalibrationParam CalibrationParam
         {
             get
             {
-                return calibParam;
+                return calibrationParam;
             }
             set
             {
-                calibParam = value;
-                CalibPointList = new ObservableCollection<CalibrationPoint>(CalibParam.CalibPointList.ConvertAll(x=> new CalibrationPoint(x)));
+                calibrationParam = value;
+                CalibPointList = new ObservableCollection<CalibrationPoint>(CalibrationParam.CalibPointList);
             }
         }
 
@@ -427,26 +600,6 @@ namespace VisionPlatform.Wpf
                 calibPointList = value;
                 NotifyOfPropertyChange(() => CalibPointList);
             }
-        }
-
-        /// <summary>
-        /// 标定矩阵
-        /// </summary>
-        public double[] Matrix
-        {
-            get
-            {
-                if (CalibParam.IsValid)
-                {
-                    return CalibParam.Matrix;
-                }
-                else
-                {
-                    return new double[0];
-                }
-
-            }
-
         }
 
         private int selectedIndex;
@@ -537,6 +690,8 @@ namespace VisionPlatform.Wpf
 
         #region 方法
 
+        #region 标定交互相关
+
         /// <summary>
         /// 清除
         /// </summary>
@@ -575,7 +730,25 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Add(double px, double py, double qx, double qy)
         {
-            CalibPointList.Add(new CalibrationPoint(CalibrationPointLocation, px, py, qx, qy));
+            Add(CalibrationPointLocation, px, py, qx, qy);
+
+            if (Enum.IsDefined(typeof(ECalibrationPointLocation), CalibrationPointLocation + 1))
+            {
+                CalibrationPointLocation++;
+            }
+        }
+
+        /// <summary>
+        /// 增加点位
+        /// </summary>
+        /// <param name="location">点位位置</param>
+        /// <param name="px">原始X点位</param>
+        /// <param name="py">原始Y点位</param>
+        /// <param name="qx">转换X点位</param>
+        /// <param name="qy">转换Y点位</param>
+        public void Add(ECalibrationPointLocation location, double px, double py, double qx, double qy)
+        {
+            CalibPointList.Add(new CalibrationPoint(location, px, py, qx, qy));
             OnCalibrationPointListChanged(CalibPointList);
         }
 
@@ -608,8 +781,12 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Clear()
         {
-            CalibPointList = new ObservableCollection<CalibrationPoint>();
-            OnCalibrationPointListChanged(CalibPointList);
+            if (MessageBox.Show("是否要清空列表?", "清空列表数据", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                CalibPointList = new ObservableCollection<CalibrationPoint>();
+                OnCalibrationPointListChanged(CalibPointList);
+            }
+            
         }
 
         /// <summary>
@@ -627,7 +804,7 @@ namespace VisionPlatform.Wpf
             bool result1 = false;
             bool result2 = false;
 
-            CalibParam.CalibPointList.Clear();
+            CalibrationParam.CalibPointList.Clear();
 
             for (int i = 0; i < CalibPointList.Count; i++)
             {
@@ -637,7 +814,7 @@ namespace VisionPlatform.Wpf
                 qyArray[i] = CalibPointList[i].Qy;
 
             }
-            CalibParam.CalibPointList = CalibPointList.ToList().ConvertAll(x=>x.GetCalibPointData());
+            CalibrationParam.CalibPointList = CalibPointList.ToList();
 
             //计算标定矩阵
             if (GetCalibMatrixCallback != null)
@@ -652,13 +829,11 @@ namespace VisionPlatform.Wpf
             }
 
             //结果保存
-            CalibParam.IsValid = result1 && result2;
-            CalibParam.Matrix = posMatrix;
-            CalibParam.InvMatrix = invMatrix;
+            CalibrationParam.IsValid = result1 && result2;
+            CalibrationParam.Matrix = posMatrix;
+            CalibrationParam.InvMatrix = invMatrix;
 
-            NotifyOfPropertyChange(() => Matrix);
-
-            if (CalibParam.IsValid)
+            if (CalibrationParam.IsValid)
             {
                 MessageRaised?.Invoke(this, new MessageRaisedEventArgs(MessageLevel.Message, "标定成功!"));
             }
@@ -667,6 +842,398 @@ namespace VisionPlatform.Wpf
                 MessageRaised?.Invoke(this, new MessageRaisedEventArgs(MessageLevel.Warning, "标定失败!请检查相关的数据"));
             }
         }
+
+        #endregion
+
+        #region 文件管理
+
+        private ObservableCollection<string> calibrationConfigFiles;
+
+        /// <summary>
+        /// 相机配置文件列表
+        /// </summary>
+        public ObservableCollection<string> CalibrationConfigFiles
+        {
+            get
+            {
+                return calibrationConfigFiles;
+            }
+            set
+            {
+                calibrationConfigFiles = value;
+                NotifyOfPropertyChange(() => CalibrationConfigFiles);
+                NotifyOfPropertyChange(() => CalibrationConfigFile);
+            }
+        }
+
+        private string calibrationConfigFile;
+
+        /// <summary>
+        /// 相机配置文件列表
+        /// </summary>
+        public string CalibrationConfigFile
+        {
+            get
+            {
+                return calibrationConfigFile;
+            }
+            set
+            {
+                calibrationConfigFile = value;
+                NotifyOfPropertyChange(() => CalibrationConfigFile);
+            }
+        }
+
+        /// <summary>
+        /// 更新相机标定文件
+        /// </summary>
+        public void UpdateCameraCalibrationFiles()
+        {
+            try
+            {
+                if (IsSceneValid && Scene.VisionFrame.IsEnableCamera)
+                {
+                    FileInfo[] files = CameraFactory.GetCameraCalibrationFiles(Scene.Camera.Info.SerialNumber);
+                    CalibrationConfigFiles = new ObservableCollection<string>(files.ToList().ConvertAll(x => x.Name));
+
+                    if ((CalibrationConfigFiles.Count > 0) && (string.IsNullOrEmpty(CalibrationConfigFile)))
+                    {
+                        CalibrationConfigFile = CalibrationConfigFiles[0];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 保存到当前文件
+        /// </summary>
+        /// <param name="fileName">配置文件名(不包含路径)</param>
+        public void SaveToCurrentFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentException("文件名无效");
+                }
+
+                if (Scene?.Camera?.IsOpen == true)
+                {
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Scene.Camera.Info.SerialNumber}/CalibrationFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    SaveToFile(file);
+                    OnMessageRaised(MessageLevel.Message, "保存成功");
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Warning, "相机无效");
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 保存到文件中
+        /// </summary>
+        /// <param name="file">文件路径(全路径)</param>
+        public void SaveToFile(string file)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new ArgumentException("文件名无效");
+                }
+
+                if (Scene?.Camera?.IsOpen == true)
+                {
+
+                    JsonSerialization.SerializeObjectToFile(CalibrationParam, file);
+                }
+                else
+                {
+                    OnMessageRaised(MessageLevel.Warning, "相机无效");
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 从当前文件中加载
+        /// </summary>
+        /// <param name="fileName">配置文件名(不包含路径)</param>
+        public void LoadFromCurrentFile(string fileName)
+        {
+            try
+            {
+                //if (string.IsNullOrEmpty(fileName))
+                //{
+                //    throw new ArgumentException("无效路径/文件不存在");
+                //}
+
+                if (Scene?.Camera?.IsOpen == true)
+                {
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Scene.Camera.Info.SerialNumber}/CalibrationFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+                    LoadFromFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 加载配置文件
+        /// </summary>
+        /// <param name="file">文件路径</param>
+        public void LoadFromFile(string file)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new ArgumentException("无效路径/文件不存在");
+                }
+
+                CalibrationParam calibrationParam = JsonSerialization.DeserializeObjectFromFile<CalibrationParam>(file);
+
+                if (calibrationParam != null)
+                {
+                    CalibrationParam = calibrationParam;
+                }
+                else
+                {
+                    CalibrationParam = new CalibrationParam();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+            finally
+            {
+                
+            }
+        }
+
+        /// <summary>
+        /// 删除当前文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void DeleteCurrentFile(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentException("无效路径/文件不存在");
+                }
+
+                if (Scene?.Camera?.IsOpen == true)
+                {
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Scene.Camera.Info.SerialNumber}/CalibrationFile/{Path.GetFileNameWithoutExtension(fileName)}.json";
+
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                        UpdateCameraCalibrationFiles();
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"{nameof(file)}:{file}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 新增标定文件
+        /// </summary>
+        public void AddCalibrationFile()
+        {
+            try
+            {
+                if (Scene?.Camera?.IsOpen != true)
+                {
+                    throw new Exception("相机无效!无法绑定标定文件到相机");
+                }
+
+                var inputWindow = new InputWindow();
+                inputWindow.InputAccepted += (sender, e) =>
+                {
+                    string file = $"{System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase}/VisionPlatform/Camera/CameraConfig/{Scene.Camera.Info.SerialNumber}/CalibrationFile/{Path.GetFileNameWithoutExtension(e.Input)}.json";
+                    SaveToFile(file);
+                    UpdateCameraCalibrationFiles();
+                };
+
+                inputWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                inputWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+        #region 场景封装
+
+        /// <summary>
+        /// 更新场景列表
+        /// </summary>
+        public void UpdateScenes()
+        {
+            try
+            {
+                Scenes = new ObservableCollection<Scene>(sceneManager.Scenes.Values);
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 设置图像标定点
+        /// </summary>
+        /// <param name="px">图像坐标X</param>
+        /// <param name="py">图像坐标Y</param>
+        public void SetImageCalibrationPoint(double px, double py)
+        {
+            try
+            {
+                for (int i = 0; i < CalibPointList.Count; i++)
+                {
+                    if (CalibPointList[i].Location == CalibrationPointLocation)
+                    {
+                        Cover(i, px, py, 0, 0);
+
+                        if (Enum.IsDefined(typeof(ECalibrationPointLocation), CalibrationPointLocation + 1))
+                        {
+                            CalibrationPointLocation++;
+                        }
+                        return;
+                    }
+                }
+                Add(CalibrationPointLocation, px, py, 0, 0);
+
+                if (Enum.IsDefined(typeof(ECalibrationPointLocation), CalibrationPointLocation + 1))
+                {
+                    CalibrationPointLocation++;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 设置机器人标定点
+        /// </summary>
+        /// <param name="qx">机器人X</param>
+        /// <param name="qy">机器人Y</param>
+        public void SetRobotCalibrationPoint(double qx, double qy)
+        {
+            try
+            {
+                for (int i = 0; i < CalibPointList.Count; i++)
+                {
+                    if (CalibPointList[i].Location == CalibrationPointLocation)
+                    {
+                        Cover(i, 0, 0, qx, qy);
+
+                        if (Enum.IsDefined(typeof(ECalibrationPointLocation), CalibrationPointLocation + 1))
+                        {
+                            CalibrationPointLocation++;
+                        }
+                        return;
+                    }
+                }
+                Add(CalibrationPointLocation, 0, 0, qx, qy);
+
+                if (Enum.IsDefined(typeof(ECalibrationPointLocation), CalibrationPointLocation + 1))
+                {
+                    CalibrationPointLocation++;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取图像位置
+        /// </summary>
+        public void GetImageLocation()
+        {
+            try
+            {
+                if (IsSceneValid)
+                {
+                    string result;
+                    RunStatus runStatus = Scene.Execute(1000, out result);
+
+                    if (runStatus.Result == EResult.Accept)
+                    {
+                        VisionResult = result;
+
+                        foreach (var item in Scene.VisionFrame.Outputs)
+                        {
+                            if (item.Value is Location[])
+                            {
+                                var locations = item.Value as Location[];
+
+                                //只取第一位有效数据
+                                if (locations.Length > 0)
+                                {
+                                    SetImageCalibrationPoint(locations[0].X, locations[0].Y);
+                                }
+
+                            }
+                            else if (item.Value is Location)
+                            {
+                                var location = (Location)item.Value;
+                                SetImageCalibrationPoint(location.X, location.Y);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        VisionResult = $"{runStatus.Result}: {runStatus.Message}";
+                    }
+                }
+                else
+                {
+                    throw new Exception("场景无效");
+                }
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+
+        }
+
+        #endregion
 
         #endregion
     }

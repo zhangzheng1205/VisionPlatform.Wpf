@@ -317,7 +317,7 @@ namespace VisionPlatform.Wpf
             }
             set
             {
-                Scene?.SetCameraCalibrationFile((value == "不选择任何文件") ? null : value);
+                Scene?.SetCameraCalibrationFile((value == "不需标定") ? null : value);
                 NotifyOfPropertyChange(() => SelectedCalibrationFile);
             }
         }
@@ -513,7 +513,7 @@ namespace VisionPlatform.Wpf
                 //获取相机标定文件
                 FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFiles(SelectedCamera?.Info.SerialNumber);
                 CameraCalibrationFiles = new ObservableCollection<string>(calibrationFileInfos.ToList().ConvertAll(x => x.Name));
-                CameraCalibrationFiles.Add("不选择任何文件");
+                CameraCalibrationFiles.Add("不需标定");
             }
             
         }
@@ -613,7 +613,7 @@ namespace VisionPlatform.Wpf
             //获取相机标定文件
             FileInfo[] calibrationFileInfos = CameraFactory.GetCameraCalibrationFiles(SelectedCamera?.Info.SerialNumber);
             CameraCalibrationFiles = new ObservableCollection<string>(calibrationFileInfos.ToList().ConvertAll(x => x.Name));
-            CameraCalibrationFiles.Add("不选择任何文件");
+            CameraCalibrationFiles.Add("不需标定");
         }
 
         private Window SceneParamDebugWindow;

@@ -38,7 +38,7 @@ namespace VisionPlatformDemo
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.uEye;
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionProVpp) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
@@ -249,94 +249,10 @@ namespace VisionPlatformDemo
             }
         }
 
-        //Thread thread1;
-        //Thread thread2;
-
-        //bool isEsc = false;
-        object lockObj = new object();
-
-        /// <summary>
-        /// 自动执行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AotoExecuteButton_Click(object sender, RoutedEventArgs e)
-        {
-        //    lock (lockObj)
-        //    {
-        //        if (isEsc == false)
-        //        {
-        //            return;
-        //        }
-        //    }
-
-        //    if (ScenesListView.Items.Count >= 2)
-        //    {
-        //        var scene1 = ScenesListView.Items[0] as Scene;
-        //        var scene2 = ScenesListView.Items[1] as Scene;
-
-        //        RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
-        //        RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
-
-        //        lock (lockObj)
-        //        {
-        //            isEsc = false;
-        //        }
-
-        //        thread1 = new Thread(() =>
-        //        {
-        //            string result;
-        //            while (true)
-        //            {
-        //                var random = new Random();
-        //                scene1.Execute(1000, out result);
-
-        //                lock (lockObj)
-        //                {
-        //                    if (isEsc)
-        //                    {
-        //                        break;
-        //                    }
-        //                }
-
-        //                Thread.Sleep(random.Next(100, 300));
-        //            }
-
-        //        });
-
-        //        thread2 = new Thread(() =>
-        //        {
-        //            string result;
-        //            while (true)
-        //            {
-        //                var random = new Random();
-        //                scene2.Execute(1000, out result);
-
-        //                lock (lockObj)
-        //                {
-        //                    if (isEsc)
-        //                    {
-        //                        break;
-        //                    }
-        //                }
-
-        //                Thread.Sleep(random.Next(100, 200));
-        //            }
-
-        //        });
-
-        //        thread1.Start();
-        //        thread2.Start();
-        //    }
-
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //lock (lockObj)
-            //{
-            //    isEsc = true;
-            //}
+            SceneManager.ResetScenes();
+            CameraFactory.RemoveAllCameras();
         }
 
         private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)

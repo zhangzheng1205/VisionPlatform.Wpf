@@ -28,9 +28,14 @@ namespace VisionPlatform.Wpf
             InitializeComponent();
 
             var viewModel = new CalibrationViewModel();
+            viewModel.MessageRaised += ViewModel_MessageRaised;
             DataContext = viewModel;
         }
 
+        private void ViewModel_MessageRaised(object sender, MessageRaisedEventArgs e)
+        {
+            MessageBox.Show(e.Message);
+        }
 
         #region 输入栏点击全选功能实现
 
