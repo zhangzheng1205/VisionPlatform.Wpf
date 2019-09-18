@@ -13,7 +13,7 @@ namespace VisionPlatform.Wpf
         /// 创建CalibrationPointListChangedEventArgs新实例
         /// </summary>
         /// <param name="calibPointList">标定点列表</param>
-        public CalibrationPointListChangedEventArgs(ObservableCollection<CalibPointData> calibPointList)
+        public CalibrationPointListChangedEventArgs(ObservableCollection<CalibrationPoint> calibPointList)
         {
             CalibPointList = calibPointList;
         }
@@ -21,6 +21,6 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 标定点列表
         /// </summary>
-        public ObservableCollection<CalibPointData> CalibPointList { get; }
+        public ObservableCollection<CalibrationPoint> CalibPointList { get; }
     }
 }

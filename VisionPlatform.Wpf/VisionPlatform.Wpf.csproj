@@ -116,14 +116,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvanceCalibrationView.xaml.cs">
-      <DependentUpon>AdvanceCalibrationView.xaml</DependentUpon>
+    <Compile Include="CalibrationView.xaml.cs">
+      <DependentUpon>CalibrationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AdvanceCalibrationViewModel.cs" />
-    <Compile Include="BaseCalibreationView.xaml.cs">
-      <DependentUpon>BaseCalibreationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BaseCalibreationViewModel.cs" />
+    <Compile Include="CalibrationViewModel.cs" />
     <Compile Include="CameraConfigView.xaml.cs">
       <DependentUpon>CameraConfigView.xaml</DependentUpon>
     </Compile>
@@ -166,19 +162,11 @@
       <Project>{C67FD7FF-D5FC-4DB9-8EFD-4EA53D40F633}</Project>
       <Name>VisionPlatform.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VisionPlatform.Robot\VisionPlatform.IRobot\VisionPlatform.IRobot.csproj">
-      <Project>{5E9CC37A-CBBC-405E-9818-1DDF0E5039FE}</Project>
-      <Name>VisionPlatform.IRobot</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="AdvanceCalibrationView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="CalibrationView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BaseCalibreationView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CameraConfigView.xaml">
       <SubType>Designer</SubType>

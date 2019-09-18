@@ -2,133 +2,305 @@
 using Framework.Vision;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Framework.Infrastructure.Serialization;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.Windows.Data;
 
 namespace VisionPlatform.Wpf
 {
     /// <summary>
-    /// 标定控件数据模型
+    /// 标定点位置
+    /// </summary>
+    public enum ECalibrationPointLocation
+    {
+        ///// <summary>
+        ///// 未知
+        ///// </summary>
+        //[Description("未知")]
+        //Unknown,
+
+        /// <summary>
+        /// 上左
+        /// </summary>
+        [Description("上左")]
+        TopLeft,
+
+        /// <summary>
+        /// 上中
+        /// </summary>
+        [Description("上中")]
+        TopCenter,
+
+        /// <summary>
+        /// 上右
+        /// </summary>
+        [Description("上右")]
+        TopRight,
+
+        /// <summary>
+        /// 正左
+        /// </summary>
+        [Description("正左")]
+        Left,
+
+        /// <summary>
+        /// 正中
+        /// </summary>
+        [Description("正中")]
+        Center,
+
+        /// <summary>
+        /// 正右
+        /// </summary>
+        [Description("正右")]
+        Right,
+
+        /// <summary>
+        /// 下左
+        /// </summary>
+        [Description("下左")]
+        BottomLeft,
+
+        /// <summary>
+        /// 下中
+        /// </summary>
+        [Description("下中")]
+        BottomCenter,
+
+        /// <summary>
+        /// 下右
+        /// </summary>
+        [Description("下右")]
+        BottomRight,
+        
+    }
+
+    /// <summary>
+    /// CalibrationPointLocation到字符串转换器
+    /// </summary>
+    public class CalibrationPointLocationListToStringListConverter : IValueConverter
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var locations = value as ObservableCollection<ECalibrationPointLocation>;
+            CalibrationPointLocationsToStringConverter converter = new CalibrationPointLocationsToStringConverter();
+
+            if (locations != null)
+            {
+                ObservableCollection<string> locationDescriptions = new ObservableCollection<string>();
+
+                foreach (var item in locations)
+                {
+                    locationDescriptions.Add(converter.Convert(item, targetType, parameter, culture) as string);
+                }
+
+                return locationDescriptions;
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    /// <summary>
+    /// 字符串到CalibrationPointLocation转换器
+    /// </summary>
+    public class CalibrationPointLocationsToStringConverter : IValueConverter
+    {
+        /// <summary>
+        /// 枚举变量到字符串描述
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            ECalibrationPointLocation location = (ECalibrationPointLocation)value;
+            return (Attribute.GetCustomAttribute(location.GetType().GetField(location.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
+        }
+
+        /// <summary>
+        /// 字符串描述到枚举变量
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string description = value as string;
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                foreach (ECalibrationPointLocation item in Enum.GetValues(typeof(ECalibrationPointLocation)))
+                {
+                    if ((Attribute.GetCustomAttribute(item.GetType().GetField(item.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description.Equals(description))
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return ECalibrationPointLocation.TopCenter;
+        }
+    }
+
+    /// <summary>
+    /// 标定点
+    /// </summary>
+    public class CalibrationPoint : CalibPointData
+    {
+        /// <summary>
+        /// 创建CalibrationPoint新实例
+        /// </summary>
+        /// <param name="px">原始X点位</param>
+        /// <param name="py">原始Y点位</param>
+        /// <param name="qx">转换X点位</param>
+        /// <param name="qy">转换Y点位</param>
+        public CalibrationPoint(double px, double py, double qx, double qy) : base(px, py, qx, qy)
+        {
+
+        }
+
+        /// <summary>
+        /// 创建CalibrationPoint新实例
+        /// </summary>
+        /// <param name="calibPointData">标定点数据</param>
+        public CalibrationPoint(CalibPointData calibPointData) : base(calibPointData.Px, calibPointData.Py, calibPointData.Qx, calibPointData.Qy)
+        {
+
+        }
+
+        /// <summary>
+        /// 创建CalibrationPoint新实例
+        /// </summary>
+        /// <param name="location">点位位置</param>
+        /// <param name="px">原始X点位</param>
+        /// <param name="py">原始Y点位</param>
+        /// <param name="qx">转换X点位</param>
+        /// <param name="qy">转换Y点位</param>
+        public CalibrationPoint(ECalibrationPointLocation location, double px, double py, double qx, double qy) : this (px, py, qx, qy)
+        {
+            Location = location;
+        }
+
+        /// <summary>
+        /// 位置
+        /// </summary>
+        public ECalibrationPointLocation Location { get; set; }
+
+        /// <summary>
+        /// 获取CalibPointData
+        /// </summary>
+        /// <returns>CalibPointData数据</returns>
+        public CalibPointData GetCalibPointData()
+        {
+            return new CalibPointData(this.Px, this.Py, this.Qx, this.Qy);
+        }
+    }
+
+    /// <summary>
+    /// CalibreationView模型
     /// </summary>
     public class CalibrationViewModel : Screen
     {
+        #region 构造函数
+
+        /// <summary>
+        /// 创建BaseCalibreationViewModel新实例
+        /// </summary>
+        public CalibrationViewModel() : this(new CalibParam())
+        {
+
+        }
+
+        /// <summary>
+        /// 创建BaseCalibreationViewModel新实例
+        /// </summary>
+        /// <param name="calibParam">标定参数</param>
+        public CalibrationViewModel(CalibParam calibParam)
+        {
+            CalibParam = calibParam;
+
+            calibrationPointLocations.Clear();
+            foreach (ECalibrationPointLocation item in Enum.GetValues(typeof(ECalibrationPointLocation)))
+            {
+                calibrationPointLocations.Add(item);
+            }
+            //foreach (ECalibrationPointLocation item in Enum.GetValues(typeof(ECalibrationPointLocation)))
+            //{
+            //    calibrationPointLocations.Add(item, (Attribute.GetCustomAttribute(item.GetType().GetField(item.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description);
+            //}
+        }
+
+        #endregion
 
         #region 属性
 
-        /// <summary>
-        /// 标定点位列表
-        /// </summary>
-        public CalibParam CalibParam { get; set; } = new CalibParam();
+        #region 场景管理
+
+        private ObservableCollection<ECalibrationPointLocation> calibrationPointLocations = new ObservableCollection<ECalibrationPointLocation>();
 
         /// <summary>
-        /// 标定点位列表
+        /// 标定点位位置
         /// </summary>
-        private ObservableCollection<CalibPointData> calibPointList = new ObservableCollection<CalibPointData>();
-
-        /// <summary>
-        /// 标定点位列表
-        /// </summary>
-        public ObservableCollection<CalibPointData> CalibPointList
+        public ObservableCollection<ECalibrationPointLocation> CalibrationPointLocations
         {
             get
             {
-                return calibPointList;
+                return calibrationPointLocations;
+            }
+        }
+
+        private ECalibrationPointLocation calibrationPointLocation;
+
+        /// <summary>
+        /// 标点点位位置
+        /// </summary>
+        public ECalibrationPointLocation CalibrationPointLocation
+        {
+            get
+            {
+                return calibrationPointLocation;
             }
             set
             {
-                calibPointList = value;
-                NotifyOfPropertyChange(() => CalibPointList);
+                calibrationPointLocation = value;
+                NotifyOfPropertyChange(() => CalibrationPointLocation);
             }
         }
 
-        /// <summary>
-        /// 标定矩阵
-        /// </summary>
-        private double[] matrix;
+        #endregion
 
-        /// <summary>
-        /// 标定矩阵
-        /// </summary>
-        public double[] Matrix
-        {
-            get
-            {
-                return matrix;
-            }
-
-            private set
-            {
-                matrix = value;
-                NotifyOfPropertyChange(() => Matrix);
-            }
-        }
-
-        /// <summary>
-        /// 文件路径
-        /// </summary>
-        private string filePath;
-
-        /// <summary>
-        /// 文件路径
-        /// </summary>
-        public string FilePath
-        {
-            get
-            {
-                return filePath;
-            }
-            set
-            {
-                filePath = value;
-                NotifyOfPropertyChange(() => FilePath);
-            }
-        }
-
-        /// <summary>
-        /// 使能标志
-        /// </summary>
-        private bool isEnable = false;
-
-        /// <summary>
-        /// 使能标志
-        /// </summary>
-        public bool IsEnable
-        {
-            get
-            {
-                return isEnable;
-            }
-            set
-            {
-                isEnable = value;
-                NotifyOfPropertyChange(() => IsEnable);
-            }
-        }
-
-        /// <summary>
-        /// 选择项索引
-        /// </summary>
-        private int selectedIndex;
-
-        /// <summary>
-        /// 选择项索引
-        /// </summary>
-        public int SelectedIndex
-        {
-            get
-            {
-                return selectedIndex;
-            }
-            set
-            {
-                selectedIndex = value;
-                NotifyOfPropertyChange(() => SelectedIndex);
-            }
-        }
+        #region 输入栏参数
 
         /// <summary>
         /// 原始点位X
@@ -216,10 +388,93 @@ namespace VisionPlatform.Wpf
 
         #endregion
 
+        #region 标定点位
+
+        private CalibParam calibParam;
+
+        /// <summary>
+        /// 标定参数
+        /// </summary>
+        public CalibParam CalibParam
+        {
+            get
+            {
+                return calibParam;
+            }
+            set
+            {
+                calibParam = value;
+                CalibPointList = new ObservableCollection<CalibrationPoint>(CalibParam.CalibPointList.ConvertAll(x=> new CalibrationPoint(x)));
+            }
+        }
+
+        /// <summary>
+        /// 标定点位列表
+        /// </summary>
+        private ObservableCollection<CalibrationPoint> calibPointList = new ObservableCollection<CalibrationPoint>();
+
+        /// <summary>
+        /// 标定点位列表
+        /// </summary>
+        public ObservableCollection<CalibrationPoint> CalibPointList
+        {
+            get
+            {
+                return calibPointList;
+            }
+            set
+            {
+                calibPointList = value;
+                NotifyOfPropertyChange(() => CalibPointList);
+            }
+        }
+
+        /// <summary>
+        /// 标定矩阵
+        /// </summary>
+        public double[] Matrix
+        {
+            get
+            {
+                if (CalibParam.IsValid)
+                {
+                    return CalibParam.Matrix;
+                }
+                else
+                {
+                    return new double[0];
+                }
+
+            }
+
+        }
+
+        private int selectedIndex;
+
+        /// <summary>
+        /// 选择项索引
+        /// </summary>
+        public int SelectedIndex
+        {
+            get
+            {
+                return selectedIndex;
+            }
+            set
+            {
+                selectedIndex = value;
+                NotifyOfPropertyChange(() => SelectedIndex);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region 委托
 
         /// <summary>
-        /// 创建标定矩阵委托
+        /// 创建标定矩阵计算委托
         /// </summary>
         /// <param name="px">原始点X</param>
         /// <param name="py">原始点Y</param>
@@ -230,134 +485,62 @@ namespace VisionPlatform.Wpf
         public delegate bool GetCalibMatrixDelegate(double[] px, double[] py, double[] qx, double[] qy, out double[] matrix);
 
         /// <summary>
-        /// 创建标定矩阵委托
+        /// 创建标定矩阵计算委托
         /// </summary>
         public GetCalibMatrixDelegate GetCalibMatrixCallback { get; set; }
-
-        /// <summary>
-        /// 获取输入结果委托
-        /// </summary>
-        /// <param name="px">输入X</param>
-        /// <param name="py">输入Y</param>
-        /// <returns>执行结果</returns>
-        public delegate bool GetInputResultDelegate(out double px, out double py);
-
-        /// <summary>
-        /// 获取输入结果委托
-        /// </summary>
-        public GetInputResultDelegate GetInputResultCallback { get; set; }
-
-        /// <summary>
-        /// 获取输出结果委托
-        /// </summary>
-        /// <param name="qx">输出</param>
-        /// <param name="qy">图像Y</param>
-        /// <returns>执行结果</returns>
-        public delegate bool GetOutputResultDelegate(out double qx, out double qy);
-
-        /// <summary>
-        /// 获取输出结果委托
-        /// </summary>
-        public GetOutputResultDelegate GetOutputResultCallback { get; set; }
 
         #endregion
 
         #region 事件
 
-        /// <summary>
-        /// 创建标定文件事件
-        /// </summary>
-        public event EventHandler<CalibrationConfigurationCompletedEventArgs> CalibrationConfigurationCompleted;
-
-        /// <summary>
-        /// 取消事件
-        /// </summary>
-        public event EventHandler<EventArgs> CalibrationConfigurationCanceled;
+        internal void OnMessageRaised(MessageLevel messageLevel, string message, Exception exception = null)
+        {
+            MessageRaised?.Invoke(this, new MessageRaisedEventArgs(messageLevel, message, exception));
+        }
 
         /// <summary>
         /// 消息触发事件
         /// </summary>
         internal event EventHandler<MessageRaisedEventArgs> MessageRaised;
 
+        /// <summary>
+        /// 触发标定点列表改变事件
+        /// </summary>
+        /// <param name="calibPointList"></param>
+        protected void OnCalibrationPointListChanged(ObservableCollection<CalibrationPoint> calibPointList)
+        {
+            CalibrationPointListChanged?.Invoke(this, new CalibrationPointListChangedEventArgs(calibPointList));
+        }
+
+        /// <summary>
+        /// 标定点列表改变事件
+        /// </summary>
+        public event EventHandler<CalibrationPointListChangedEventArgs> CalibrationPointListChanged;
+
+        /// <summary>
+        /// 触发标定点选择项改变事件
+        /// </summary>
+        /// <param name="calibPointList">标定点列表</param>
+        /// <param name="index">点位索引</param>
+        /// <param name="calibPointData">标定点点位数据</param>
+        protected void OnCalibrationPointSelectionChanged(ObservableCollection<CalibrationPoint> calibPointList, int index, CalibPointData calibPointData)
+        {
+            CalibrationPointSelectionChanged?.Invoke(this, new CalibrationPointSelectionChangedEventArgs(calibPointList, index, calibPointData));
+        }
+
+        /// <summary>
+        /// 选择的点位改变
+        /// </summary>
+        public event EventHandler<CalibrationPointSelectionChangedEventArgs> CalibrationPointSelectionChanged;
+
         #endregion
 
         #region 方法
 
         /// <summary>
-        /// 加载文件
-        /// </summary>
-        /// <param name="filePath"></param>
-        public void LoadFile(string filePath)
-        {
-            try
-            {
-                FilePath = filePath;
-                if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
-                {
-                    CalibParam = JsonSerialization.DeserializeObjectFromFile<CalibParam>(filePath);
-                    if (CalibParam == null)
-                    {
-                        CalibParam = new CalibParam();
-                    }
-
-                    CalibPointList = new ObservableCollection<CalibPointData>(CalibParam.CalibPointList);
-
-                    IsEnable = true;
-                    Matrix = CalibParam.Matrix;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 创建文件
-        /// </summary>
-        /// <param name="filePath"></param>
-        public void CreateFile(string filePath)
-        {
-            try
-            {
-                FilePath = filePath;
-                if (!string.IsNullOrWhiteSpace(filePath))
-                {
-                    CalibParam = new CalibParam();
-                    CalibPointList.Clear();
-
-                    IsEnable = true;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 复位
-        /// </summary>
-        public void Reset()
-        {
-            IsEnable = false;
-
-            Px = 0;
-            Py = 0;
-            Qx = 0;
-            Qy = 0;
-
-            FilePath = "";
-            Matrix = null;
-
-            CalibPointList = new ObservableCollection<CalibPointData>();
-
-        }
-
-        /// <summary>
         /// 清除
         /// </summary>
-        public void Clear()
+        public void ClearInput()
         {
             Px = 0;
             Py = 0;
@@ -366,31 +549,25 @@ namespace VisionPlatform.Wpf
         }
 
         /// <summary>
-        /// 获取输入结果
+        /// 设置在输入框当前显示的点位
         /// </summary>
-        public void GetInputResult()
+        /// <param name="index">点位索引</param>
+        public void SetCurrentDisplayPointInInputBox(int index)
         {
-            double px = -1;
-            double py = -1;
+            if ((index >= 0) && (index < CalibPointList.Count))
+            {
+                CalibrationPointLocation = CalibPointList[index].Location;
+                Px = CalibPointList[index].Px;
+                Py = CalibPointList[index].Py;
+                Qx = CalibPointList[index].Qx;
+                Qy = CalibPointList[index].Qy;
 
-            GetInputResultCallback?.Invoke(out px, out py);
-
-            Px = px;
-            Py = py;
-        }
-
-        /// <summary>
-        /// 获取输出结果
-        /// </summary>
-        public void GetOutputResult()
-        {
-            double qx = -1;
-            double qy = -1;
-
-            GetOutputResultCallback?.Invoke(out qx, out qy);
-
-            Qx = qx;
-            Qy = qy;
+                OnCalibrationPointSelectionChanged(CalibPointList, index, CalibPointList[index]);
+            }
+            else
+            {
+                OnCalibrationPointSelectionChanged(CalibPointList, -1, null);
+            }
         }
 
         /// <summary>
@@ -398,7 +575,8 @@ namespace VisionPlatform.Wpf
         /// </summary>
         public void Add(double px, double py, double qx, double qy)
         {
-            CalibPointList.Add(new CalibPointData(px, py, qx, qy));
+            CalibPointList.Add(new CalibrationPoint(CalibrationPointLocation, px, py, qx, qy));
+            OnCalibrationPointListChanged(CalibPointList);
         }
 
         /// <summary>
@@ -408,7 +586,8 @@ namespace VisionPlatform.Wpf
         {
             if ((index >= 0) && (index < CalibPointList.Count))
             {
-                CalibPointList[index] = new CalibPointData(px, py, qx, qy);
+                CalibPointList[index] = new CalibrationPoint(CalibrationPointLocation, px, py, qx, qy);
+                OnCalibrationPointListChanged(CalibPointList);
             }
         }
 
@@ -420,7 +599,17 @@ namespace VisionPlatform.Wpf
             if ((index >= 0) && (index < CalibPointList.Count))
             {
                 CalibPointList.RemoveAt(index);
+                OnCalibrationPointListChanged(CalibPointList);
             }
+        }
+
+        /// <summary>
+        /// 清除所有的数据
+        /// </summary>
+        public void Clear()
+        {
+            CalibPointList = new ObservableCollection<CalibrationPoint>();
+            OnCalibrationPointListChanged(CalibPointList);
         }
 
         /// <summary>
@@ -448,7 +637,7 @@ namespace VisionPlatform.Wpf
                 qyArray[i] = CalibPointList[i].Qy;
 
             }
-            CalibParam.CalibPointList = CalibPointList.ToList();
+            CalibParam.CalibPointList = CalibPointList.ToList().ConvertAll(x=>x.GetCalibPointData());
 
             //计算标定矩阵
             if (GetCalibMatrixCallback != null)
@@ -467,72 +656,16 @@ namespace VisionPlatform.Wpf
             CalibParam.Matrix = posMatrix;
             CalibParam.InvMatrix = invMatrix;
 
-            Matrix = posMatrix;
+            NotifyOfPropertyChange(() => Matrix);
 
             if (CalibParam.IsValid)
             {
-                MessageRaised?.Invoke(this, new MessageRaisedEventArgs( MessageLevel.Message, "标定成功!点击\"确定\"将保存当前配置到文件之中"));
+                MessageRaised?.Invoke(this, new MessageRaisedEventArgs(MessageLevel.Message, "标定成功!"));
             }
             else
             {
-                MessageRaised?.Invoke(this, new MessageRaisedEventArgs( MessageLevel.Warning, "标定失败!请检查相关的数据"));
+                MessageRaised?.Invoke(this, new MessageRaisedEventArgs(MessageLevel.Warning, "标定失败!请检查相关的数据"));
             }
-        }
-
-        /// <summary>
-        /// 选择项改变
-        /// </summary>
-        /// <param name="index"></param>
-        public void CalibPointListSelectionChanged(int index)
-        {
-            if ((index >= 0) && (index < CalibPointList.Count))
-            {
-                Px = CalibPointList[index].Px;
-                Py = CalibPointList[index].Py;
-                Qx = CalibPointList[index].Qx;
-                Qy = CalibPointList[index].Qy;
-            }
-        }
-
-        /// <summary>
-        /// 触发标定配置完成事件
-        /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <param name="calibParam">标定参数</param>
-        /// <param name="isSuccess">成功标志</param>
-        protected void OnCalibrationConfigurationCompleted(string filePath, CalibParam calibParam, bool isSuccess)
-        {
-            CalibrationConfigurationCompleted?.Invoke(this, new CalibrationConfigurationCompletedEventArgs(calibParam));
-
-        }
-
-        /// <summary>
-        /// 确认
-        /// </summary>
-        public void Accept()
-        {
-            //保存结果
-            JsonSerialization.SerializeObjectToFile(CalibParam, FilePath);
-
-            //触发"创建标定文件"事件
-            OnCalibrationConfigurationCompleted(FilePath, CalibParam, CalibParam.IsValid);
-
-        }
-
-        /// <summary>
-        /// 触发标定配置取消事件
-        /// </summary>
-        protected void OnCalibrationConfigurationCanceled()
-        {
-            CalibrationConfigurationCanceled?.Invoke(this, new EventArgs());
-        }
-
-        /// <summary>
-        /// 取消
-        /// </summary>
-        public void Cancel()
-        {
-            OnCalibrationConfigurationCanceled();
         }
 
         #endregion

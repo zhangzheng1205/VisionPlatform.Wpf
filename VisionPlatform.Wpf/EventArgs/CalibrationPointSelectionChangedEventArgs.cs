@@ -19,7 +19,7 @@ namespace VisionPlatform.Wpf
         /// <param name="calibPointList">标定点列表</param>
         /// <param name="index">点位索引</param>
         /// <param name="calibPointData">标定点点位数据</param>
-        public CalibrationPointSelectionChangedEventArgs(ObservableCollection<CalibPointData> calibPointList, int index, CalibPointData calibPointData)
+        public CalibrationPointSelectionChangedEventArgs(ObservableCollection<CalibrationPoint> calibPointList, int index, CalibPointData calibPointData)
         {
             CalibPointList = calibPointList;
             Index = index;
@@ -29,7 +29,7 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 标定点列表
         /// </summary>
-        public ObservableCollection<CalibPointData> CalibPointList { get; }
+        public ObservableCollection<CalibrationPoint> CalibPointList { get; }
 
         /// <summary>
         /// 点位索引

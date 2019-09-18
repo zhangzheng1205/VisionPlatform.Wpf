@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,20 +34,43 @@ namespace VisionPlatformDemo
 
             //更新视觉框架集合
             VisionFrameFactory.UpdateAssembly();
-            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.HalconHdev;
+            VisionFrameFactory.DefaultVisionFrameType = EVisionFrameType.HalconDLL;
 
             //更新相机框架集合
             CameraFactory.UpdateAssembly();
-            CameraFactory.DefaultCameraSdkType = ECameraSdkType.uEye;
+            CameraFactory.DefaultCameraSdkType = ECameraSdkType.VirtualCamera;
 
             if ((VisionFrameFactory.DefaultVisionFrameType != EVisionFrameType.VisionProVpp) && (CameraFactory.DefaultCameraSdkType == ECameraSdkType.VirtualCamera))
             {
-                CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
-                CameraFactory.AddCamera(@"E:\测试图像\刹车片");
-                CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
-                CameraFactory.AddCamera(@"E:\测试图像\眼镜");
-                CameraFactory.AddCamera(@"E:\测试图像\定位圆");
-                CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
+                if (Directory.Exists(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images"))
+                {
+                    CameraFactory.AddCamera(@"C:\Users\Public\Documents\MVTec\HALCON-17.12-Progress\examples\images");
+                }
+
+                if (Directory.Exists(@"E:\测试图像\刹车片"))
+                {
+                    CameraFactory.AddCamera(@"E:\测试图像\刹车片");
+                }
+
+                if (Directory.Exists(@"E:\测试图像\AGV标定板"))
+                {
+                    CameraFactory.AddCamera(@"E:\测试图像\AGV标定板");
+                }
+
+                if (Directory.Exists(@"E:\测试图像\眼镜"))
+                {
+                    CameraFactory.AddCamera(@"E:\测试图像\眼镜");
+                }
+
+                if (Directory.Exists(@"E:\测试图像\定位圆"))
+                {
+                    CameraFactory.AddCamera(@"E:\测试图像\定位圆");
+                }
+
+                if (Directory.Exists(@"E:\测试图像\眼镜腿"))
+                {
+                    CameraFactory.AddCamera(@"E:\测试图像\眼镜腿");
+                }
             }
 
             //获取场景管理器实例(单例)
@@ -225,10 +249,10 @@ namespace VisionPlatformDemo
             }
         }
 
-        Thread thread1;
-        Thread thread2;
+        //Thread thread1;
+        //Thread thread2;
 
-        bool isEsc = false;
+        //bool isEsc = false;
         object lockObj = new object();
 
         /// <summary>
@@ -238,81 +262,81 @@ namespace VisionPlatformDemo
         /// <param name="e"></param>
         private void AotoExecuteButton_Click(object sender, RoutedEventArgs e)
         {
-            lock (lockObj)
-            {
-                if (isEsc == false)
-                {
-                    return;
-                }
-            }
+        //    lock (lockObj)
+        //    {
+        //        if (isEsc == false)
+        //        {
+        //            return;
+        //        }
+        //    }
 
-            if (ScenesListView.Items.Count >= 2)
-            {
-                var scene1 = ScenesListView.Items[0] as Scene;
-                var scene2 = ScenesListView.Items[1] as Scene;
+        //    if (ScenesListView.Items.Count >= 2)
+        //    {
+        //        var scene1 = ScenesListView.Items[0] as Scene;
+        //        var scene2 = ScenesListView.Items[1] as Scene;
 
-                RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
-                RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
+        //        RunningWindow1.Content = scene1.VisionFrame.RunningWindow;
+        //        RunningWindow2.Content = scene2.VisionFrame.RunningWindow;
 
-                lock (lockObj)
-                {
-                    isEsc = false;
-                }
+        //        lock (lockObj)
+        //        {
+        //            isEsc = false;
+        //        }
 
-                thread1 = new Thread(() =>
-                {
-                    string result;
-                    while (true)
-                    {
-                        var random = new Random();
-                        scene1.Execute(1000, out result);
+        //        thread1 = new Thread(() =>
+        //        {
+        //            string result;
+        //            while (true)
+        //            {
+        //                var random = new Random();
+        //                scene1.Execute(1000, out result);
 
-                        lock (lockObj)
-                        {
-                            if (isEsc)
-                            {
-                                break;
-                            }
-                        }
+        //                lock (lockObj)
+        //                {
+        //                    if (isEsc)
+        //                    {
+        //                        break;
+        //                    }
+        //                }
 
-                        Thread.Sleep(random.Next(100, 300));
-                    }
+        //                Thread.Sleep(random.Next(100, 300));
+        //            }
 
-                });
+        //        });
 
-                thread2 = new Thread(() =>
-                {
-                    string result;
-                    while (true)
-                    {
-                        var random = new Random();
-                        scene2.Execute(1000, out result);
+        //        thread2 = new Thread(() =>
+        //        {
+        //            string result;
+        //            while (true)
+        //            {
+        //                var random = new Random();
+        //                scene2.Execute(1000, out result);
 
-                        lock (lockObj)
-                        {
-                            if (isEsc)
-                            {
-                                break;
-                            }
-                        }
+        //                lock (lockObj)
+        //                {
+        //                    if (isEsc)
+        //                    {
+        //                        break;
+        //                    }
+        //                }
 
-                        Thread.Sleep(random.Next(100, 200));
-                    }
+        //                Thread.Sleep(random.Next(100, 200));
+        //            }
 
-                });
+        //        });
 
-                thread1.Start();
-                thread2.Start();
-            }
+        //        thread1.Start();
+        //        thread2.Start();
+        //    }
 
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            lock (lockObj)
-            {
-                isEsc = true;
-            }
+            //lock (lockObj)
+            //{
+            //    isEsc = true;
+            //}
         }
 
         private void ExecuteSceneButton_Click(object sender, RoutedEventArgs e)
@@ -349,22 +373,22 @@ namespace VisionPlatformDemo
 
         private void EscThreadButton_Click(object sender, RoutedEventArgs e)
         {
-            lock (this)
-            {
-                isEsc = true;
-            }
+            //lock (this)
+            //{
+            //    isEsc = true;
+            //}
         }
 
         private void OpenCalibButton_Click(object sender, RoutedEventArgs e)
         {
             //ScenesListView.SelectedItem
-            var view = new AdvanceCalibrationView()
+            var view = new CalibrationView()
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            var viewModel = (view.DataContext as AdvanceCalibrationViewModel);
+            var viewModel = (view.DataContext as CalibrationViewModel);
 
             //将控件嵌入窗口之中
             var window = new Window();
