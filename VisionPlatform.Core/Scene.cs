@@ -556,16 +556,22 @@ namespace VisionPlatform.Core
 
                     if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                     {
-                        if (string.IsNullOrEmpty(CalibrationFile))
+                        //配置相机参数
+                        if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
                         {
-                            CalibrationFile = $"default.json";
+                            if (string.IsNullOrEmpty(CameraConfigFile))
+                            {
+                                CameraConfigFile = $"default.json";
+                            }
+                            SetCameraConfigFile(CameraConfigFile);
                         }
+
+                        //if (string.IsNullOrEmpty(CalibrationFile))
+                        //{
+                        //    CalibrationFile = $"default.json";
+                        //}
+                        //配置标定信息
                         SetCameraCalibrationFile(CalibrationFile);
-                        if (string.IsNullOrEmpty(CameraConfigFile))
-                        {
-                            CameraConfigFile = $"default.json";
-                        }
-                        SetCameraConfigFile(CameraConfigFile);
                     }
                 }
             }
@@ -635,6 +641,11 @@ namespace VisionPlatform.Core
                     calibrationParam = new CalibParam();
                     JsonSerialization.SerializeObjectToFile(calibrationParam, calibrationFile);
                 }
+            }
+            else
+            {
+                CalibrationFile = null;
+                calibrationParam = new CalibParam();
             }
 
         }
@@ -819,14 +830,14 @@ namespace VisionPlatform.Core
                             //若打开相机失败,不抛异常
                         }
 
-                        //配置相机参数
-                        if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
-                        {
-                            SetCameraConfigFile(CameraConfigFile);
-                        }
+                        ////配置相机参数
+                        //if (CameraFactory.DefaultCameraSdkType != ECameraSdkType.VirtualCamera)
+                        //{
+                        //    SetCameraConfigFile(CameraConfigFile);
+                        //}
 
-                        //配置标定信息
-                        SetCameraCalibrationFile(CalibrationFile);
+                        ////配置标定信息
+                        //SetCameraCalibrationFile(CalibrationFile);
                     }
 
                 }

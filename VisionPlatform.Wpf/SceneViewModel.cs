@@ -313,7 +313,7 @@ namespace VisionPlatform.Wpf
         {
             get
             {
-                return Scene?.CalibrationFile;
+                return Scene?.CalibrationFile ?? "不需标定";
             }
             set
             {
