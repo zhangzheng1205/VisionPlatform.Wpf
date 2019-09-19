@@ -40,9 +40,9 @@ namespace VisionPlatform.Wpf
         TopRight,
 
         /// <summary>
-        /// 正左
+        /// 中左
         /// </summary>
-        [Description("正左")]
+        [Description("中左")]
         Left,
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace VisionPlatform.Wpf
         Center,
 
         /// <summary>
-        /// 正右
+        /// 中右
         /// </summary>
-        [Description("正右")]
+        [Description("中右")]
         Right,
 
         /// <summary>
@@ -426,9 +426,9 @@ namespace VisionPlatform.Wpf
             {
                 if (IsSceneValid && (Scene?.VisionFrame.IsEnableCamera == true))
                 {
-                    return Scene.Camera.ToString();
+                    return $"{Scene.Camera.Info.Manufacturer} {Scene.Camera.Info.ModelName}[{Scene.Camera.Info.SerialNumber}]";
                 }
-                return "";
+                return "Invalid";
             }
         }
 
@@ -1101,6 +1101,52 @@ namespace VisionPlatform.Wpf
             {
                 OnMessageRaised(MessageLevel.Err, ex.Message, ex);
             }
+        }
+
+        private Window SceneParamDebugWindow;
+
+        /// <summary>
+        /// 打开视觉参数
+        /// </summary>
+        public void OpenSceneParamDebugView()
+        {
+            try
+            {
+                var view = new SceneParamDebugView()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
+                };
+                var viewModel = (view.DataContext as SceneParamDebugViewModel);
+                viewModel.Scene = Scene;
+                viewModel.SceneConfigurationCompleted -= ViewModel_SceneConfigurationCompleted;
+                viewModel.SceneConfigurationCompleted += ViewModel_SceneConfigurationCompleted;
+
+                //将控件嵌入窗口之中
+                SceneParamDebugWindow = new Window();
+                SceneParamDebugWindow.MinWidth = view.MinWidth;
+                SceneParamDebugWindow.MinHeight = view.MinHeight;
+                SceneParamDebugWindow.Width = view.MinWidth + 600;
+                SceneParamDebugWindow.Height = view.MinHeight + 200;
+                SceneParamDebugWindow.Content = view;
+                SceneParamDebugWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                //SceneParamDebugWindow.Owner = Window.GetWindow(this);
+                SceneParamDebugWindow.Title = "场景参数配置窗口";
+                //SceneParamDebugWindow.WindowState = WindowState.Maximized;
+
+                SceneParamDebugWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                OnMessageRaised(MessageLevel.Err, ex.Message, ex);
+            }
+        }
+
+        private void ViewModel_SceneConfigurationCompleted(object sender, SceneConfigurationCompletedEventArgs e)
+        {
+            SceneParamDebugWindow?.Close();
+
+            NotifyOfPropertyChange(() => CalibrationOperationViewWindow);
         }
 
         /// <summary>
