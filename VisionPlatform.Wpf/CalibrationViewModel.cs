@@ -880,6 +880,7 @@ namespace VisionPlatform.Wpf
             set
             {
                 calibrationConfigFile = value;
+                LoadFromCurrentFile(calibrationConfigFile);
                 NotifyOfPropertyChange(() => CalibrationConfigFile);
             }
         }
@@ -977,10 +978,10 @@ namespace VisionPlatform.Wpf
         {
             try
             {
-                //if (string.IsNullOrEmpty(fileName))
-                //{
-                //    throw new ArgumentException("无效路径/文件不存在");
-                //}
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return;
+                }
 
                 if (Scene?.Camera?.IsOpen == true)
                 {

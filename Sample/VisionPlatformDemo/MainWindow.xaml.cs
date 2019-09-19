@@ -346,5 +346,11 @@ namespace VisionPlatformDemo
             window.Title = "相机窗口";
             window.ShowDialog();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //强制退出进程
+            Environment.Exit(0);
+        }
     }
 }

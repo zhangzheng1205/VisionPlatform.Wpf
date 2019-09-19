@@ -44,8 +44,7 @@
                             <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">文件</TextBlock>
                             <ComboBox x:Name="CalibrationFileListComboBox" 
                                       ItemsSource="{Binding CalibrationConfigFiles}" 
-                                      SelectedItem="{Binding CalibrationConfigFile}"
-                                      cal:Message.Attach="[Event SelectionChanged] = [Action LoadFromCurrentFile(CalibrationFileListComboBox.SelectedItem)]"/>
+                                      SelectedItem="{Binding CalibrationConfigFile}"/>
                         </DockPanel>
                         <DockPanel Margin="34,10,0,0">
                             <Button cal:Message.Attach="AddCalibrationFile" DockPanel.Dock="Left" MinWidth="60" Margin="0,0,10,0">新增</Button>
