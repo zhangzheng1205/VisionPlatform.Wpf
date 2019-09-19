@@ -8,8 +8,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,12 +21,6 @@ namespace VisionPlatform.Wpf
     /// </summary>
     public enum ECalibrationPointLocation
     {
-        ///// <summary>
-        ///// 未知
-        ///// </summary>
-        //[Description("未知")]
-        //Unknown,
-
         /// <summary>
         /// 上左
         /// </summary>
@@ -82,7 +74,7 @@ namespace VisionPlatform.Wpf
         /// </summary>
         [Description("下右")]
         BottomRight,
-        
+
     }
 
     /// <summary>
@@ -187,7 +179,7 @@ namespace VisionPlatform.Wpf
         /// <summary>
         /// 创建CalibrationPoint新实例
         /// </summary>
-        public CalibrationPoint() : base(-1,-1,-1,-1)
+        public CalibrationPoint() : base(-1, -1, -1, -1)
         {
             Location = ECalibrationPointLocation.Center;
         }
@@ -221,7 +213,7 @@ namespace VisionPlatform.Wpf
         /// <param name="py">原始Y点位</param>
         /// <param name="qx">转换X点位</param>
         /// <param name="qy">转换Y点位</param>
-        public CalibrationPoint(ECalibrationPointLocation location, double px, double py, double qx, double qy) : this (px, py, qx, qy)
+        public CalibrationPoint(ECalibrationPointLocation location, double px, double py, double qx, double qy) : this(px, py, qx, qy)
         {
             Location = location;
         }
@@ -786,7 +778,7 @@ namespace VisionPlatform.Wpf
                 CalibPointList = new ObservableCollection<CalibrationPoint>();
                 OnCalibrationPointListChanged(CalibPointList);
             }
-            
+
         }
 
         /// <summary>
@@ -1025,7 +1017,7 @@ namespace VisionPlatform.Wpf
             }
             finally
             {
-                
+
             }
         }
 

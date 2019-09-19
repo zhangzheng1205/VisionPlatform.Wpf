@@ -111,9 +111,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="XVisionCShare">
-      <HintPath>..\ThirdPartyPlatform\XVisionCShare\XVisionCShare.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalibrationView.xaml.cs">
